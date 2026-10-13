@@ -1,0 +1,338 @@
+openapi: 3.1.0
+info:
+  title: Asia-POP Render API (propuesta)
+  version: 0.1.0-draft
+  summary: Contrato propuesto para que SIFCA pida a Asia-POP el renderizado de documentos en PDF.
+  description: |
+    **Propuesta, no implementada.** Asia-POP hoy no expone esta API (ver
+    `docs/01-arquitectura/05-integracion-asia-pop.md`, cambios `AP-CR-02` a `AP-CR-10`).
+
+    Seguridad: no se publica en internet; autenticación de servicio con firma HMAC (cabeceras `X-Sifca-*`).
+    Los importes viajan como cadenas decimales; **Asia-POP no calcula ni redondea**.
+servers:
+  - url: "{internalBaseUrl}/v1"
+    variables:
+      internalBaseUrl:
+        default: http://asia-pop.internal:3000
+tags:
+  - name: Render
+  - name: Templates
+  - name: Health
+security:
+  - hmacSignature: []
+paths:
+  /render/documents:
+    post:
+      tags: [Render]
+      operationId: render_document_sync
+      summary: Renderiza un documento
+      description: |
+        Responde con el PDF si termina dentro del tiempo máximo (por defecto 30 s). Si no, responde `202` con el
+        identificador de un trabajo. Misma `requestId` ⇒ mismo resultado (idempotente).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RenderRequest" }
+      responses:
+        "200":
+          description: PDF generado.
+          headers:
+            X-Render-Request-Id: { schema: { type: string } }
+            X-Render-Pages: { schema: { type: integer } }
+            X-Render-Sha256: { schema: { type: string } }
+            X-Render-Template: { schema: { type: string, examples: ["factura-clasica@3"] } }
+            X-Render-Engine: { schema: { type: string } }
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        "202":
+          description: El render continúa en segundo plano.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/JobAccepted" }
+        "404": { $ref: "#/components/responses/Problem" }
+        "409": { $ref: "#/components/responses/Problem" }
+        "413": { $ref: "#/components/responses/Problem" }
+        "422": { $ref: "#/components/responses/Problem" }
+        "429": { $ref: "#/components/responses/Problem" }
+        "503": { $ref: "#/components/responses/Problem" }
+  /render/jobs:
+    post:
+      tags: [Render]
+      operationId: render_job_create
+      summary: Encola un render
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RenderRequest" }
+      responses:
+        "202":
+          description: Trabajo aceptado.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/JobAccepted" }
+        "422": { $ref: "#/components/responses/Problem" }
+        "429": { $ref: "#/components/responses/Problem" }
+  /render/jobs/{jobId}:
+    get:
+      tags: [Render]
+      operationId: render_job_get
+      summary: Estado de un render
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Estado del trabajo.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/JobStatus" }
+        "404": { $ref: "#/components/responses/Problem" }
+  /templates:
+    get:
+      tags: [Templates]
+      operationId: templates_list
+      summary: Plantillas disponibles
+      parameters:
+        - name: documentType
+          in: query
+          schema: { $ref: "#/components/schemas/DocumentType" }
+        - name: tenantId
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Plantillas con su versión publicada.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/TemplateInfo" }
+  /health:
+    get:
+      tags: [Health]
+      operationId: health_get
+      summary: Salud y versión del motor
+      security: []
+      responses:
+        "200":
+          description: Servicio operativo.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, engineVersion]
+                properties:
+                  status: { type: string, enum: [ok, degraded] }
+                  engineVersion: { type: string }
+                  queueDepth: { type: integer }
+components:
+  securitySchemes:
+    hmacSignature:
+      type: apiKey
+      in: header
+      name: X-Sifca-Signature
+      description: |
+        Firma HMAC-SHA-256 en hexadecimal sobre `MÉTODO + "\n" + RUTA + "\n" + X-Sifca-Timestamp + "\n" +
+        SHA-256(cuerpo)`, con el secreto compartido del entorno. Cabeceras adicionales: `X-Sifca-Key-Id`,
+        `X-Sifca-Timestamp` (segundos Unix; se rechaza fuera de ±300 s).
+  responses:
+    Problem:
+      description: Error (RFC 9457).
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+  schemas:
+    Decimal:
+      type: string
+      pattern: '^-?\d+(\.\d+)?$'
+    Problem:
+      type: object
+      required: [type, title, status, code]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        code:
+          type: string
+          examples: [SCHEMA_INVALID, TEMPLATE_NOT_FOUND, TEMPLATE_VERSION_NOT_PUBLISHED, PAYLOAD_TOO_LARGE, ENGINE_BUSY]
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path: { type: string }
+              message: { type: string }
+    DocumentType:
+      type: string
+      enum: [invoice, credit_note, debit_note, quote, receipt, account_statement, catalog]
+    RenderRequest:
+      type: object
+      required: [requestId, tenantId, documentType, template, data]
+      properties:
+        requestId: { type: string, format: uuid }
+        tenantId: { type: string, format: uuid }
+        documentType: { $ref: "#/components/schemas/DocumentType" }
+        template:
+          type: object
+          required: [id, version]
+          properties:
+            id: { type: string }
+            version: { type: integer, minimum: 1 }
+        locale: { type: string, default: es-CO }
+        options:
+          type: object
+          properties:
+            pageSize: { type: string, enum: [A4, LETTER, HALF_LETTER, POS_80MM], default: A4 }
+            imageQuality: { type: string, enum: [optimized, original], default: optimized }
+        data: { $ref: "#/components/schemas/CanonicalDocument" }
+    JobAccepted:
+      type: object
+      required: [jobId, statusUrl]
+      properties:
+        jobId: { type: string }
+        statusUrl: { type: string }
+    JobStatus:
+      type: object
+      required: [jobId, status]
+      properties:
+        jobId: { type: string }
+        status: { type: string, enum: [queued, running, succeeded, failed] }
+        pages: { type: integer }
+        sha256: { type: string }
+        downloadUrl:
+          type: string
+          description: URL de corta vida (minutos); presente cuando `status = succeeded`.
+        error:
+          $ref: "#/components/schemas/Problem"
+    TemplateInfo:
+      type: object
+      required: [id, name, documentType, publishedVersion]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        documentType: { $ref: "#/components/schemas/DocumentType" }
+        publishedVersion: { type: integer }
+        isDefault: { type: boolean }
+    Party:
+      type: object
+      required: [legalName]
+      properties:
+        legalName: { type: string }
+        tradeName: { type: string }
+        idType: { type: string }
+        idNumber: { type: string }
+        dv: { type: string }
+        address: { type: string }
+        city: { type: string }
+        department: { type: string }
+        phones:
+          type: array
+          items: { type: string }
+        email: { type: string }
+        fiscalResponsibilities:
+          type: array
+          items: { type: string }
+        logo:
+          type: object
+          properties:
+            ref: { type: string, format: uri, description: URL firmada de corta vida o referencia interna. }
+    Line:
+      type: object
+      required: [lineNo, description, quantity, unitPrice, lineTotal]
+      properties:
+        lineNo: { type: integer }
+        code: { type: string }
+        description: { type: string }
+        unit: { type: string }
+        quantity: { $ref: "#/components/schemas/Decimal" }
+        unitPrice: { $ref: "#/components/schemas/Decimal" }
+        discount: { $ref: "#/components/schemas/Decimal" }
+        taxes:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              ratePercent: { $ref: "#/components/schemas/Decimal" }
+              amount: { $ref: "#/components/schemas/Decimal" }
+        lineTotal: { $ref: "#/components/schemas/Decimal" }
+    CanonicalDocument:
+      type: object
+      required: [issuer, document, lines, totals]
+      properties:
+        issuer: { $ref: "#/components/schemas/Party" }
+        customer: { $ref: "#/components/schemas/Party" }
+        document:
+          type: object
+          required: [kind, fullNumber, issuedAt, currency]
+          properties:
+            kind: { $ref: "#/components/schemas/DocumentType" }
+            prefix: { type: string }
+            number: { type: string }
+            fullNumber: { type: string }
+            issuedAt: { type: string, format: date-time }
+            dueDate: { type: string, format: date }
+            paymentForm: { type: string }
+            paymentMethod: { type: string }
+            currency: { type: string, enum: [COP] }
+            notes: { type: string }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/Line" }
+        totals:
+          type: object
+          required: [subtotal, total, payable]
+          properties:
+            subtotal: { $ref: "#/components/schemas/Decimal" }
+            discounts: { $ref: "#/components/schemas/Decimal" }
+            taxes:
+              type: array
+              items:
+                type: object
+                properties:
+                  name: { type: string }
+                  base: { $ref: "#/components/schemas/Decimal" }
+                  amount: { $ref: "#/components/schemas/Decimal" }
+            withholdings:
+              type: array
+              items:
+                type: object
+                properties:
+                  name: { type: string }
+                  base: { $ref: "#/components/schemas/Decimal" }
+                  amount: { $ref: "#/components/schemas/Decimal" }
+            total: { $ref: "#/components/schemas/Decimal" }
+            payable: { $ref: "#/components/schemas/Decimal" }
+            amountInWords: { type: string }
+        fiscal:
+          type: object
+          description: Obligatorio en documentos electrónicos de la DIAN.
+          properties:
+            cufe: { type: string }
+            qrData: { type: string }
+            qrUrl: { type: string, format: uri }
+            validatedAt: { type: string, format: date-time }
+            numbering:
+              type: object
+              properties:
+                resolution: { type: string }
+                resolutionDate: { type: string, format: date }
+                prefix: { type: string }
+                from: { type: string }
+                to: { type: string }
+                validUntil: { type: string, format: date }
+            softwareProvider: { type: string }
+        extras:
+          type: object
+          additionalProperties: true
