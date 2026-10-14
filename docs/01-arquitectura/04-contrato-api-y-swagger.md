@@ -1,19 +1,28 @@
 # Contrato de API y Swagger/OpenAPI
 
-Estado: **borrador de Fase 1** · Contratos de diseño (validados sintácticamente como OpenAPI 3.1):
-[`openapi/sifca.v1.draft.yaml`](openapi/sifca.v1.draft.yaml) ·
-[`openapi/asia-pop-render.v1.draft.yaml`](openapi/asia-pop-render.v1.draft.yaml)
+Estado: **Fase 1 (actualizada)** · Contrato de diseño (validado sintácticamente como OpenAPI 3.1):
+[`openapi/sifca.v1.draft.yaml`](openapi/sifca.v1.draft.yaml) · Gobernanza: constitución, principios V y IX.
 
-## 1. Enfoque: código primero, contrato versionado
+> **Integración externa (decisión vigente):** SIFCA expone **contratos OpenAPI limpios y webhooks estándar**;
+> cualquier motor externo (por ejemplo Asia-POP, fase futura/experimental) los **consume**. SIFCA nunca invoca
+> a esos motores en su camino crítico (ADR-0008).
+
+## 1. Enfoque: Zod primero, contrato derivado y versionado
 
 | Decisión | Detalle |
 |---|---|
-| El OpenAPI se **genera** desde NestJS (`@nestjs/swagger`) | La fuente de verdad en ejecución son los controladores y los DTO; no hay un YAML que mantener a mano en paralelo |
-| Se **versiona una instantánea** | En cada cambio de API, el CI exporta `openapi.json` a `docs/01-arquitectura/openapi/generated/` y falla si difiere de la confirmada: ningún cambio de API pasa sin que se vea en el *diff* |
+| **Zod es la fuente de verdad** (ADR-0009) | Los esquemas de `packages/contracts` definen entradas, salidas, errores, eventos y webhooks. **No** se usa `class-validator` ni DTO con decoradores de validación |
+| El OpenAPI se **deriva** de los esquemas | Con la conversión nativa de Zod 4 (`z.toJSONSchema`) o una librería que la use (decisión en el spike S-ZOD); `@nestjs/swagger` solo se mantiene si hace falta para servir Swagger UI |
+| Se **versiona una instantánea** | En cada cambio, el CI exporta `openapi.json` a `docs/01-arquitectura/openapi/generated/` y falla si difiere de la confirmada: ningún cambio de API pasa sin verse en el *diff* |
 | Se **comprueban cambios incompatibles** | El CI compara contra la versión publicada anterior con una herramienta de *diff* de OpenAPI (p. ej. `oasdiff`) y bloquea cambios que rompen clientes sin subir la versión mayor |
-| Se **lintea** el contrato | Reglas de estilo con Spectral: `operationId` único, descripciones, ejemplos, esquemas de error, sin `additionalProperties` accidentales |
-| Se **generan clientes** | `packages/api-client` desde el OpenAPI para admin, vitrina y móvil |
-| Los borradores de esta carpeta | Se usan como **referencia de diseño** y, durante F2, se contrastan con el generado para detectar derivas |
+| Se **lintea** el contrato | Reglas de estilo con Spectral: `operationId` único, descripciones, ejemplos, esquemas de error |
+| El **cliente** reutiliza los esquemas | `packages/api-client` usa los tipos inferidos de `contracts`; el frontend valida formularios con los mismos esquemas |
+| El borrador de esta carpeta | Es **referencia de diseño**; en F2 se contrasta con el derivado para detectar derivas |
+
+> **Limitación conocida de Zod → JSON Schema:** los refinamientos, transformaciones y mensajes personalizados
+> no se reflejan en el esquema generado ✅ ([zod.dev](https://zod.dev/json-schema)). Las reglas entre campos
+> (p. ej. `dueDate ≥ issueDate`) se describen también en la `description` del esquema para que el OpenAPI
+> las documente.
 
 ## 2. Convenciones de la API
 
@@ -33,7 +42,7 @@ Estado: **borrador de Fase 1** · Contratos de diseño (validados sintácticamen
 |---|---|
 | JSON | `camelCase`; `null` explícito cuando el campo existe pero no tiene valor; los opcionales ausentes se omiten |
 | Identificadores | UUID v7 como texto |
-| **Dinero, cantidades, porcentajes** | **Cadenas decimales** (`"1190000.00"`, `"19.00"`); nunca `number`. Evita la pérdida de precisión de `float` y las sorpresas de redondeo entre sistemas (R-CON-009). *Excepción:* la fachada de compatibilidad con Alegra usa números porque imita su formato |
+| **Dinero, cantidades, porcentajes** | **Cadenas decimales** (`"1190000.00"`, `"19.00"`); nunca `number`. Evita la pérdida de precisión de `float` y las sorpresas de redondeo entre sistemas (R-CON-009). Se validan con Zod (patrón y escala) |
 | Fechas y horas | `date` (`2026-10-13`) para fechas contables; `date-time` ISO 8601 con desfase (`2026-10-13T14:30:00-05:00`) para instantes |
 | Enumeraciones | `UPPER_SNAKE_CASE`; agregar valores es un cambio compatible, así que los clientes deben tolerar valores desconocidos |
 | Moneda | COP implícita en el MVP; el campo `currency` se reserva |
@@ -46,7 +55,6 @@ Estado: **borrador de Fase 1** · Contratos de diseño (validados sintácticamen
 - **Filtros** como parámetros simples (`status=ACCEPTED&issuedFrom=2026-10-01`); `q` para texto libre.
 - **Orden:** `sort=-issuedAt,number` (prefijo `-` descendente). Solo se puede ordenar por campos indexados y
   documentados.
-- **Fachada Alegra:** `start`/`limit` con máximo 30, para ser idéntica (ver `02-…/06-…`).
 
 ### 2.4 Errores (RFC 9457, `application/problem+json`)
 
@@ -68,9 +76,11 @@ Estado: **borrador de Fase 1** · Contratos de diseño (validados sintácticamen
   no pertenece a la empresa; no se revela) · `409` conflicto de estado de negocio (período cerrado, rango agotado,
   stock) · `412` fallo de `If-Match` · `422` validación de datos · `429` límite de tasa · `5xx` falla del servidor.
 - Códigos de negocio iniciales: `VALIDATION_FAILED`, `INSUFFICIENT_STOCK`, `NUMBERING_RANGE_EXHAUSTED`,
-  `NUMBERING_RANGE_EXPIRED`, `PERIOD_CLOSED`, `DOCUMENT_NOT_EDITABLE`, `CREDIT_LIMIT_EXCEEDED`,
-  `ENTRY_NOT_BALANCED`, `DIAN_REJECTED`, `IDEMPOTENCY_KEY_REUSED`, `RATE_LIMITED`. Se mantienen en un
-  catálogo único (`docs/…/errores.md`, a crear en F2).
+  `NUMBERING_RANGE_EXPIRED`, `PERIOD_CLOSED`, `DOCUMENT_NOT_EDITABLE`, `ENTRY_NOT_BALANCED`, `DIAN_REJECTED`,
+  `IDEMPOTENCY_KEY_REUSED`, `RATE_LIMITED`; crédito: `CREDIT_LIMIT_EXCEEDED`, `CUSTOMER_BLOCKED_OVERDUE`,
+  `CREDIT_NOT_ALLOWED`; inventario: `COSTING_METHOD_NOT_ALLOWED`, `COSTING_METHOD_LOCKED`; devoluciones:
+  `RETURN_EXCEEDS_SOLD`, `RETURN_WINDOW_EXPIRED`. Se mantienen en un catálogo único
+  (`docs/…/errores.md`, a crear en F2) y se declaran como esquemas Zod.
 - Jamás se devuelven trazas de pila ni mensajes de la base de datos.
 
 ### 2.5 Idempotencia, concurrencia y límites
@@ -96,8 +106,6 @@ esperando a la DIAN.
 |---|---|---|
 | `bearerAuth` | Usuarios del back-office y la app móvil | JWT de vida corta (≈ 15 min) + *refresh token* rotatorio con detección de reutilización |
 | `apiKeyAuth` | Integraciones | Encabezado `X-API-Key: sk_live_<prefijo>_<secreto>`; solo se guarda el *hash* (SHA-256) del secreto y el prefijo para identificarla; el secreto se muestra **una vez** |
-| `basicAuthApiKey` | Solo la fachada de compatibilidad Alegra | `Authorization: Basic base64(<prefijo>:<secreto>)` |
-| `hmacSignature` | Llamadas entre SIFCA y Asia-POP | Ver `05-integracion-asia-pop.md` §4.5 |
 
 Alcances de una API Key (mínimo privilegio; cada llave pertenece a **una empresa**):
 
@@ -111,7 +119,8 @@ Alcances de una API Key (mínimo privilegio; cada llave pertenece a **una empres
 | `receipts:write` / `receivables:read` | Recibos de caja / estados de cuenta |
 | `reports:read` | Reportes |
 | `webhooks:manage` | Suscripciones de webhooks |
-| `compat:alegra:read` | Fachada de compatibilidad |
+| `credit:read` / `credit:release` | Consultar estado de crédito y cupo / liberar documentos retenidos |
+| `documents:read` / `documents:write` | Leer datos de render de un documento / devolver un PDF generado por un motor externo |
 
 Además: caducidad opcional, restricción por IP, límite de tasa propio, registro del último uso, y rotación
 con solapamiento (dos llaves vigentes durante el cambio).
@@ -128,6 +137,12 @@ con solapamiento (dos llaves vigentes durante el cambio).
 | `stock.changed` | Cambió el disponible de un ítem (con el valor nuevo) |
 | `order.created` | Entró un pedido web |
 | `receipt.registered` | Se registró un recibo de caja |
+| `return.received` | Se emitió una nota crédito con reingreso al kardex (incluye condición de cada línea) |
+| `credit.limit.warning` / `credit.limit.exceeded` | La exposición de un cliente alcanza 80 % del cupo / lo supera |
+| `credit.hold.created` / `credit.hold.released` | Un documento queda retenido por crédito / se libera |
+| `receivable.overdue` | Una factura entra en mora o cambia de rango de edad |
+| `inventory.reorder.required` | La posición de inventario de un ítem cruza su punto de reorden |
+| `inventory.abc.reclassified` | Cambia la clase ABC de un ítem |
 
 ### 4.2 Sobre del evento y entrega
 
@@ -136,7 +151,7 @@ con solapamiento (dos llaves vigentes durante el cambio).
   "id": "0192f6d7-0000-7000-8000-000000000001",
   "type": "invoice.accepted",
   "createdAt": "2026-10-13T14:30:07-05:00",
-  "companyId": "0192f6d5-1111-7000-9000-aaaaaaaaaaaa",
+  "tenantId": "0192f6d5-1111-7000-9000-aaaaaaaaaaaa",
   "data": { "invoiceId": "0192f6d6-…", "fullNumber": "SETP990000123", "total": "2380000.00" }
 }
 ```
@@ -160,49 +175,55 @@ Detalle y esquemas: ver el OpenAPI. `R` = lectura, `W` = escritura.
 |---|---|---|
 | Terceros | `GET/POST /parties`, `GET/PATCH /parties/{id}` | `parties:*` |
 | Catálogo | `GET/POST /items`, `GET/PATCH /items/{id}`, `/item-categories`, `/price-lists` | `catalog:*` |
-| Inventario | `GET /inventory/stock`, `GET /inventory/movements` (kardex), `POST /inventory/adjustments`, `POST /inventory/transfers` | `inventory:*` |
-| Ventas | `POST /sales/quotes`, `POST /sales/orders`, `GET/POST /sales/invoices`, `POST /sales/invoices/{id}/issue`, `GET /sales/invoices/{id}/pdf`, `GET /sales/invoices/{id}/xml`, `POST /sales/invoices/{id}/credit-notes`, `POST /sales/invoices/{id}/debit-notes` | `invoices:*` |
+| Inventario | `GET /inventory/stock`, `GET /inventory/movements` (kardex), `POST /inventory/adjustments`, `POST /inventory/transfers`, `GET /inventory/items/{id}/costing` (capas o promedio), `GET /inventory/abc`, `POST /inventory/abc/recalculate`, `GET /inventory/reorder` (ROP, posición y sugerido), `GET/POST /inventory/cycle-counts` | `inventory:*` |
+| Ventas | `POST /sales/quotes`, `POST /sales/orders`, `POST /sales/orders/{id}/confirm`, `POST /sales/orders/{id}/credit-release`, `GET/POST /sales/invoices`, `POST /sales/invoices/{id}/issue`, `GET /sales/invoices/{id}/pdf`, `GET /sales/invoices/{id}/xml`, `GET /sales/invoices/{id}/render-data`, `PUT /sales/invoices/{id}/rendered-documents/{kind}`, `POST /sales/invoices/{id}/credit-notes` (devolución total o parcial con reingreso a kardex), `POST /sales/invoices/{id}/debit-notes` | `invoices:*`, `credit:release`, `documents:*` |
 | POS | `POST /pos/sessions`, `POST /pos/sales`, `POST /pos/sessions/{id}/close` | `pos:*` |
-| Compras | `GET/POST /purchases/bills`, `POST /purchases/support-documents` | `purchases:*` |
-| Cartera | `POST /receivables/receipts`, `GET /receivables/customers/{id}/statement`, `GET /receivables/aging` | `receivables:*` |
-| Préstamos | `POST /lending/loans`, `GET /lending/loans/{id}/schedule`, `POST /lending/loans/{id}/payments`, `POST /lending/loans/{id}/prepayments` | `lending:*` |
+| Compras | `GET/POST /purchases/bills`, `POST /purchases/support-documents`, `POST /purchases/bills/{id}/returns` (devolución a proveedor) | `purchases:*` |
+| Cartera y crédito | `POST /receivables/receipts`, `POST /receivables/receipts/{id}/reverse`, `GET /receivables/customers/{id}/statement`, `GET /receivables/customers/{id}/credit` (cupo, exposición, estado), `PUT /parties/{id}/credit-terms` (cupo y plazo), `GET /receivables/aging`, `GET /receivables/credit-holds`, `POST /receivables/collection-actions` | `receivables:*`, `credit:*` |
 | Contabilidad | `GET /accounting/accounts`, `POST /accounting/entries`, `POST /accounting/entries/{id}/reverse`, `GET /accounting/periods`, `POST /accounting/periods/{id}/close` | `accounting:*` |
 | Reportes | `GET /reports/trial-balance`, `/general-ledger`, `/journal`, `/balance-sheet`, `/income-statement`, `/kardex` | `reports:read` |
 | Vitrina | `GET /public/catalog`, `POST /public/orders` | sin auth, con límite de tasa |
-| Integraciones | `GET /integrations/catalog-feed/items`, `/integrations/webhook-endpoints`, `/compat/alegra/v1/*` | `catalog:read`, `webhooks:manage`, `compat:alegra:read` |
+| Integraciones | `GET /integrations/catalog-feed/items`, `/integrations/webhook-endpoints` | `catalog:read`, `webhooks:manage` |
 | Búsqueda global | `GET /search?q=&types=` (alimenta la paleta de comandos) | según tipos pedidos |
 
-## 6. Cómo se escribe un controlador NestJS para que el OpenAPI salga bien
+## 6. Cómo se escribe un endpoint (Presentation) con Zod
 
 Reglas para el equipo (el código llega en F2; el ejemplo es ilustrativo):
 
-1. **Un DTO por cuerpo de entrada y otro por salida.** No se exponen entidades del ORM ni del dominio.
-2. **Validación con `class-validator`** en los DTO de entrada y `ValidationPipe` global con
-   `whitelist: true`, `forbidNonWhitelisted: true`, `transform: true`: los campos desconocidos se rechazan.
-3. **Decoradores obligatorios:** `@ApiTags`, `@ApiOperation({ operationId })`, `@ApiProperty` con `description`
-   y `example` en cada campo de DTO, y una respuesta tipada por cada código posible
-   (`@ApiOkResponse`, `@ApiCreatedResponse`, `@ApiConflictResponse`…), incluida la de error `Problem`.
-4. **Seguridad declarada:** `@ApiBearerAuth()` / `@ApiSecurity('api-key')`, y el alcance requerido con un
-   decorador propio `@RequiredScopes('invoices:issue')` que además alimenta una extensión `x-required-scopes`
-   en el OpenAPI (como en el borrador).
-5. **Montos como cadena:** un decorador `@MoneyString()` que valida el patrón decimal y documenta el esquema
-   `Money`; un *transformer* convierte entre `string` y `Decimal` en el borde del controlador.
-6. **Plugin de CLI de `@nestjs/swagger`** para inferir propiedades de los DTO y reducir ruido.
-7. **Documentación de la API:** Swagger UI y `openapi.json` solo en entornos de desarrollo/pruebas o tras
-   autenticación; en producción se publica el `openapi.json` en el portal de desarrolladores.
+1. **Los esquemas viven en `packages/contracts`**, uno por cuerpo de entrada, salida y error; los tipos se
+   infieren con `z.infer`. No se crean clases DTO con decoradores de validación.
+2. **El controlador no valida ni contiene reglas:** extrae el cuerpo/parámetros crudos, llama al caso de uso y
+   devuelve su resultado. La validación ocurre al inicio de `execute` del caso de uso (principio V).
+3. **Objetos estrictos:** los esquemas de entrada usan `strict()`: los campos desconocidos se rechazan.
+4. **Importes como cadena decimal:** helpers `nonNegativeMoney`, `positiveQuantity`, etc.; la conversión a
+   `Money`/`Quantity` ocurre en Application.
+5. **Seguridad declarada:** el esquema de seguridad y el alcance requerido (`x-required-scopes`) se declaran
+   junto al endpoint y alimentan el OpenAPI; un *guard* de Presentation los hace cumplir.
+6. **Errores:** un filtro de excepciones traduce `ZodError` a `422 Problem` (`VALIDATION_FAILED`) y los errores
+   de negocio tipificados a su `Problem` con `code` estable.
+7. **Documentación:** Swagger UI y `openapi.json` solo en desarrollo/pruebas o tras autenticación; en
+   producción se publica el `openapi.json` en el portal de desarrolladores.
 
 ```ts
 // Ilustrativo (no es código de la aplicación)
-@ApiTags('Sales')
-@Controller('sales/invoices')
-export class InvoicesController {
-  @Post(':invoiceId/issue')
-  @HttpCode(202)
-  @RequiredScopes('invoices:issue')
-  @ApiOperation({ operationId: 'sales_invoices_issue', summary: 'Emite la factura' })
-  @ApiAcceptedResponse({ type: InvoiceDto })
-  @ApiConflictResponse({ type: ProblemDto })
-  issue(@Param('invoiceId', ParseUUIDPipe) id: string, @Headers('idempotency-key') key?: string) { /* … */ }
+// packages/contracts: la ÚNICA definición del contrato
+export const IssueInvoiceInput = z.object({
+  invoiceId: uuidV7,
+  idempotencyKey: z.string().min(8).max(128).optional(),
+}).strict();
+
+// application/use-cases/issue-invoice.ts: valida en el borde del caso de uso
+export class IssueInvoice {
+  async execute(raw: unknown) {
+    const input = IssueInvoiceInput.parse(raw);        // nada inválido pasa de aquí
+    return this.uow.run(async () => { /* crédito, consecutivo, inventario, cartera, asiento, outbox */ });
+  }
+}
+
+// presentation/http/invoices.controller.ts: solo traduce
+@Post(':invoiceId/issue') @HttpCode(202) @RequiredScopes('invoices:issue')
+issue(@Param('invoiceId') invoiceId: string, @Headers('idempotency-key') key?: string) {
+  return this.issueInvoice.execute({ invoiceId, idempotencyKey: key });
 }
 ```
 
@@ -213,6 +234,5 @@ export class InvoicesController {
 | Instantánea del OpenAPI | Ningún cambio de API pasa sin revisión |
 | *Diff* de cambios incompatibles | Los clientes existentes no se rompen |
 | Pruebas de esquema en integración | Las respuestas reales cumplen el esquema declarado (validador en las pruebas de integración) |
-| Contrato con Asia-POP | Mismo esquema validado de ambos lados (`asia-pop-render.v1.draft.yaml`) |
-| Contrato de la fachada Alegra | Pasa la suite del servidor simulado de Asia-POP |
+| Contrato con un consumidor externo | Los esquemas de `contracts` publicados se validan contra respuestas reales en pruebas de integración |
 | Seguridad | Cada endpoint exige el alcance declarado; ninguna ruta de `/public/*` devuelve campos internos (prueba de «lista blanca» de campos) |

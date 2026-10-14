@@ -10,10 +10,10 @@ reglas: [`../02-normativa-y-reglas/`](../02-normativa-y-reglas/)
 
 | Tema | Convención |
 |---|---|
-| Esquemas | Un **esquema PostgreSQL por módulo** (`iam`, `core`, `parties`, `catalog`, `tax`, `inventory`, `sales`, `purchases`, `acc`, `arap`, `lending`, `einv`, `doc`, `integ`, `audit`, `jobs`). Refuerza la regla D-4 (ningún módulo toca tablas ajenas) con permisos de base de datos |
+| Esquemas | Un **esquema PostgreSQL por módulo** (`iam`, `core`, `parties`, `catalog`, `tax`, `inventory`, `sales`, `purchases`, `acc`, `arap`, `einv`, `doc`, `integ`, `audit`, `jobs`). Refuerza la regla D-4 (ningún módulo toca tablas ajenas) con permisos de base de datos |
 | Nombres | `snake_case`, tablas en singular (`journal_entry`) |
 | Clave primaria | `id uuid` (UUID v7: ordenable por tiempo, buena localidad de índice) |
-| Multiempresa | `company_id uuid NOT NULL` en toda tabla de negocio; RLS activa (ADR-0002); unicidad siempre `(company_id, …)` |
+| Multiempresa | `tenant_id uuid NOT NULL` en toda tabla de negocio; RLS activa (ADR-0002); unicidad siempre `(tenant_id, …)` |
 | Auditoría de fila | `created_at timestamptz`, `created_by uuid`, `updated_at`, `updated_by`; `version int` para bloqueo optimista en agregados editables |
 | Dinero | `numeric(18,2)` (COP, 2 decimales). **Nunca** `float`/`money` |
 | Costo unitario | `numeric(18,6)` |
@@ -32,11 +32,11 @@ Los diagramas muestran las columnas más relevantes, no todas.
 
 ```mermaid
 erDiagram
-    COMPANY ||--o{ APP_USER : "tiene miembros"
-    COMPANY ||--o{ API_KEY : "emite"
-    COMPANY ||--o{ PARTY : "registra"
-    COMPANY ||--o{ ITEM : "vende"
-    COMPANY ||--o{ BRANCH : "opera en"
+    TENANT ||--o{ APP_USER : "tiene miembros"
+    TENANT ||--o{ API_KEY : "emite"
+    TENANT ||--o{ PARTY : "registra"
+    TENANT ||--o{ ITEM : "vende"
+    TENANT ||--o{ BRANCH : "opera en"
     APP_USER }o--o{ ROLE : "asignado"
     ROLE ||--o{ ROLE_PERMISSION : "concede"
     PARTY ||--o{ PARTY_ADDRESS : "tiene"
@@ -50,7 +50,7 @@ erDiagram
     TAX ||--o{ ITEM : "grava"
     WITHHOLDING_CONCEPT ||--o{ TAX_RATE : "aplica a"
 
-    COMPANY {
+    TENANT {
         uuid id PK
         text legal_name
         text nit
@@ -64,14 +64,14 @@ erDiagram
     }
     APP_USER {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text email UK
         text password_hash
         bool mfa_enabled
     }
     API_KEY {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text key_prefix
         text key_hash
         text_array scopes
@@ -80,7 +80,7 @@ erDiagram
     }
     ROLE {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text name
     }
     ROLE_PERMISSION {
@@ -89,13 +89,13 @@ erDiagram
     }
     BRANCH {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text code
         text name
     }
     PARTY {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text kind "CUSTOMER, SUPPLIER, EMPLOYEE, OTHER"
         text id_type "NIT, CC, CE, PAS, ..."
         text id_number
@@ -128,7 +128,7 @@ erDiagram
     }
     ITEM_CATEGORY {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         uuid parent_id FK
         text name
     }
@@ -139,12 +139,17 @@ erDiagram
     }
     ITEM {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text sku UK
         text name
         text item_type "SIMPLE, KIT, VARIANT_PARENT, VARIANT, SERVICE"
         bool tracks_inventory
         bool tracks_lots
+        bool tracks_expiry "perecedero: obliga a FIFO"
+        text costing_method "WEIGHTED_AVERAGE, FIFO (nunca LIFO)"
+        text picking_policy "FEFO, FIFO, LIFO, MANUAL"
+        text abc_class "A, B, C (denormalizado de la última clasificación)"
+        numeric manual_daily_demand
         uuid tax_id FK
         uuid category_id FK
         uuid unit_id FK
@@ -158,7 +163,7 @@ erDiagram
     }
     PRICE_LIST {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text name
         bool includes_tax
     }
@@ -210,22 +215,33 @@ erDiagram
     ITEM ||--o{ STOCK_MOVEMENT : "mueve"
     LOT ||--o{ STOCK_MOVEMENT : "identifica"
     LOT ||--o{ STOCK_BALANCE : "existencia por lote"
-    ITEM ||--o{ ITEM_COST : "costo promedio"
+    ITEM ||--o| ITEM_COST : "costo promedio (WEIGHTED_AVERAGE)"
+    ITEM ||--o{ COST_LAYER : "capas PEPS (FIFO)"
+    STOCK_MOVEMENT ||--o| COST_LAYER : "una entrada crea una capa"
+    STOCK_MOVEMENT ||--o{ COST_LAYER_CONSUMPTION : "una salida consume capas"
+    COST_LAYER ||--o{ COST_LAYER_CONSUMPTION : "es consumida por"
     STOCK_MOVEMENT ||--o| STOCK_MOVEMENT : "reversa de"
     STOCK_RESERVATION }o--|| ITEM : "reserva"
     STOCK_RESERVATION }o--|| WAREHOUSE : "en"
+    ITEM ||--o{ ITEM_SUPPLIER : "se compra a"
+    ITEM ||--o{ ABC_CLASSIFICATION : "historial de clase"
+    ITEM ||--o| REORDER_METRICS : "punto de reorden vigente"
+    WAREHOUSE ||--o{ CYCLE_COUNT_TASK : "conteos"
+    CYCLE_COUNT_TASK ||--|{ CYCLE_COUNT_LINE : "líneas"
 
     WAREHOUSE {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         uuid branch_id FK
         text code UK
         text name
+        text kind "MAIN, DAMAGED, QUARANTINE, TRANSIT"
+        bool is_sellable "solo las vendibles suman al disponible"
         bool allows_negative_stock
     }
     LOT {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         uuid item_id FK
         text lot_code
         date manufactured_on
@@ -233,7 +249,7 @@ erDiagram
     }
     STOCK_MOVEMENT {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         uuid item_id FK
         uuid warehouse_id FK
         uuid lot_id FK
@@ -241,16 +257,18 @@ erDiagram
         text movement_type "PURCHASE_IN, SALE_OUT, TRANSFER_OUT, TRANSFER_IN, ADJUST_IN, ADJUST_OUT, RETURN_IN, RETURN_OUT"
         numeric quantity "siempre positiva"
         text direction "IN, OUT"
+        text condition "RESELLABLE, DAMAGED, EXPIRED (devoluciones)"
         numeric unit_cost "costo con que entró o salió"
         numeric total_cost
         numeric running_quantity "saldo después del movimiento"
         numeric running_value
         text source_type "documento origen"
         uuid source_id
+        uuid source_line_id
         uuid reversal_of FK
     }
     STOCK_BALANCE {
-        uuid company_id FK
+        uuid tenant_id FK
         uuid item_id FK
         uuid warehouse_id FK
         uuid lot_id FK
@@ -259,16 +277,38 @@ erDiagram
         timestamptz updated_at
     }
     ITEM_COST {
-        uuid company_id FK
+        uuid tenant_id FK
         uuid item_id FK
-        numeric quantity_on_hand "global de la empresa"
+        numeric quantity_on_hand "global del tenant"
         numeric total_value
         numeric avg_unit_cost "derivado: total_value / quantity"
         uuid last_movement_id FK
     }
+    COST_LAYER {
+        uuid id PK
+        uuid tenant_id FK
+        uuid item_id FK
+        uuid origin_movement_id FK
+        uuid lot_id FK
+        date received_on
+        numeric initial_quantity
+        numeric remaining_quantity "saldo derivado, mantenido bajo bloqueo"
+        numeric unit_cost
+    }
+    COST_LAYER_CONSUMPTION {
+        uuid id PK
+        uuid tenant_id FK
+        uuid movement_id FK "movimiento de salida o de reingreso"
+        uuid layer_id FK
+        text kind "CONSUME, RESTORE"
+        numeric quantity
+        numeric unit_cost
+        numeric amount
+        uuid restores_consumption_id FK
+    }
     STOCK_RESERVATION {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         uuid item_id FK
         uuid warehouse_id FK
         numeric quantity
@@ -276,7 +316,65 @@ erDiagram
         uuid source_id
         timestamptz expires_at
     }
+    ITEM_SUPPLIER {
+        uuid item_id FK
+        uuid supplier_id FK "party"
+        int agreed_lead_time_days
+        numeric min_order_quantity
+        bool is_preferred
+    }
+    ABC_CLASSIFICATION {
+        uuid id PK
+        uuid tenant_id FK
+        uuid item_id FK
+        date computed_on
+        int window_months
+        numeric consumption_value "Vi"
+        numeric share_percent
+        numeric cumulative_before_percent
+        text pareto_class "A, B, C"
+        numeric turns "vueltas por año"
+        text rotation_class "HIGH, MEDIUM, LOW"
+        text final_class "A, B, C"
+        text flag "NEW, NO_ROTATION"
+    }
+    REORDER_METRICS {
+        uuid tenant_id FK
+        uuid item_id FK
+        date computed_on
+        numeric avg_daily_demand "d"
+        numeric std_daily_demand
+        numeric lead_time_days "L"
+        numeric lead_time_std
+        numeric service_level
+        numeric z_value
+        numeric safety_stock "SS"
+        numeric reorder_point "ROP"
+        text confidence "NORMAL, LOW_CONFIDENCE"
+    }
+    CYCLE_COUNT_TASK {
+        uuid id PK
+        uuid tenant_id FK
+        uuid warehouse_id FK
+        text abc_class
+        date due_on
+        text status "OPEN, COUNTED, ADJUSTED, WAIVED"
+        timestamptz completed_at
+    }
+    CYCLE_COUNT_LINE {
+        uuid task_id FK
+        uuid item_id FK
+        uuid lot_id FK
+        numeric system_quantity
+        numeric counted_quantity
+        uuid adjustment_movement_id FK
+    }
 ```
+
+> `item_cost` aplica a ítems `WEIGHTED_AVERAGE`; `cost_layer` y `cost_layer_consumption` a ítems `FIFO`.
+> `stock_movement` y `cost_layer_consumption` son **de solo inserción** (constitución I); `remaining_quantity`
+> y `item_cost` son **saldos derivados** que se mantienen bajo bloqueo en la misma transacción que escribe el
+> movimiento y se concilian periódicamente (INV-13).
 
 ### 2.3 Ventas y compras
 
@@ -295,7 +393,7 @@ erDiagram
 
     NUMBERING_RANGE {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text doc_kind "INVOICE, CREDIT_NOTE, DEBIT_NOTE, SUPPORT_DOC, POS"
         text prefix
         bigint range_from
@@ -310,7 +408,7 @@ erDiagram
     }
     SALES_DOCUMENT {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text doc_type "QUOTE, ORDER, INVOICE, CREDIT_NOTE, DEBIT_NOTE, POS_TICKET"
         text status "DRAFT, ISSUED, TRANSMITTING, ACCEPTED, REJECTED, CANCELLED"
         uuid numbering_range_id FK
@@ -322,6 +420,8 @@ erDiagram
         uuid references_document_id FK
         text correction_concept_code
         text payment_form "CONTADO, CREDITO"
+        int payment_term_days
+        text credit_hold_status "NONE, HELD, RELEASED"
         text payment_method_code
         numeric subtotal
         numeric tax_total
@@ -344,6 +444,8 @@ erDiagram
         uuid warehouse_id FK
         uuid lot_id FK
         numeric unit_cost_at_sale "costo usado al emitir"
+        uuid references_line_id FK "línea original (notas crédito)"
+        text return_condition "RESELLABLE, DAMAGED, EXPIRED"
     }
     LINE_TAX {
         uuid line_id FK
@@ -371,7 +473,7 @@ erDiagram
     }
     PURCHASE_DOCUMENT {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text doc_type "PURCHASE_ORDER, SUPPLIER_INVOICE, SUPPORT_DOCUMENT, PURCHASE_RETURN"
         uuid supplier_id FK
         text supplier_document_number
@@ -409,7 +511,7 @@ erDiagram
 
     ACCOUNT {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text code UK "ej. 130505"
         text name
         uuid parent_id FK
@@ -423,7 +525,7 @@ erDiagram
     }
     FISCAL_PERIOD {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         int year
         int month
         date starts_on
@@ -434,10 +536,10 @@ erDiagram
     }
     VOUCHER_TYPE {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text code "FV, NC, RC, CE, NOT, AJ ..."
         text name
-        text numbering_scope "COMPANY, YEAR"
+        text numbering_scope "TENANT, YEAR"
     }
     VOUCHER_SEQUENCE {
         uuid voucher_type_id FK
@@ -446,13 +548,13 @@ erDiagram
     }
     JOURNAL_ENTRY {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         uuid voucher_type_id FK
         bigint number
         date accounting_date
         uuid fiscal_period_id FK
         text description
-        text source_type "SALES_DOCUMENT, RECEIPT, LOAN, MANUAL ..."
+        text source_type "SALES_DOCUMENT, RECEIPT, PURCHASE_DOCUMENT, STOCK_ADJUSTMENT, MANUAL ..."
         uuid source_id
         text status "POSTED"
         uuid reversal_of FK
@@ -477,13 +579,13 @@ erDiagram
     }
     COST_CENTER {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text code
         text name
     }
     POSTING_RULE {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text event_type "InvoiceIssued, CreditNoteIssued, ReceiptRegistered ..."
         text concept "REVENUE, VAT_OUTPUT, RECEIVABLE, COGS, INVENTORY ..."
     }
@@ -496,7 +598,7 @@ erDiagram
     }
 ```
 
-### 2.5 Cartera, préstamos, factura electrónica e integración
+### 2.5 Cartera y crédito, factura electrónica e integración
 
 ```mermaid
 erDiagram
@@ -504,17 +606,16 @@ erDiagram
     RECEIPT ||--|{ RECEIPT_ALLOCATION : "se aplica a"
     SALES_DOCUMENT ||--o{ RECEIPT_ALLOCATION : "recibe abono"
     PARTY ||--o{ COLLECTION_ACTION : "gestión de cobro"
-    PARTY ||--o{ LOAN : "deudor o acreedor"
-    LOAN ||--|{ LOAN_SCHEDULE_ITEM : "cronograma"
-    LOAN ||--o{ LOAN_PAYMENT : "pagos"
+    PARTY ||--o| CUSTOMER_CREDIT_SNAPSHOT : "estado de crédito vigente"
+    SALES_DOCUMENT ||--o| CREDIT_HOLD : "retención por crédito"
     SALES_DOCUMENT ||--o{ EINVOICE_SUBMISSION : "transmisiones"
-    EINVOICE_SUBMISSION ||--o{ EINVOICE_EVENT : "respuestas DIAN"
+    EINVOICE_SUBMISSION ||--o{ EINVOICE_EVENT : "respuestas del PTA y la DIAN"
     WEBHOOK_ENDPOINT ||--o{ WEBHOOK_DELIVERY : "entregas"
     OUTBOX_EVENT ||--o{ WEBHOOK_DELIVERY : "origina"
 
     RECEIPT {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text kind "CASH_RECEIPT, DISBURSEMENT"
         uuid party_id FK
         date receipt_date
@@ -523,6 +624,7 @@ erDiagram
         uuid bank_account_account_id FK
         numeric withholdings_suffered
         uuid journal_entry_id FK
+        uuid reversal_of FK "los recibos son de solo inserción"
     }
     RECEIPT_ALLOCATION {
         uuid receipt_id FK
@@ -538,45 +640,35 @@ erDiagram
         date promise_date
         numeric promise_amount
     }
-    LOAN {
-        uuid id PK
-        uuid company_id FK
-        text direction "GRANTED, RECEIVED"
+    CUSTOMER_CREDIT_SNAPSHOT {
+        uuid tenant_id FK
         uuid party_id FK
-        numeric principal
-        numeric periodic_rate_percent
-        text rate_basis "NOMINAL_PERIOD, EFFECTIVE_ANNUAL"
-        text amortization "FIXED_PAYMENT, FIXED_PRINCIPAL, BULLET"
-        int term_periods
-        text frequency "MONTHLY, ..."
-        date disbursement_date
-        text status
+        numeric credit_limit
+        numeric exposure "cartera + pedidos confirmados − anticipos"
+        numeric available_credit
+        int max_days_overdue
+        text status "AL_DIA, ALERTA, BLOQUEADO_CUPO, BLOQUEADO_MORA, SUSPENDIDO"
+        bool manually_suspended
+        timestamptz computed_at
     }
-    LOAN_SCHEDULE_ITEM {
+    CREDIT_HOLD {
         uuid id PK
-        uuid loan_id FK
-        int installment_no
-        date due_date
-        numeric principal_due
-        numeric interest_due
-        numeric total_due
-        numeric balance_after
-        numeric paid_amount
-    }
-    LOAN_PAYMENT {
-        uuid id PK
-        uuid loan_id FK
-        date paid_on
-        numeric principal_paid
-        numeric interest_paid
-        numeric late_interest_paid
-        uuid journal_entry_id FK
+        uuid tenant_id FK
+        uuid document_id FK
+        text cause "CREDIT_LIMIT, OVERDUE, SUSPENDED"
+        numeric exposure_at_hold
+        numeric limit_at_hold
+        numeric excess_amount
+        text status "HELD, RELEASED, CANCELLED"
+        uuid released_by
+        text release_reason
+        timestamptz released_at
     }
     EINVOICE_SUBMISSION {
         uuid id PK
         uuid document_id FK
         int attempt
-        text provider "adaptador usado"
+        text provider "adaptador usado (PTA)"
         text status "PENDING, SENT, ACCEPTED, ACCEPTED_WITH_NOTES, REJECTED, ERROR"
         text cufe
         uuid xml_file_id FK
@@ -595,25 +687,16 @@ erDiagram
     }
     OUTBOX_EVENT {
         uuid id PK
-        uuid company_id FK
-        text event_type "invoice.issued, invoice.accepted, stock.changed ..."
+        uuid tenant_id FK
+        text event_type "invoice.issued, invoice.accepted, stock.changed, credit.hold.created ..."
         jsonb payload
         text status "PENDING, DONE, FAILED"
         timestamptz available_at
         int attempts
     }
-    REFERENCE_RATE {
-        uuid id PK
-        text modality "CONSUMO_ORDINARIO, MICROCREDITO ..."
-        numeric ibc_percent_ea "interés bancario corriente"
-        numeric usury_percent_ea "límite de usura"
-        date valid_from
-        date valid_to
-        text source_reference
-    }
     WEBHOOK_ENDPOINT {
         uuid id PK
-        uuid company_id FK
+        uuid tenant_id FK
         text url
         text secret_hash
         text_array event_types
@@ -629,8 +712,12 @@ erDiagram
     }
 ```
 
+> `customer_credit_snapshot` es un **saldo derivado** (no editable): se recalcula en la misma transacción de
+> cada evento que cambie exposición o mora (factura, recibo, nota crédito, pedido) y se concilia contra el libro
+> mayor (INV-14, R-CAR-001/008). `credit_limit` y `payment_term_days` viven en `parties.party`.
+
 Tablas transversales sin diagrama: `audit.audit_log`, `jobs.idempotency_key` (clave, hash del cuerpo,
-respuesta, expiración), `doc.template_ref` (qué plantilla de Asia-POP usa cada tipo de documento por
+respuesta, expiración), `doc.document_template` (plantilla fija del renderizador mínimo y su versión, por tipo de documento y por
 empresa), `files.stored_file` (objeto en almacenamiento, hash SHA-256, tipo, tamaño).
 
 ## 3. Invariantes y cómo se imponen
@@ -641,13 +728,17 @@ empresa), `files.stored_file` (objeto en almacenamiento, hash SHA-256, tipo, tam
 | INV-02 | Una línea tiene débito **o** crédito, positivo | R-CON-002 | `CHECK ((debit > 0) <> (credit > 0))` y `CHECK (debit >= 0 AND credit >= 0)` |
 | INV-03 | Solo se contabiliza en cuentas auxiliares activas | R-CON-003 | FK + *trigger* que verifica `allows_posting` |
 | INV-04 | No se contabiliza en períodos cerrados | R-CON-004 | *Trigger* en `journal_entry` contra `fiscal_period.status` |
-| INV-05 | Los comprobantes son inmutables | R-CON-005 | *Trigger* que rechaza `UPDATE`/`DELETE` en `journal_entry` y `journal_line` (salvo el campo `reversed_by`, solo hacia adelante) |
-| INV-06 | Consecutivos sin saltos ni duplicados | R-CON-006, R-FE-004 | `UNIQUE (company_id, voucher_type_id, number)` + asignación con `SELECT … FOR UPDATE` en la misma transacción |
-| INV-07 | El movimiento de stock es inmutable; la corrección es un movimiento inverso | R-INV-004 | *Trigger* análogo a INV-05 en `stock_movement` |
+| INV-05 | Los comprobantes son inmutables | R-CON-005, constitución I | (1) el rol de la aplicación NO tiene `UPDATE`/`DELETE` sobre `journal_entry`/`journal_line`; (2) *trigger* que rechaza la mutación (salvo el campo `reversed_by`, solo hacia adelante) |
+| INV-06 | Consecutivos sin saltos ni duplicados | R-CON-006, R-FE-004 | `UNIQUE (tenant_id, voucher_type_id, number)` + asignación con `SELECT … FOR UPDATE` en la misma transacción |
+| INV-07 | El movimiento de stock y el consumo de capas son inmutables; la corrección es un movimiento inverso | R-INV-004, constitución I | Privilegios y *trigger* análogos a INV-05 en `stock_movement` y `cost_layer_consumption` |
 | INV-08 | No hay stock negativo salvo bodega que lo permita | R-INV-007 | `CHECK (on_hand >= 0)` condicional vía *trigger* sobre `stock_balance` |
 | INV-09 | Un documento aceptado por la DIAN no se modifica; se corrige con nota crédito/débito | R-FE-009 | Máquina de estados en dominio + *trigger* sobre `sales_document` |
 | INV-10 | `Σ journal_line` por documento fuente coincide con los totales del documento | R-CON-007 | Prueba de integridad periódica (job de conciliación interna) |
-| INV-11 | Aislamiento por empresa | S-01 | RLS en todas las tablas de negocio |
+| INV-11 | Aislamiento por tenant | Constitución IV | RLS habilitada **y forzada** en todas las tablas de negocio; rol sin `BYPASSRLS` |
+| INV-12 | Una devolución no excede lo vendido (por línea, acumulado) | R-INV-040 | Caso de uso con bloqueo de la línea original + *trigger* de verificación sobre `references_line_id` |
+| INV-13 | Σ(`remaining_quantity` × `unit_cost`) de las capas = valor del inventario contable; `item_cost.total_value` = Σ de movimientos | R-INV-015 | Trabajo de conciliación diaria; bloquea el cierre mensual |
+| INV-14 | La exposición de crédito del snapshot = recálculo desde cartera y pedidos | R-CAR-001, R-CAR-008 | Trabajo de conciliación diaria |
+| INV-15 | Ningún comprobante contabiliza fuera de la transacción del evento comercial | Constitución III | Pruebas de atomicidad (falla inyectada en cada paso) |
 
 ### 3.1 Intención de los *triggers* críticos (ilustrativa, no es el DDL final)
 
@@ -677,11 +768,13 @@ FOR EACH ROW EXECUTE FUNCTION acc.reject_mutation();
 
 ## 5. Índices y rendimiento (puntos de partida)
 
-- `journal_line (company_id, account_id, entry_id)` y `(company_id, party_id, account_id)` para libro mayor
+- `journal_line (tenant_id, account_id, entry_id)` y `(tenant_id, party_id, account_id)` para libro mayor
   y cartera por tercero.
-- `journal_entry (company_id, accounting_date)` para libros y balances por rango.
-- `stock_movement (company_id, item_id, warehouse_id, movement_date, id)` para kardex.
-- `sales_document (company_id, doc_type, prefix, number)` único; `(company_id, customer_id, status)`.
+- `journal_entry (tenant_id, accounting_date)` para libros y balances por rango.
+- `stock_movement (tenant_id, item_id, warehouse_id, movement_date, id)` para kardex.
+- `cost_layer (tenant_id, item_id, received_on, id) WHERE remaining_quantity > 0` (índice parcial) para consumir PEPS en orden.
+- `customer_credit_snapshot (tenant_id, status)` y `sales_document (tenant_id, customer_id, payment_form, status)` para cartera y cupo.
+- `sales_document (tenant_id, doc_type, prefix, number)` único; `(tenant_id, customer_id, status)`.
 - Búsqueda global: extensiones `pg_trgm` y `unaccent`, índices GIN sobre nombre/NIT/número.
 - **Particionamiento** por rango de fecha de `journal_line` y `stock_movement` cuando superen decenas de
   millones de filas; se decide por métricas, no desde el inicio.
@@ -700,3 +793,25 @@ FOR EACH ROW EXECUTE FUNCTION acc.reject_mutation();
 
 Las tablas oficiales de la DIAN cambian con las versiones del Anexo: se versionan en `docs/` como
 referencia y se cargan por migración de datos con fecha de vigencia.
+
+## 7. Notas de implementación con Prisma
+
+Prisma es el ORM definitivo (ADR-0004). Lo que el modelo exige y Prisma no expresa en `schema.prisma` se
+implementa en **migraciones SQL escritas a mano** (`prisma migrate dev --create-only` y edición del SQL antes
+de aplicarla), versionadas y revisadas:
+
+| Necesidad | Cómo se resuelve |
+|---|---|
+| Un esquema PostgreSQL por módulo | Soporte multiesquema de Prisma (verificar su estado en el spike S-PRISMA) o, si fallara, un solo esquema con prefijo de tabla y privilegios por tabla |
+| RLS, `FORCE ROW LEVEL SECURITY`, políticas por `tenant_id` | SQL en la migración; el rol de la aplicación sin `BYPASSRLS` |
+| `REVOKE UPDATE, DELETE` y *triggers* de inmutabilidad | SQL en la migración (constitución I) |
+| *Constraint triggers* diferidos (asiento cuadrado) | SQL en la migración |
+| Índices parciales, GIN (`pg_trgm`), expresiones | SQL en la migración |
+| `SELECT … FOR UPDATE` (consecutivos, stock, capas, cupo) | `tx.$queryRaw` dentro de la **misma** transacción interactiva |
+| `set_config('app.tenant_id', …, true)` | `tx.$executeRaw` al inicio de cada `$transaction` (en el `UnitOfWork`) |
+| `NUMERIC` sin pérdida | Prisma lo mapea a `Decimal` (basado en decimal.js); el *mapper* de `infrastructure` lo convierte a `Money`/`Quantity` del dominio |
+| Tiempo de espera de la transacción | Configurar `timeout`, `maxWait` e `isolationLevel` **explícitamente**; el valor por defecto de las transacciones interactivas es corto (≈ 5 s) |
+
+Regla: **ningún tipo generado por Prisma sale de `infrastructure/persistence`** (D-4); el cliente de Prisma
+solo se instancia en el *composition root*.
+

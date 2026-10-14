@@ -82,7 +82,7 @@ Quedan **fuera del MVP**, pero `tax.kind` y el código DIAN por impuesto permite
 
 ### R-IMP-010 · Quién retiene
 Retiene el **agente de retención** (personas jurídicas, ciertas personas naturales comerciantes, entidades
-públicas…). `company.is_withholding_agent` y las responsabilidades RUT del tercero determinan si hay retención
+públicas…). `tenant.is_withholding_agent` y las responsabilidades RUT del tercero determinan si hay retención
 en cada documento.
 - **Fuente:** ET art. 368 🔶.
 

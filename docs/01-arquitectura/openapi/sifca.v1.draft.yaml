@@ -40,7 +40,7 @@ tags:
   - name: Storefront
     description: API pública de la vitrina (sin autenticación).
   - name: Integrations
-    description: Webhooks, alimentador de catálogo y fachada de compatibilidad.
+    description: Webhooks, alimentador de catálogo y datos de render para motores externos.
 security:
   - bearerAuth: []
   - apiKeyAuth: []
@@ -398,7 +398,7 @@ paths:
       description: Solo ítems publicados. Nunca expone costos ni datos internos. Con límite de tasa por IP.
       security: []
       parameters:
-        - name: companySlug
+        - name: tenantSlug
           in: query
           required: true
           schema: { type: string, maxLength: 60 }
@@ -453,7 +453,7 @@ paths:
     get:
       tags: [Integrations]
       operationId: integrations_catalog_feed_items
-      summary: Alimentador de catálogo para Asia-POP y otros consumidores
+      summary: Alimentador de catálogo para motores externos de catálogos y reportes
       description: |
         Entrega los ítems con la información necesaria para generar catálogos: precio con IVA explícito, imágenes
         con URL firmada, disponible, tipo y componentes de kits. **Sin costos.**
@@ -517,90 +517,233 @@ paths:
               schema: { $ref: "#/components/schemas/WebhookEndpointCreated" }
         default: { $ref: "#/components/responses/Problem" }
 
-  /compat/alegra/v1/company:
-    get:
-      tags: [Integrations]
-      operationId: compat_alegra_company
-      summary: "[Compatibilidad Alegra] Validación de credenciales"
-      description: Solo lectura. Autenticación HTTP Basic con el identificador y el secreto de una API Key.
-      security:
-        - basicAuthApiKey: []
-      responses:
-        "200":
-          description: Credenciales válidas.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id: { type: string }
-                  name: { type: string }
-        "401": { $ref: "#/components/responses/Problem" }
-  /compat/alegra/v1/item-categories:
-    get:
-      tags: [Integrations]
-      operationId: compat_alegra_item_categories
-      summary: "[Compatibilidad Alegra] Categorías de ítems"
-      security:
-        - basicAuthApiKey: []
-      parameters:
-        - $ref: "#/components/parameters/AlegraStart"
-        - $ref: "#/components/parameters/AlegraLimit"
-      responses:
-        "200":
-          description: Arreglo de categorías (página corta = fin).
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id: { type: string }
-                    name: { type: string }
-                    status: { type: string }
-                    parent:
-                      oneOf:
-                        - type: "null"
-                        - type: object
-                          properties:
-                            id: { type: string }
-        "401": { $ref: "#/components/responses/Problem" }
-        "429": { $ref: "#/components/responses/Problem" }
-  /compat/alegra/v1/items:
-    get:
-      tags: [Integrations]
-      operationId: compat_alegra_items
-      summary: "[Compatibilidad Alegra] Ítems activos"
+  /sales/orders/{orderId}/credit-release:
+    post:
+      tags: [Receivables]
+      operationId: sales_orders_credit_release
+      summary: Libera un pedido retenido por crédito
       description: |
-        Forma verificada contra lo que consume Asia-POP. `inventory.availableQuantity` es el **disponible**.
-        Las fotos incluyen `favorite` y `url` firmada accesible sin credenciales.
-      security:
-        - basicAuthApiKey: []
+        Un pedido o factura a crédito queda en `CREDIT_HOLD` cuando excede el cupo o el cliente está en mora
+        (R-CAR-012). Liberarlo exige permiso, **motivo obligatorio** y queda en la bitácora.
+      x-required-scopes: ["credit:release"]
       parameters:
-        - name: status
-          in: query
-          schema: { type: string, enum: [active, inactive] }
-        - name: mode
-          in: query
-          schema: { type: string, enum: [simple, advanced] }
-        - $ref: "#/components/parameters/AlegraStart"
-        - $ref: "#/components/parameters/AlegraLimit"
+        - name: orderId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason: { type: string, minLength: 5, maxLength: 500 }
       responses:
         "200":
-          description: Arreglo de ítems (página corta = fin).
+          description: Pedido liberado.
+        "409": { $ref: "#/components/responses/Problem" }
+        default: { $ref: "#/components/responses/Problem" }
+
+  /sales/invoices/{invoiceId}/render-data:
+    get:
+      tags: [Integrations]
+      operationId: sales_invoices_render_data
+      summary: Datos canónicos del documento para un motor externo de renderizado
+      description: |
+        Entrega el documento ya calculado (importes como cadenas decimales) para que **cualquier motor externo**
+        genere su representación gráfica. SIFCA no invoca al motor: este lo consume (p. ej. al recibir el
+        webhook `invoice.accepted`).
+      x-required-scopes: ["documents:read"]
+      parameters:
+        - $ref: "#/components/parameters/InvoiceId"
+      responses:
+        "200":
+          description: Documento canónico.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CanonicalDocument" }
+        "404": { $ref: "#/components/responses/Problem" }
+        default: { $ref: "#/components/responses/Problem" }
+
+  /sales/invoices/{invoiceId}/rendered-documents/{kind}:
+    put:
+      tags: [Integrations]
+      operationId: sales_invoices_rendered_document_put
+      summary: Adjunta un PDF generado por un motor externo
+      description: |
+        Permite que un motor externo devuelva la representación gráfica. Solo se acepta para facturas
+        aceptadas; se guarda con su hash SHA-256 y no reemplaza al XML firmado (que es el documento legal).
+      x-required-scopes: ["documents:write"]
+      parameters:
+        - $ref: "#/components/parameters/InvoiceId"
+        - name: kind
+          in: path
+          required: true
+          schema: { type: string, enum: [PDF_ALTERNATE] }
+      requestBody:
+        required: true
+        content:
+          application/pdf:
+            schema: { type: string, format: binary }
+      responses:
+        "204":
+          description: Adjunto guardado.
+        "409": { $ref: "#/components/responses/Problem" }
+        default: { $ref: "#/components/responses/Problem" }
+
+  /receivables/customers/{partyId}/credit:
+    get:
+      tags: [Receivables]
+      operationId: receivables_customer_credit_get
+      summary: Cupo, exposición, mora y estado de crédito de un cliente
+      x-required-scopes: ["credit:read"]
+      parameters:
+        - $ref: "#/components/parameters/PartyId"
+      responses:
+        "200":
+          description: Estado de crédito.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerCredit" }
+        default: { $ref: "#/components/responses/Problem" }
+
+  /parties/{partyId}/credit-terms:
+    put:
+      tags: [Parties]
+      operationId: parties_credit_terms_put
+      summary: Define el cupo de crédito y el plazo de pago de un cliente
+      description: Exige permiso y deja el valor anterior y el nuevo en la bitácora (R-CAR-015).
+      x-required-scopes: ["credit:write"]
+      parameters:
+        - $ref: "#/components/parameters/PartyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreditTermsInput" }
+      responses:
+        "200":
+          description: Condiciones actualizadas.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CustomerCredit" }
+        default: { $ref: "#/components/responses/Problem" }
+
+  /inventory/items/{itemId}/costing:
+    get:
+      tags: [Inventory]
+      operationId: inventory_item_costing_get
+      summary: Método de costeo, valor y capas (PEPS) o promedio de un ítem
+      x-required-scopes: ["inventory:read"]
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Costeo del ítem.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ItemCosting" }
+        default: { $ref: "#/components/responses/Problem" }
+
+  /inventory/abc:
+    get:
+      tags: [Inventory]
+      operationId: inventory_abc_list
+      summary: Clasificación ABC vigente (Pareto por valor de consumo y rotación)
+      x-required-scopes: ["inventory:read"]
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+        - name: finalClass
+          in: query
+          schema: { type: string, enum: [A, B, C] }
+      responses:
+        "200":
+          description: Página de clasificaciones.
           content:
             application/json:
               schema:
-                type: array
-                items: { $ref: "#/components/schemas/AlegraCompatItem" }
-        "400":
-          description: "`limit` mayor que 30."
+                allOf:
+                  - $ref: "#/components/schemas/PageEnvelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/AbcRow" }
+        default: { $ref: "#/components/responses/Problem" }
+
+  /inventory/reorder:
+    get:
+      tags: [Inventory]
+      operationId: inventory_reorder_list
+      summary: Punto de reorden, stock de seguridad, posición y cantidad sugerida
+      x-required-scopes: ["inventory:read"]
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+        - name: belowReorderPoint
+          in: query
+          description: Solo ítems con posición de inventario menor o igual al punto de reorden.
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Página de métricas de reposición.
           content:
-            application/problem+json:
-              schema: { $ref: "#/components/schemas/Problem" }
-        "401": { $ref: "#/components/responses/Problem" }
-        "429": { $ref: "#/components/responses/Problem" }
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageEnvelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: "#/components/schemas/ReorderRow" }
+        default: { $ref: "#/components/responses/Problem" }
+
+  /purchases/bills/{billId}/returns:
+    post:
+      tags: [Inventory]
+      operationId: purchases_bill_returns_create
+      summary: Registra una devolución a proveedor
+      description: |
+        Sale de kardex al costo correspondiente (promedio: costo de la compra original; PEPS: capa de esa
+        entrada), reduce la cuenta por pagar y reversa IVA descontable y retenciones en proporción (R-INV-045).
+      x-required-scopes: ["purchases:write"]
+      parameters:
+        - name: billId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [lines]
+              properties:
+                reason: { type: string, maxLength: 500 }
+                lines:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required: [billLineNo, quantity]
+                    properties:
+                      billLineNo: { type: integer }
+                      quantity: { $ref: "#/components/schemas/Decimal" }
+      responses:
+        "201":
+          description: Devolución registrada.
+        "409": { $ref: "#/components/responses/Problem" }
+        default: { $ref: "#/components/responses/Problem" }
 
 webhooks:
   invoice.accepted:
@@ -609,6 +752,37 @@ webhooks:
       description: |
         Entrega firmada con `SIFCA-Signature`. Reintentos con retroceso exponencial hasta 24 h. Al menos una
         vez; el receptor debe deduplicar por `id`.
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/WebhookEvent" }
+      responses:
+        "2XX":
+          description: Recibido.
+
+  return.received:
+    post:
+      summary: Se emitió una nota crédito con reingreso al kardex
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/WebhookEvent" }
+      responses:
+        "2XX":
+          description: Recibido.
+  credit.hold.created:
+    post:
+      summary: Un documento quedó retenido por cupo excedido o mora
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/WebhookEvent" }
+      responses:
+        "2XX":
+          description: Recibido.
+  inventory.reorder.required:
+    post:
+      summary: La posición de inventario de un ítem cruzó su punto de reorden
       requestBody:
         content:
           application/json:
@@ -629,10 +803,6 @@ components:
       in: header
       name: X-API-Key
       description: API Key de integración; sus alcances (scopes) limitan lo que puede hacer.
-    basicAuthApiKey:
-      type: http
-      scheme: basic
-      description: Solo para la fachada de compatibilidad. Usuario = id de la API Key; contraseña = secreto.
 
   parameters:
     Limit:
@@ -660,15 +830,6 @@ components:
       in: path
       required: true
       schema: { type: string, format: uuid }
-    AlegraStart:
-      name: start
-      in: query
-      schema: { type: integer, minimum: 0, default: 0 }
-    AlegraLimit:
-      name: limit
-      in: query
-      description: Máximo 30 (igual que Alegra).
-      schema: { type: integer, minimum: 1, maximum: 30, default: 30 }
 
   responses:
     Problem:
@@ -698,7 +859,7 @@ components:
         code:
           type: string
           description: Código estable legible por máquina.
-          examples: [INSUFFICIENT_STOCK, NUMBERING_RANGE_EXHAUSTED, PERIOD_CLOSED, VALIDATION_FAILED]
+          examples: [INSUFFICIENT_STOCK, NUMBERING_RANGE_EXHAUSTED, PERIOD_CLOSED, VALIDATION_FAILED, CREDIT_LIMIT_EXCEEDED, CUSTOMER_BLOCKED_OVERDUE, RETURN_EXCEEDS_SOLD, COSTING_METHOD_NOT_ALLOWED]
         requestId: { type: string }
         errors:
           type: array
@@ -743,6 +904,9 @@ components:
           examples: [["O-13", "O-15"]]
         isIncomeDeclarant: { type: boolean }
         isWithholdingAgent: { type: boolean }
+        creditLimit: { $ref: "#/components/schemas/Money" }
+        paymentTermDays: { type: integer, minimum: 0, maximum: 365 }
+        creditStatus: { $ref: "#/components/schemas/CreditStatus" }
     PartyInput:
       type: object
       required: [kind, idType, idNumber, legalName]
@@ -776,6 +940,10 @@ components:
         categoryId: { type: [string, "null"], format: uuid }
         tracksInventory: { type: boolean }
         tracksLots: { type: boolean }
+        tracksExpiry: { type: boolean, description: "Perecedero: obliga a costeo FIFO (R-INV-001)." }
+        costingMethod: { $ref: "#/components/schemas/CostingMethod" }
+        pickingPolicy: { $ref: "#/components/schemas/PickingPolicy" }
+        abcClass: { type: [string, "null"], enum: [A, B, C, null] }
         taxCode: { type: string, examples: [IVA19] }
         status: { type: string, enum: [ACTIVE, INACTIVE] }
         prices:
@@ -817,7 +985,7 @@ components:
       properties:
         customerId: { type: string, format: uuid }
         issueDate: { type: string, format: date }
-        paymentForm: { type: string, enum: [CASH, CREDIT] }
+        paymentForm: { type: string, enum: [CONTADO, CREDITO] }
         paymentTermDays: { type: integer, minimum: 0, maximum: 365 }
         paymentMethodCode: { type: string }
         numberingRangeId: { type: string, format: uuid }
@@ -858,6 +1026,8 @@ components:
         customerId: { type: string, format: uuid }
         issuedAt: { type: [string, "null"], format: date-time }
         dueDate: { type: [string, "null"], format: date }
+        paymentForm: { type: string, enum: [CONTADO, CREDITO] }
+        creditHoldStatus: { type: string, enum: [NONE, HELD, RELEASED] }
         subtotal: { $ref: "#/components/schemas/Money" }
         taxTotal: { $ref: "#/components/schemas/Money" }
         total: { $ref: "#/components/schemas/Money" }
@@ -889,15 +1059,27 @@ components:
           type: string
           description: Concepto de corrección de la tabla oficial (devolución, anulación, descuento…).
         reason: { type: string, maxLength: 500 }
+        writeOffOnReturn:
+          type: boolean
+          description: Si es `true`, lo averiado o vencido se da de baja en la misma transacción (R-INV-041).
+          default: false
         lines:
           type: array
           minItems: 1
           items:
             type: object
-            required: [invoiceLineNo, quantity]
+            required: [invoiceLineNo, quantity, condition]
             properties:
               invoiceLineNo: { type: integer }
-              quantity: { $ref: "#/components/schemas/Decimal" }
+              quantity:
+                allOf:
+                  - $ref: "#/components/schemas/Decimal"
+                description: Positiva y no mayor que lo vendido menos lo ya devuelto (R-INV-040).
+              condition:
+                type: string
+                enum: [RESELLABLE, DAMAGED, EXPIRED]
+                description: Estado del producto devuelto; decide a qué bodega reingresa.
+              warehouseId: { type: string, format: uuid }
     ReceiptInput:
       type: object
       required: [partyId, receiptDate, amount, paymentMethod, allocations]
@@ -998,9 +1180,9 @@ components:
         category: { type: [string, "null"] }
     PublicOrderInput:
       type: object
-      required: [companySlug, customer, lines]
+      required: [tenantSlug, customer, lines]
       properties:
-        companySlug: { type: string }
+        tenantSlug: { type: string }
         customer:
           type: object
           required: [name, email, phone]
@@ -1064,46 +1246,6 @@ components:
               itemId: { type: string }
               name: { type: string }
               quantity: { $ref: "#/components/schemas/Decimal" }
-    AlegraCompatItem:
-      type: object
-      required: [id, name]
-      properties:
-        id: { type: string }
-        name: { type: string }
-        description: { type: [string, "null"] }
-        status: { type: string }
-        type: { type: string, enum: [simple, kit, variantParent, variant] }
-        category:
-          type: [object, "null"]
-          properties:
-            id: { type: string }
-            name: { type: string }
-        price:
-          oneOf:
-            - type: number
-            - type: array
-              items:
-                type: object
-                properties:
-                  idPriceList: { type: [string, integer] }
-                  price: { type: number }
-                  name: { type: string }
-        images:
-          type: array
-          items:
-            type: object
-            properties:
-              id: { type: [string, integer] }
-              name: { type: string }
-              url: { type: string, format: uri }
-              favorite: { type: boolean }
-        inventory:
-          type: [object, "null"]
-          properties:
-            quantity: { type: [number, "null"] }
-            availableQuantity: { type: [number, "null"] }
-            trackInventory: { type: boolean }
-        trackInventory: { type: boolean }
     WebhookEndpointInput:
       type: object
       required: [url, eventTypes]
@@ -1121,6 +1263,14 @@ components:
               - stock.changed
               - order.created
               - receipt.registered
+              - return.received
+              - credit.limit.warning
+              - credit.limit.exceeded
+              - credit.hold.created
+              - credit.hold.released
+              - receivable.overdue
+              - inventory.reorder.required
+              - inventory.abc.reclassified
         description: { type: string, maxLength: 200 }
     WebhookEndpoint:
       allOf:
@@ -1146,8 +1296,196 @@ components:
         id: { type: string, format: uuid, description: Identificador del evento (para deduplicar). }
         type: { type: string, examples: [invoice.accepted] }
         createdAt: { type: string, format: date-time }
-        companyId: { type: string, format: uuid }
+        tenantId: { type: string, format: uuid }
         data:
           type: object
           description: Cuerpo mínimo del recurso; use la API para obtener el detalle.
           additionalProperties: true
+    CreditStatus:
+      type: string
+      enum: [AL_DIA, ALERTA, BLOQUEADO_CUPO, BLOQUEADO_MORA, SUSPENDIDO]
+    CreditTermsInput:
+      type: object
+      required: [creditLimit, paymentTermDays]
+      properties:
+        creditLimit:
+          allOf:
+            - $ref: "#/components/schemas/Money"
+          description: Cupo máximo de exposición; `"0.00"` = sin crédito (solo contado). No puede ser negativo.
+        paymentTermDays: { type: integer, minimum: 0, maximum: 365 }
+        suspended: { type: boolean }
+        reason: { type: string, maxLength: 500 }
+    CustomerCredit:
+      type: object
+      required: [partyId, creditLimit, exposure, availableCredit, status]
+      properties:
+        partyId: { type: string, format: uuid }
+        creditLimit: { $ref: "#/components/schemas/Money" }
+        paymentTermDays: { type: integer }
+        exposure:
+          allOf:
+            - $ref: "#/components/schemas/Money"
+          description: Cartera pendiente + pedidos a crédito confirmados sin facturar − saldos a favor (R-CAR-008).
+        availableCredit: { $ref: "#/components/schemas/Money" }
+        maxDaysOverdue: { type: integer, minimum: 0 }
+        status: { $ref: "#/components/schemas/CreditStatus" }
+        agingBuckets:
+          type: array
+          items:
+            type: object
+            required: [label, amount]
+            properties:
+              label: { type: string, enum: [Corriente, "30", "60", "90", "90+"] }
+              amount: { $ref: "#/components/schemas/Money" }
+    CostingMethod:
+      type: string
+      enum: [WEIGHTED_AVERAGE, FIFO]
+      description: |
+        Método de costeo financiero. **LIFO/UEPS no es un valor válido**: solo existe como política de
+        despacho físico (R-INV-001, R-INV-017).
+    PickingPolicy:
+      type: string
+      enum: [FEFO, FIFO, LIFO, MANUAL]
+      description: Política de despacho físico; no afecta el costeo.
+    ItemCosting:
+      type: object
+      required: [itemId, costingMethod, quantityOnHand, totalValue]
+      properties:
+        itemId: { type: string, format: uuid }
+        costingMethod: { $ref: "#/components/schemas/CostingMethod" }
+        quantityOnHand: { $ref: "#/components/schemas/Decimal" }
+        totalValue: { $ref: "#/components/schemas/Money" }
+        averageUnitCost:
+          type: [string, "null"]
+          description: Solo en `WEIGHTED_AVERAGE`; derivado de `totalValue / quantityOnHand` (6 decimales).
+        layers:
+          type: array
+          description: Solo en `FIFO`; capas con saldo, en orden de consumo.
+          items:
+            type: object
+            required: [receivedOn, remainingQuantity, unitCost]
+            properties:
+              receivedOn: { type: string, format: date }
+              lotCode: { type: [string, "null"] }
+              remainingQuantity: { $ref: "#/components/schemas/Decimal" }
+              unitCost: { $ref: "#/components/schemas/Decimal" }
+    AbcRow:
+      type: object
+      required: [itemId, consumptionValue, paretoClass, finalClass]
+      properties:
+        itemId: { type: string, format: uuid }
+        computedOn: { type: string, format: date }
+        consumptionValue: { $ref: "#/components/schemas/Money" }
+        sharePercent: { $ref: "#/components/schemas/Decimal" }
+        cumulativeBeforePercent: { $ref: "#/components/schemas/Decimal" }
+        paretoClass: { type: string, enum: [A, B, C] }
+        turns: { $ref: "#/components/schemas/Decimal" }
+        rotationClass: { type: string, enum: [HIGH, MEDIUM, LOW] }
+        finalClass: { type: string, enum: [A, B, C] }
+        flag: { type: [string, "null"], enum: [NEW, NO_ROTATION, null] }
+    ReorderRow:
+      type: object
+      required: [itemId, reorderPoint, position]
+      properties:
+        itemId: { type: string, format: uuid }
+        avgDailyDemand: { $ref: "#/components/schemas/Decimal" }
+        leadTimeDays: { $ref: "#/components/schemas/Decimal" }
+        serviceLevel: { $ref: "#/components/schemas/Decimal" }
+        safetyStock: { $ref: "#/components/schemas/Decimal" }
+        reorderPoint:
+          allOf:
+            - $ref: "#/components/schemas/Decimal"
+          description: "ROP = d × L + SS (R-INV-032)."
+        position:
+          allOf:
+            - $ref: "#/components/schemas/Decimal"
+          description: Disponible + cantidades en órdenes de compra abiertas (R-INV-033).
+        suggestedOrderQuantity: { $ref: "#/components/schemas/Decimal" }
+        confidence: { type: string, enum: [NORMAL, LOW_CONFIDENCE] }
+    CanonicalDocument:
+      type: object
+      description: Documento ya calculado; los importes son cadenas decimales (SIFCA es quien suma y redondea).
+      required: [issuer, document, lines, totals]
+      properties:
+        issuer: { $ref: "#/components/schemas/DocumentParty" }
+        customer: { $ref: "#/components/schemas/DocumentParty" }
+        document:
+          type: object
+          required: [kind, fullNumber, issuedAt, currency]
+          properties:
+            kind: { type: string, enum: [invoice, credit_note, debit_note, quote, receipt, account_statement] }
+            prefix: { type: string }
+            number: { type: string }
+            fullNumber: { type: string }
+            issuedAt: { type: string, format: date-time }
+            dueDate: { type: string, format: date }
+            paymentForm: { type: string, enum: [CONTADO, CREDITO] }
+            paymentMethod: { type: string }
+            currency: { type: string, enum: [COP] }
+            notes: { type: string }
+        lines:
+          type: array
+          items:
+            type: object
+            required: [lineNo, description, quantity, unitPrice, lineTotal]
+            properties:
+              lineNo: { type: integer }
+              code: { type: string }
+              description: { type: string }
+              unit: { type: string }
+              quantity: { $ref: "#/components/schemas/Decimal" }
+              unitPrice: { $ref: "#/components/schemas/Decimal" }
+              discount: { $ref: "#/components/schemas/Decimal" }
+              lineTotal: { $ref: "#/components/schemas/Decimal" }
+        totals:
+          type: object
+          required: [subtotal, total, payable]
+          properties:
+            subtotal: { $ref: "#/components/schemas/Decimal" }
+            discounts: { $ref: "#/components/schemas/Decimal" }
+            taxes:
+              type: array
+              items:
+                type: object
+                properties:
+                  name: { type: string }
+                  base: { $ref: "#/components/schemas/Decimal" }
+                  amount: { $ref: "#/components/schemas/Decimal" }
+            total: { $ref: "#/components/schemas/Decimal" }
+            payable: { $ref: "#/components/schemas/Decimal" }
+            amountInWords: { type: string }
+        fiscal:
+          type: object
+          description: Obligatorio en documentos electrónicos de la DIAN.
+          properties:
+            cufe: { type: string }
+            qrData: { type: string }
+            qrUrl: { type: string, format: uri }
+            validatedAt: { type: string, format: date-time }
+            numbering:
+              type: object
+              properties:
+                resolution: { type: string }
+                resolutionDate: { type: string, format: date }
+                prefix: { type: string }
+                from: { type: string }
+                to: { type: string }
+                validUntil: { type: string, format: date }
+    DocumentParty:
+      type: object
+      required: [legalName]
+      properties:
+        legalName: { type: string }
+        tradeName: { type: string }
+        idType: { type: string }
+        idNumber: { type: string }
+        dv: { type: string }
+        address: { type: string }
+        city: { type: string }
+        email: { type: string }
+        phones:
+          type: array
+          items: { type: string }
+        fiscalResponsibilities:
+          type: array
+          items: { type: string }

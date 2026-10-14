@@ -63,7 +63,7 @@ conciliación interna lo verifica periódicamente (INV-10).
 
 ### R-CON-008 · Tercero y dimensión obligatorios según la cuenta
 Las cuentas con `requires_party = true` (clientes, proveedores, anticipos, impuestos y retenciones por
-pagar/cobrar, préstamos) exigen `party_id` en cada línea; las que tengan `requires_cost_center = true`
+pagar/cobrar, anticipos) exigen `party_id` en cada línea; las que tengan `requires_cost_center = true`
 exigen centro de costo. **Motivo:** sin tercero por línea no se pueden producir cartera, certificados de
 retención ni información exógena.
 
@@ -152,11 +152,12 @@ para sus vigilados. **Decisiones:**
 | 1110 | Bancos | Débito | `BANK` |
 | 1305 | Clientes | Débito | `RECEIVABLE` |
 | 1355 | Anticipo de impuestos y contribuciones o saldos a favor | Débito | `TAX_ADVANCE` (subcuentas: retención en la fuente, IVA retenido, ICA retenido a favor) |
-| 1370 | Préstamos a particulares | Débito | `LOAN_GRANTED` |
 | 1435 | Mercancías no fabricadas por la empresa | Débito | `INVENTORY_GOODS` |
-| 2105 | Obligaciones financieras: bancos nacionales | Crédito | `LOAN_RECEIVED` |
 | 2205 | Proveedores nacionales | Crédito | `PAYABLE` |
 | 2335 | Costos y gastos por pagar | Crédito | `EXPENSE_PAYABLE` |
+| 2805 | Anticipos y avances recibidos | Crédito | `CUSTOMER_ADVANCE` |
+| 1330 | Anticipos y avances (entregados a proveedores) | Débito | `SUPPLIER_ADVANCE` |
+| 5xxx | Pérdida por avería/merma de inventario (cuenta configurable) | Débito | `INVENTORY_LOSS_EXPENSE` |
 | 2365 | Retención en la fuente | Crédito | `WITHHOLDING_INCOME_PAYABLE` |
 | 2367 | Impuesto a las ventas retenido | Crédito | `WITHHOLDING_VAT_PAYABLE` |
 | 2368 | Impuesto de industria y comercio retenido | Crédito | `WITHHOLDING_ICA_PAYABLE` |
@@ -185,7 +186,7 @@ Venta de 10 unidades a $100.000, IVA 19 %, costo promedio $60.000.
 | 2408 IVA generado | | 190000 |
 | **Subtotal comprobante FV** | **1190000** | **1190000** |
 
-Comprobante de costo (mismo evento, generado por `inventory` al costo promedio, R-INV-003):
+Comprobante de costo (mismo evento, generado por `inventory` al costo del método del ítem: promedio, R-INV-003, o PEPS, R-INV-016):
 
 | Cuenta | Débito | Crédito |
 |---|---:|---:|
@@ -285,14 +286,57 @@ Débito: gasto o costo (o inventario); Crédito: `2335`/`2205` y retenciones que
 descontable cuando el vendedor no es responsable de IVA. Los casos con IVA asumido por servicios del exterior
 quedan para una fase posterior 🔶.
 
-### P-09 · Préstamo recibido: desembolso, causación y pago de cuota
+### P-09 · Anticipo de cliente y saldo a favor
 
-Ver [`05-cartera-y-prestamos.md`](05-cartera-y-prestamos.md) §3.4.
+Un recibo de caja que no se aplica por completo, o una nota crédito sobre una factura ya pagada, deja un
+**saldo a favor** del cliente (cuenta 2805 «Anticipos y avances recibidos» 🔶; concepto `CUSTOMER_ADVANCE`).
+
+| Momento | Débito | Crédito |
+|---|---|---|
+| Recibo de 500.000 sin factura asociada | 1110 Bancos 500000 | 2805 Anticipos de clientes 500000 |
+| Aplicación del anticipo a una factura de 500.000 | 2805 Anticipos de clientes 500000 | 1305 Clientes 500000 |
 
 ### P-10 · Cierre de ejercicio (R-CON-012)
 
 Cancela clases 4, 5 y 6 contra 59 y traslada a 36. Se genera por un caso de uso específico, no por el flujo
 normal de documentos.
+
+### P-11 · Nota crédito con devolución en mal estado (avería/merma)
+
+Continuación de P-02: de las 2 unidades devueltas, 1 es `RESELLABLE` y 1 `DAMAGED`. Todo a costo de salida
+60.000 (R-INV-042). La unidad averiada reingresa a la bodega de avería y se da de baja en la misma
+transacción (`write_off_on_return = true`).
+
+| Cuenta | Débito | Crédito |
+|---|---:|---:|
+| 4175 Devoluciones en ventas | 200000 | |
+| 2408 IVA generado (reverso) | 38000 | |
+| 1305 Clientes | | 238000 |
+| 1435 Mercancías (reingreso de las 2 unidades) | 120000 | |
+| 6135 Costo de ventas (reverso) | | 120000 |
+| 5xxx Pérdida por avería de inventario (cuenta configurable `INVENTORY_LOSS_EXPENSE`) | 60000 | |
+| 1435 Mercancías (baja de la unidad averiada) | | 60000 |
+| **Totales** | **418000** | **418000** |
+
+Efecto neto: el costo de ventas baja 120.000, el gasto por avería sube 60.000 y el inventario disponible
+sube 1 unidad (60.000).
+
+### P-12 · Devolución a proveedor con nota crédito del proveedor
+
+Se devuelven 100 unidades de la compra de P-05 (costo unitario 10.000): base 1.000.000 + IVA 190.000.
+La retención practicada se reversa en proporción: 2,5 % de 1.000.000 = 25.000 🔶 (la base mínima de la
+compra original se evaluó sobre la operación completa).
+
+| Cuenta | Débito | Crédito |
+|---|---:|---:|
+| 2205 Proveedores | 1165000 | |
+| 2365 Retención en la fuente (reverso) | 25000 | |
+| 1435 Mercancías | | 1000000 |
+| 2408 IVA descontable (reverso) | | 190000 |
+| **Totales** | **1190000** | **1190000** |
+
+Si el proveedor ya había sido pagado, `Dr 2205` se reemplaza por `Dr 1330 Anticipos y avances (saldo a
+favor con el proveedor)` o por el cobro del reembolso.
 
 ## 5. Balance de prueba de referencia (fixture)
 

@@ -18,15 +18,19 @@
 
 ## 2. Modalidades de emisión y decisión de diseño
 
+**Decisión Q-02 (vigente):** la primera fase emite mediante un **Proveedor Tecnológico Autorizado (PTA)**,
+**desacoplado por una interfaz de servicio** (`EInvoiceProvider`, ADR-0003) para permitir **facturación directa**
+en el futuro sin tocar el dominio.
+
 | Modalidad | Qué implica | Decisión |
 |---|---|---|
-| **Proveedor tecnológico autorizado** | El proveedor firma, transmite y valida; SIFCA le entrega los datos (por su API) y recibe el resultado | **Elegida para F3 (S-02, ADR-0003)** |
-| Software propio | Habilitación ante la DIAN (set de pruebas), certificado de firma digital, firma XAdES, operación 24/7 | Posible en una fase posterior; el puerto `EInvoiceProvider` permite añadirlo como otro adaptador |
+| **Proveedor tecnológico autorizado (PTA)** | El proveedor firma, transmite y valida; SIFCA le entrega los datos (por su API) y recibe el resultado | **Primera fase (Q-02, ADR-0003)** |
+| Facturación directa (software propio) | Habilitación ante la DIAN (set de pruebas), certificado de firma digital, firma XAdES, operación 24/7 | **Futura:** se añade como otro adaptador de `EInvoiceProvider` |
 | Solución gratuita de la DIAN | Portal web para bajo volumen | No aplica a un sistema contable integrado |
 
-Requisitos previos de la empresa cliente (si emite por proveedor tecnológico) 🔶: RUT con la
-responsabilidad de facturador electrónico, **autorización de numeración** (prefijo y rango) solicitada en los
-servicios de la DIAN, y el proveedor registrado como proveedor tecnológico de la empresa.
+Requisitos previos de la empresa cliente (con PTA) 🔶: RUT con la responsabilidad de facturador electrónico,
+**autorización de numeración** (prefijo y rango) solicitada en los servicios de la DIAN, y el PTA registrado
+como proveedor tecnológico de la empresa.
 
 ## 3. Tipos de documento (códigos de referencia) 🔶
 
@@ -50,7 +54,7 @@ Tomar la tabla oficial del Anexo al implementar.
 
 ### R-FE-001 · Quién debe facturar electrónicamente
 Los responsables de IVA y demás obligados a facturar según el calendario y las excepciones de la DIAN. El
-sistema registra por empresa si es **facturador electrónico** (`company.is_electronic_invoicer`) y bloquea la
+sistema registra por empresa si es **facturador electrónico** (`tenant.is_electronic_invoicer`) y bloquea la
 emisión de facturas de venta si no está habilitada la numeración y el proveedor.
 - **Estado:** 🔶
 
@@ -117,9 +121,10 @@ como mínimo 🔶: identificación del emisor (razón social, NIT-DV), del adqui
 («Factura electrónica de venta»), prefijo y número, fecha y hora de expedición, descripción, cantidad y
 valor de cada ítem, IVA/INC discriminados, total, forma y medio de pago, datos de la **resolución de
 numeración** (número, fecha, prefijo, rango, vigencia), **CUFE**, **QR** y datos del software/proveedor.
-- Se renderiza con Asia-POP (ver `01-arquitectura/05-integracion-asia-pop.md`); el contenido obligatorio **no
-  es editable** por la plantilla: la plantilla solo cambia el diseño (los bloques «CUFE», «QR», «resolución» y
-  «totales» son automáticos y no se pueden quitar).
+- Se genera mediante el puerto `DocumentRenderer` del núcleo (PDF del PTA o renderizador mínimo propio,
+  ADR-0008). Un motor externo (fase futura) solo puede ofrecer una representación **alternativa**; el contenido
+  obligatorio **no es editable** por ninguna plantilla (los bloques «CUFE», «QR», «resolución» y «totales» son
+  automáticos y no se pueden quitar).
 - El PDF emitido se guarda **una vez** y se conserva; no se regenera para consultas posteriores.
 
 ### R-FE-008 · Estados DIAN
@@ -220,9 +225,15 @@ Requisitos de cualquier adaptador: **idempotencia** (reintentar no duplica docum
 reintentos con *backoff*, registro completo de petición/respuesta (sin credenciales) y pruebas contra el
 ambiente de pruebas del proveedor y el de habilitación de la DIAN.
 
-> **Selección del proveedor:** criterios para la decisión (Q-02): costo por documento, soporte de notas,
-> documento soporte y POS, API REST con *sandbox*, entrega de XML firmado y `AttachedDocument`, tiempos de
-> respuesta, política de reintentos e historial de disponibilidad.
+> **Selección del PTA (Q-13):** criterios: costo por documento, soporte de notas, documento soporte y POS, API
+> REST con *sandbox*, entrega de XML firmado y `AttachedDocument`, **entrega de la representación gráfica
+> (PDF)** (si no, el renderizador mínimo del núcleo la genera, S-02), tiempos de respuesta, política de
+> reintentos e historial de disponibilidad.
+>
+> **Ubicación en la arquitectura:** el puerto `EInvoiceProvider` se define en la capa Application de
+> `einvoicing`; el adaptador del PTA vive en `infrastructure/clients` y valida con Zod cada respuesta del
+> proveedor antes de usarla (constitución V). Un adaptador de facturación directa futura implementa el mismo
+> puerto.
 
 ## 7. Máquina de estados del documento de venta
 

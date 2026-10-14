@@ -1,79 +1,92 @@
 # Evaluación comparativa de librerías
 
-Estado: **borrador de Fase 1 — propuesta sujeta a *spikes***
+Estado: **Fase 1 (actualizada)** — ORM y validación **decididos**; el resto, propuesta sujeta a *spikes*
 
-> **Cómo leer este documento.** La evaluación se basa en el conocimiento general que se tiene de cada
-> librería; no se ejecutaron *benchmarks* ni se comprobó la última versión de cada una. Por eso cada sección
-> termina con una **recomendación provisional** y un **spike** (prueba de concepto corta, con criterios de
-> aceptación) que debe ejecutarse al inicio de la Fase 2 antes de fijar la decisión en el ADR.
+> **Cómo leer este documento.** El **ORM (Prisma)** y la **validación (Zod)** son decisiones definitivas del
+> arquitecto principal; lo que se verifica con *spikes* son sus mitigaciones. El resto es **recomendación
+> provisional**: la evaluación se basa en el conocimiento general de cada librería (sin *benchmarks* ni
+> comprobar la última versión) y termina con un **spike** (prueba de concepto corta, con criterios de
+> aceptación) que se ejecuta al inicio de la Fase 2 antes de fijar la decisión en el ADR.
 > Escala usada: ● fuerte · ◐ aceptable · ○ débil.
 
-## 1. ORM / acceso a datos: TypeORM vs Prisma vs Drizzle
+## 1. ORM / acceso a datos: decisión definitiva — Prisma ORM
+
+**Decisión (vigente):** **Prisma ORM** sobre PostgreSQL, **sustituye definitivamente a TypeORM** (ADR-0004).
+Se aprovechan su tipado estricto generado en tiempo de compilación y las transacciones interactivas
+`$transaction`. Esta sección ya no es una comparación abierta: documenta **qué exige el sistema, cómo lo
+cumple Prisma, dónde hay que ayudarle y cómo se verifica**.
 
 ### 1.1 Qué exige un sistema contable al acceso a datos
 
 | # | Necesidad | Por qué importa |
 |---|---|---|
-| N-1 | Transacciones explícitas con nivel de aislamiento y alcance controlado (una por caso de uso) | Factura + stock + asiento + consecutivo deben ser atómicos |
-| N-2 | Bloqueo de filas (`SELECT … FOR UPDATE`) | Consecutivos, saldo de stock y costo promedio bajo concurrencia |
-| N-3 | `NUMERIC` sin pérdida (cadena o decimal, nunca `float`) | Evitar errores de redondeo (RK-02) |
+| N-1 | Transacciones explícitas con nivel de aislamiento y alcance controlado (una por caso de uso) | Factura + stock + cartera + asiento + consecutivo deben ser atómicos (constitución III) |
+| N-2 | Bloqueo de filas (`SELECT … FOR UPDATE`) | Consecutivos, saldo de stock, capas PEPS, costo promedio y cupo de crédito bajo concurrencia |
+| N-3 | `NUMERIC` sin pérdida (decimal, nunca `float`) | Evitar errores de redondeo (RK-02) |
 | N-4 | Poder ejecutar SQL propio dentro de la misma transacción | *Triggers*, RLS, reportes con CTE y funciones de ventana |
-| N-5 | Fijar variables de sesión por transacción (`SET LOCAL app.company_id`) | RLS multiempresa (ADR-0002) |
-| N-6 | Migraciones como SQL revisable, con *triggers*, índices parciales, GIN y esquemas por módulo | Invariantes en la base de datos |
-| N-7 | Buen encaje con NestJS y con repositorios detrás de puertos | Arquitectura hexagonal |
+| N-5 | Fijar variables de sesión por transacción (`app.tenant_id`) | RLS multiempresa (constitución IV) |
+| N-6 | Migraciones como SQL revisable, con *triggers*, `REVOKE`, índices parciales, GIN y esquemas por módulo | Invariantes en la base de datos (constitución I) |
+| N-7 | Encaje con NestJS y con repositorios detrás de puertos | Clean Architecture (constitución II) |
 | N-8 | Tipado fuerte de resultados | Menos errores en código de reportes |
 | N-9 | Madurez, mantenimiento y comunidad | Riesgo a 5+ años |
 
-### 1.2 Comparativa
+### 1.2 Cómo cumple Prisma cada necesidad
 
-| Criterio | TypeORM | Prisma | Drizzle ORM |
+| # | Cobertura | Cómo | Verificación |
 |---|---|---|---|
-| N-1 Transacciones / aislamiento | ● `QueryRunner` y `DataSource.transaction` con nivel de aislamiento | ● transacciones interactivas con opción de aislamiento | ● `db.transaction` con configuración de aislamiento |
-| N-2 `FOR UPDATE` | ● bloqueos pesimistas (`pessimistic_write`…) en `find` y `QueryBuilder` | ○ no está en la API del cliente; requiere `$queryRaw` | ● `.for('update')` en las consultas |
-| N-3 `NUMERIC` | ● el driver `pg` devuelve cadena (hay que envolverla en `Decimal`) | ● mapea a `Decimal` (decimal.js) | ● devuelve cadena por defecto |
-| N-4 SQL propio en la misma transacción | ● `queryRunner.query` / `manager.query` | ◐ `tx.$queryRaw` (en la misma transacción interactiva) | ● la plantilla `sql` se mezcla con el constructor de consultas |
-| N-5 Variables de sesión / RLS | ● se ejecuta `SET LOCAL` con el `QueryRunner` de la transacción | ◐ requiere extensión de cliente y transacción interactiva | ● mismo patrón; además modela políticas RLS en el esquema |
-| N-6 Migraciones | ◐ autogeneradas por diferencia; hay que escribir a mano lo avanzado | ● Prisma Migrate genera SQL editable; *triggers*/parciales a mano | ● `drizzle-kit` genera SQL editable; *triggers* a mano |
-| N-6b Múltiples esquemas (uno por módulo) | ● | ◐ soporte multiesquema más reciente | ● |
-| N-7 Encaje con NestJS | ● módulo oficial `@nestjs/typeorm` | ◐ servicio propio (patrón habitual y sencillo) | ◐ integración comunitaria; sencillo de envolver |
-| N-8 Tipado | ◐ entidades tipadas; `QueryBuilder` y relaciones con tipado débil | ● el mejor tipado de resultados | ● inferencia fuerte desde el esquema en TS |
-| N-9 Madurez / mantenimiento | ◐ muy extendida; ritmo de mantenimiento irregular y muchos *issues* abiertos | ● mantenimiento activo y empresa detrás | ◐ más joven, evolución rápida |
-| Curva de aprendizaje | ● baja (el equipo ya la conoce) | ● baja | ◐ media (hay que pensar en SQL) |
+| N-1 | ● Nativa | `prisma.$transaction(async (tx) => …, { maxWait, timeout, isolationLevel })`; admite desde *ReadUncommitted* hasta *Serializable* | ✅ opciones y **plazo por defecto de ≈ 5 s** confirmados en documentación y guías de terceros: se configuran **explícitamente** |
+| N-2 | ◐ **Con SQL explícito** | La API tipada de Prisma no expone `FOR UPDATE`; se usa `tx.$queryRaw` **dentro de la misma transacción** | 🔶 práctica estándar; se prueba en S-PRISMA |
+| N-3 | ● Nativa | `Decimal` (basado en decimal.js); el *mapper* lo convierte a `Money`/`Quantity` del dominio | 🔶 |
+| N-4 | ● Nativa | `tx.$queryRaw` / `tx.$executeRaw` parametrizados | 🔶 |
+| N-5 | ◐ **Con SQL explícito** | `tx.$executeRaw` con `set_config('app.tenant_id', $1, true)` al inicio de cada transacción, encapsulado en el `UnitOfWork` | 🔶 se prueba en S-PRISMA (incluido el comportamiento con un *pooler*) |
+| N-6 | ◐ **Con SQL a mano** | Prisma Migrate genera SQL editable (`--create-only`); *triggers*, RLS, `REVOKE` e índices parciales/GIN se escriben en la migración | 🔶; soporte multiesquema a verificar |
+| N-7 | ● | El cliente de Prisma se envuelve en un servicio de `infrastructure`; los repositorios implementan puertos de `application` | — |
+| N-8 | ● Fuerte | Tipos generados desde el esquema (que **no** salen de `infrastructure`, D-4) | — |
+| N-9 | ● | Mantenimiento activo | 🔶 |
 
-### 1.3 Análisis
+### 1.3 Riesgos asumidos y mitigaciones
 
-- **Prisma** brilla en experiencia de desarrollo, pero pelea con tres necesidades que aquí son centrales:
-  `FOR UPDATE` (N-2), triggers/índices parciales (N-6) y el patrón `SET LOCAL` por transacción (N-5). Cada una
-  se resuelve con SQL crudo, es decir, se pierde justo la ventaja que aporta. No es inviable, pero el
-  núcleo contable terminaría escrito casi todo en `$queryRaw`.
-- **TypeORM** cubre N-1…N-5 sin rodeos y es lo que ya se planteó en el stack. Su debilidad es el tipado de
-  consultas complejas y el mantenimiento: se mitiga limitando su uso (ver abajo).
-- **Drizzle** es la opción técnicamente más cómoda para SQL explícito y tipado, pero es la menos integrada
-  con NestJS y la más joven.
+La evaluación de la Fase 1 ya señalaba que Prisma es la opción que más se sale de su API tipada en un
+sistema contable (N-2, N-5, N-6). Se acepta esa decisión con estas mitigaciones:
 
-### 1.4 Recomendación provisional
+| Riesgo | Mitigación |
+|---|---|
+| El núcleo contable termina escrito en SQL crudo y se pierde el tipado | Se **limita** el SQL crudo a tres utilidades de `infrastructure` (`lockRows`, `setTenant`, `appendOnlyInsert`) y a reportes; todo lo demás usa la API tipada. Cada consulta cruda tiene prueba de integración sobre PostgreSQL real |
+| Olvidar `FOR UPDATE` o el `set_config` en un repositorio nuevo | Los repositorios **no** abren transacciones: reciben la transacción del `UnitOfWork`, que ya fijó el tenant; una regla de lint prohíbe `prisma.$transaction` fuera del `UnitOfWork` (G-04) |
+| Transacciones largas (plazo por defecto corto) | Transacciones **cortas**: ninguna llamada de red dentro de la transacción (constitución III); `timeout` y `maxWait` explícitos por caso de uso |
+| Migraciones SQL manuales desincronizadas del `schema.prisma` | Revisión de migraciones obligatoria; CI aplica las migraciones sobre una base vacía y ejecuta `prisma migrate diff` para detectar deriva |
+| Bloqueo por *pooler* de conexiones | Verificar en S-PRISMA que `set_config(..., true)` y las transacciones interactivas funcionan con el *pooler* elegido; si no, usar conexión directa para el worker |
+| Prisma deja de convenir a futuro | La arquitectura limpia lo contiene: cambiar de ORM = reescribir `infrastructure/persistence` de cada módulo (constitución II) |
 
-**TypeORM** como ORM de la Fase 2, con estas reglas que reducen su riesgo y facilitan cambiarlo:
+### 1.4 Reglas de uso
 
-1. **El ORM vive solo en `infrastructure/persistence`.** Las entidades del ORM no salen de ahí; el dominio usa
-   sus propias clases (regla D-2). Cambiar de ORM = reescribir un directorio por módulo.
-2. **Operaciones críticas con SQL explícito:** asignación de consecutivos, descuento de stock y recálculo
-   de costo promedio, contabilización. Se escriben como consultas parametrizadas revisadas.
-3. **`synchronize` prohibido.** Migraciones escritas/revisadas a mano en SQL (ADR-0004).
-4. **Reportes y libros** (balance de prueba, mayor, kardex, edades de cartera): SQL con CTE y ventanas, sin
-   pasar por entidades. Si se necesita tipado, usar un constructor de consultas (p. ej. Kysely) solo en
-   `reporting`.
-5. **`Decimal` en el borde:** toda columna `numeric` se convierte a `Money`/`Decimal` en el *mapper*; el
-   dominio nunca ve cadenas ni `number`.
+1. Prisma **solo** en `infrastructure/persistence`; sus tipos no cruzan hacia `application` ni `domain` (D-4, G-03).
+2. Un único `UnitOfWork` abre `$transaction`; propaga `tx` a los repositorios con un contexto asíncrono.
+3. Importes y cantidades se leen como `Decimal` y se convierten de inmediato a objetos de valor del dominio.
+4. Las tablas de registro inmutable se escriben **solo con inserciones** (`create`, `createMany`); el rol de la
+   aplicación no tiene privilegios de `UPDATE`/`DELETE` sobre ellas, así que el código que lo intente falla
+   en la base de datos.
+5. Los reportes y libros usan SQL explícito (`$queryRaw`) con tipos de resultado declarados y validados.
 
-**Spike S-ORM (1 día)** — criterios de aceptación:
+### 1.5 Spike S-PRISMA (1–2 días, **verifica mitigaciones**, no reabre la decisión)
 
-- Emitir una factura de ejemplo en una sola transacción con 2 hilos concurrentes sobre el mismo ítem y el
-  mismo rango: 0 consecutivos duplicados y 0 stock negativo en 1.000 repeticiones.
-- `SET LOCAL app.company_id` activo y RLS impide leer filas de otra empresa desde el mismo pool.
-- *Constraint trigger* de asiento cuadrado: una inserción descuadrada falla al `COMMIT`.
-- Migración con esquema por módulo, índice parcial y *trigger*, aplicada y revertida.
-- Si TypeORM falla alguno, repetir el spike con Drizzle antes de decidir.
+| Criterio de aceptación |
+|---|
+| Emitir una factura de ejemplo en **una** transacción con 2 hilos concurrentes sobre el mismo ítem y el mismo rango: 0 consecutivos duplicados y 0 stock negativo en 1.000 repeticiones (bloqueos con `$queryRaw`) |
+| `set_config('app.tenant_id', …, true)` dentro de `$transaction`: RLS impide leer filas de otro tenant desde el mismo cliente y el mismo *pool* |
+| Un *constraint trigger* de asiento cuadrado falla al `COMMIT` ante una inserción descuadrada y la transacción de Prisma se revierte |
+| `REVOKE UPDATE, DELETE` sobre `journal_line` hace fallar un `prisma.journalLine.update(...)` |
+| Migración con esquema por módulo, índice parcial, RLS y *trigger*, aplicada y revertida; `prisma migrate diff` sin deriva |
+| `Decimal` ↔ `Money`: ida y vuelta sin pérdida con 1.000 valores aleatorios de 2 y 6 decimales |
+| Transacción con `timeout` explícito: una transacción que lo excede se revierte por completo |
+| Si algún criterio **no** se puede cumplir, se escala al arquitecto principal con la alternativa propuesta (sin cambiar de ORM por iniciativa propia) |
+
+### 1.6 Historial de la evaluación (Fase 1, para contexto)
+
+Se compararon TypeORM, Prisma y Drizzle frente a N-1…N-9. TypeORM y Drizzle cubrían N-2, N-5 y N-6 sin salirse
+de su API (bloqueos pesimistas y `.for('update')`), Prisma ofrecía el mejor tipado y la mejor experiencia de
+desarrollo. El arquitecto principal fijó Prisma como decisión definitiva; las mitigaciones de §1.3 convierten
+esa diferencia en trabajo conocido y verificable.
 
 ## 2. Aritmética decimal
 
@@ -146,27 +159,67 @@ El back-office y la vitrina **no comparten** biblioteca de componentes: tienen n
 - Abrir la paleta de comandos con `Ctrl+K` estando con foco en una celda.
 - Medir tiempos de render y memoria con 5.000 filas de solo lectura.
 
-## 4. Otras decisiones de librerías
+## 4. Validación y contratos: decisión definitiva — Zod
+
+**Decisión (vigente):** **Zod** es la **única fuente de verdad** de los contratos de datos: validación en los
+casos de uso, esquemas compartidos con el frontend y base del OpenAPI (constitución V, ADR-0009).
+
+### 4.1 Cómo se usa
+
+| Aspecto | Regla |
+|---|---|
+| Dónde viven | `packages/contracts`: esquemas de entradas, salidas, errores, eventos y webhooks; los tipos se **infieren** (`z.infer`) |
+| Dónde se validan | Al inicio de `execute` de **cada caso de uso** (capa Application), de modo que HTTP, worker, webhooks y pruebas tengan la misma garantía; los controladores no reimplementan validación |
+| Dominio | **No importa Zod.** Los invariantes del dominio los protegen sus objetos de valor (`Money`, `Quantity`, `Percentage`) y entidades; un esquema Zod válido no sustituye al invariante |
+| Esquemas estrictos | `strict()` en objetos de entrada: los campos desconocidos se rechazan |
+| «Nada negativo ni inconsistente» | Helpers compartidos: `nonNegativeMoney`, `positiveQuantity`, `percentage0to100`, `uuidV7`, `isoDate`, `nit`; refinamientos entre campos (`due_date ≥ issue_date`, `Σ aplicaciones ≤ valor del recibo`) |
+| Dinero en la API | Cadena decimal validada con patrón y escala (`"1190000.00"`); la conversión a `Money` ocurre en Application, no en Zod |
+| Eventos entre módulos | Uniones discriminadas por `type` en `contracts` (un evento = un esquema) |
+| Integraciones externas | Las respuestas del PTA, los cuerpos de webhooks entrantes y la configuración (variables de entorno) se validan con Zod **en el adaptador que las recibe** |
+| Errores | `ZodError` → `422 application/problem+json` con `code = VALIDATION_FAILED` y la lista de campos |
+| Frontend | React Hook Form + `zodResolver` con los mismos esquemas (los componentes de AntD se envuelven con `Controller`); el cliente tipado reutiliza los tipos inferidos |
+
+### 4.2 OpenAPI derivado de los esquemas
+
+Zod 4 incluye conversión nativa a JSON Schema (`z.toJSONSchema`, con destino `draft-2020-12` u `openapi-3.0`)
+✅ ([documentación de Zod](https://zod.dev/json-schema)). Limitación documentada: los **refinamientos,
+transformaciones y mensajes personalizados no se reflejan** en el JSON Schema, así que las reglas
+entre campos se describen además en la `description` de cada esquema (`.meta({ description, examples })`).
+
+| Opción para generar el OpenAPI 3.1 de NestJS | Estado |
+|---|---|
+| `nestjs-zod` (DTO desde Zod + integración con `@nestjs/swagger`) | 🔶 no verificado |
+| `zod-openapi` / `@asteasolutions/zod-to-openapi` (documento OpenAPI construido desde los esquemas) | 🔶 `zod-openapi` v5 usa el conversor nativo de Zod 4 según fuentes de terceros |
+| Ensamblador propio sobre `z.toJSONSchema` | ✅ viable (capacidad nativa), más trabajo |
+
+**Spike S-ZOD (1 día):** generar el OpenAPI de 5 endpoints (incluida una respuesta de error `Problem`, un
+evento y un webhook) desde `packages/contracts`; criterios: documento válido OpenAPI 3.1, ejemplos presentes,
+instantánea en CI y rechazo en tiempo de ejecución de un cuerpo con campo desconocido, importe negativo y
+decimal de más.
+
+## 5. Otras decisiones de librerías
 
 | Necesidad | Recomendación provisional | Alternativas | Notas |
 |---|---|---|---|
-| Validación de entrada (HTTP) | `class-validator` + `class-transformer` (decorado en DTO) | zod + `nestjs-zod` | `class-validator` se integra directo con `@nestjs/swagger`; zod para variables de entorno y validación del lado del cliente |
-| Documentación OpenAPI | `@nestjs/swagger` con el *plugin* de CLI | — | Ver `04-contrato-api-y-swagger.md` |
+| Validación y contratos | **Zod** (decisión definitiva, §4) | — | `class-validator`/`class-transformer` **no se usan** |
+| Documentación OpenAPI | Derivada de los esquemas Zod (§4.2); `@nestjs/swagger` solo como soporte de Swagger UI si el spike S-ZOD lo requiere | — | Ver `04-contrato-api-y-swagger.md` |
 | Cola de tareas | **pg-boss** (sobre PostgreSQL) | BullMQ (Redis) | Una pieza menos de infraestructura; revisar si el volumen exige Redis |
-| Cliente HTTP generado | `openapi-typescript` + `openapi-fetch`, u `orval` | — | Un solo cliente tipado para admin, vitrina y móvil |
+| Cliente HTTP tipado | `packages/api-client` sobre `fetch`, con tipos inferidos de `packages/contracts` | `openapi-typescript` generado desde el OpenAPI | Un solo cliente para admin, vitrina y móvil |
 | Datos del lado del cliente | TanStack Query | RTK Query | Caché, reintentos, invalidación |
-| Formularios en el back-office | Los de AntD `Form` | React Hook Form | — |
+| Formularios en el back-office | **React Hook Form + `zodResolver`** con los esquemas de `contracts` | AntD `Form` con validador adaptado | Los mismos esquemas que valida el backend |
 | XML (UBL) | `xmlbuilder2` o `fast-xml-parser` (según se construya o se lea) | — | Si se emite vía proveedor tecnológico, se reduce a lo que pida su API |
 | Firma XAdES | **No implementar al inicio** (lo hace el proveedor tecnológico) | `xml-crypto`/`xadesjs` si se habilita facturador propio | La firma XAdES con la política de la DIAN es delicada (ADR-0003) |
 | Fechas | `date-fns` + `date-fns-tz` (o Luxon) | API Temporal cuando esté disponible | Fecha contable como `date` sin zona |
 | Logs | `pino` | — | Con redacción de campos sensibles |
 | Pruebas unitarias | Vitest o Jest | — | Elegir uno por monorepo |
-| Pruebas con base de datos real | Testcontainers (PostgreSQL) | — | Necesarias para RLS, *triggers* y concurrencia |
+| Pruebas con base de datos real | Testcontainers (PostgreSQL) | — | Necesarias para RLS, *triggers*, privilegios y concurrencia; **no** se simula la base de datos |
+| Pruebas de aceptación ejecutables | `@cucumber/cucumber` (Gherkin en español) | `vitest-cucumber` | Los `.feature` de `docs/specs/` son ejecutables (ver `specs/README.md`) |
+| Reglas de arquitectura | `dependency-cruiser` | `eslint-plugin-boundaries` | Gates G-01 a G-03 y reglas D-1…D-7 |
 | Pruebas de propiedades | `fast-check` | — | Invariantes contables (p. ej. «cualquier secuencia de asientos válidos deja el balance cuadrado») |
 | Pruebas de contrato OpenAPI | Comparador de cambios incompatibles en CI (p. ej. `oasdiff`) | — | Falla el CI si se rompe la API pública |
-| Móvil | Expo + el cliente generado | — | Mismo contrato que la web |
+| Móvil | Expo + `packages/api-client` | — | Mismo contrato que la web |
 
-## 5. Gestión del monorepo
+## 6. Gestión del monorepo
 
 | Opción | Evaluación |
 |---|---|
@@ -178,14 +231,17 @@ Recomendación provisional: **pnpm + Turborepo**. Si la verificación de límite
 quiere automatizar con la herramienta del monorepo, Nx lo trae resuelto; con Turborepo se usa
 `dependency-cruiser`/`eslint-plugin-boundaries`.
 
-## 6. Resumen de decisiones provisionales
+## 7. Resumen de decisiones
 
-| Tema | Elección provisional | Se confirma con |
-|---|---|---|
-| ORM | TypeORM (restringido a `infrastructure`) | Spike S-ORM |
-| Decimal | `decimal.js` detrás de `Money` | — |
-| UI back-office | Ant Design 5 + grilla editable (AG Grid Community o TanStack Table) | Spike S-UI |
-| Paleta de comandos | `cmdk` | Spike S-UI |
-| UI vitrina | Next.js + Tailwind + shadcn/ui | — |
-| Cola | pg-boss | Volumen real |
-| Monorepo | pnpm + Turborepo | — |
+| Tema | Elección | Estado | Se confirma con |
+|---|---|---|---|
+| ORM | **Prisma ORM** (solo en `infrastructure`) | **Definitiva** | Spike S-PRISMA (verifica mitigaciones) |
+| Validación y contratos | **Zod** (`packages/contracts`) | **Definitiva** | Spike S-ZOD |
+| Arquitectura del backend | Clean Architecture en 4 capas | **Definitiva** | `dependency-cruiser` en CI |
+| Decimal | `decimal.js` detrás de `Money` | Provisional | — |
+| UI back-office | Ant Design 5 + grilla editable (AG Grid Community o TanStack Table) | Provisional | Spike S-UI |
+| Paleta de comandos | `cmdk` | Provisional | Spike S-UI |
+| UI vitrina | Next.js + Tailwind + shadcn/ui | Provisional | — |
+| Formularios | React Hook Form + `zodResolver` | Provisional | Spike S-UI |
+| Cola | pg-boss | Provisional | Volumen real |
+| Monorepo | pnpm + Turborepo | Provisional | — |

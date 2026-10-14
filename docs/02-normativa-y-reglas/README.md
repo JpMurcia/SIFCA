@@ -11,9 +11,9 @@ Es la fuente que alimenta (1) los motores de dominio (`accounting`, `tax`, `inve
 | [`01-contabilidad-partida-doble-y-puc.md`](01-contabilidad-partida-doble-y-puc.md) | Partida doble, PUC, comprobantes, períodos, plantillas de contabilización | `R-CON` |
 | [`02-impuestos-y-retenciones.md`](02-impuestos-y-retenciones.md) | IVA, INC, ReteFuente, ReteIVA, ReteICA, UVT, vigencias | `R-IMP` |
 | [`03-facturacion-electronica-dian.md`](03-facturacion-electronica-dian.md) | Anexo Técnico UBL 2.1, CUFE, QR, numeración, notas, POS | `R-FE` |
-| [`04-inventarios-y-valoracion.md`](04-inventarios-y-valoracion.md) | Kardex, promedio ponderado, lotes, traslados | `R-INV` |
-| [`05-cartera-y-prestamos.md`](05-cartera-y-prestamos.md) | Cartera, CxP, recibos, mora, amortización | `R-CAR`, `R-PRE` |
-| [`06-referencia-api-alegra.md`](06-referencia-api-alegra.md) | Cómo modela Alegra sus recursos y cómo se mapea a SIFCA | `R-API` |
+| [`04-inventarios-y-valoracion.md`](04-inventarios-y-valoracion.md) | Kardex, costeo **PEPS y promedio**, política de despacho, **ABC**, **punto de reorden**, conteos, **devoluciones (RMA)** | `R-INV` |
+| [`05-cartera-y-ventas-a-credito.md`](05-cartera-y-ventas-a-credito.md) | **Ventas a crédito y cartera**: cupo, plazos, edades, recibos, mora y bloqueo de despacho; cuentas por pagar | `R-CAR` |
+| [`06-referencia-api-alegra.md`](06-referencia-api-alegra.md) | Cómo modela Alegra sus recursos y cómo se mapea a SIFCA (referencia funcional) | — |
 
 ## Cómo se escribe una regla
 
@@ -51,6 +51,15 @@ Al redactar esta documentación se intentó contrastar los datos críticos. Resu
 | Fórmula del CUFE (SHA-384) y contenido del QR | No se pudo acceder al Anexo oficial; solo se encontró una guía de terceros. La fórmula de §4 de `03-…` es de memoria | 🔶 | — |
 | Endpoints y campos de la API de Alegra | `developer.alegra.com` no fue accesible desde el entorno; se usó lo verificado por el proyecto Asia-POP (ver `06-…`) y documentación de terceros | 🔶 / ⚠️ | — |
 | Códigos de plan de cuentas (PUC) a nivel de 4 dígitos | De memoria del PUC clásico | 🔶 | — |
+| **UEPS (LIFO) no admitido como fórmula de costo** (NIC 2 / Sección 13 NIIF Pymes); admitidos PEPS y promedio ponderado | Coinciden fuentes secundarias; no se leyó el texto oficial de la NIIF | ⚠️ | [Dialnet – inventarios NIC 2 vs Sección 13](https://dialnet.unirioja.es/descarga/articulo/5470842.pdf), [Siempre al Día](https://siemprealdia.co/colombia/contabilidad/valuacion-de-inventarios/) |
+| ET art. 65 (mod. Ley 1819/2016 art. 44): para obligados a llevar contabilidad, las fórmulas de costo son las de la técnica contable o las que fije el Gobierno; sin autorización previa para cambiar de método. ET art. 62: sistema de inventarios permanentes o periódicos | Resúmenes de fuentes secundarias; el texto vigente de los arts. 62-65 y el estado del UEPS en el decreto reglamentario **no se verificaron** | ⚠️ | [estatuto.co/65](https://estatuto.co/65), [DIAN Oficio 10482/2019](https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_10482_2019.htm) |
+| «FIFO obligatorio para perecederos» | **No es una norma**: es política de producto del proyecto | Decisión | — |
+| Fórmulas de **ABC (Pareto)** y **punto de reorden** (`ROP = d·L + SS`, `SS = z·√(L·σd² + d²·σL²)`) y valores de `z` (1,2816; 1,6449; 1,96; 2,0537; 2,3263) | Teoría estándar de inventarios; los números de los ejemplos se verificaron por cálculo. Los **umbrales** (80/95 %, niveles de servicio, ventanas) son parámetros de negocio, no normativa | ✅ aritmética · decisión de negocio (parámetros) | — |
+| Tratamiento de **retenciones sufridas** y de la diferencia de costo en devoluciones | Decisión contable pendiente | 🔶 | Q-14 |
+| Plazo por defecto de las transacciones interactivas de Prisma ≈ 5 s; opciones `maxWait`, `timeout`, `isolationLevel` | Confirmado en documentación y guías de terceros | ✅ | [Prisma docs (Postgres)](https://www.prisma.io/docs/v6/postgres/database/connection-pooling) |
+| `FOR UPDATE` vía `$queryRaw`, `set_config` con RLS y soporte multiesquema de Prisma | No verificados en este entorno; se comprueban en el spike S-PRISMA | 🔶 | — |
+| Zod 4: conversión nativa a JSON Schema (`z.toJSONSchema`, destinos `draft-2020-12` y `openapi-3.0`); los refinamientos no se reflejan | Documentación oficial de Zod | ✅ | [zod.dev/json-schema](https://zod.dev/json-schema) |
+| `nestjs-zod` y su generación de OpenAPI | No verificado | 🔶 | — |
 
 > **Acción previa a la Fase 2:** (1) descargar a este repositorio, como referencia local versionada, el
 > Anexo Técnico vigente, la resolución de numeración y la tabla de retención oficial; (2) el contador marca

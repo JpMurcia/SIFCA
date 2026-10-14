@@ -1,45 +1,59 @@
-# SIFCA — Documentación de especificaciones
+# SIFCA — Documentación
 
-**SIFCA** (Sistema Integral Fiscal y Contable Ágil) es una plataforma modular, construida desde cero, para
-gestión contable, fiscal y administrativa de empresas colombianas, con una vitrina comercial pública y un
-back-office ERP.
+**SIFCA** (Sistema Integral Fiscal y Contable Ágil) es una plataforma SaaS multiempresa, modular y construida
+desde cero, para gestión contable, fiscal y administrativa de empresas colombianas, con una vitrina comercial
+pública y un back-office ERP.
 
-> **Estado: Fase 1 — Especificaciones.** Este repositorio todavía no contiene código de aplicación.
-> Todo lo que hay aquí es documentación que servirá de fuente de verdad para implementar con
-> desarrollo guiado por especificaciones (spec-driven) y asistencia de IA.
+> **Estado: Fase 1 — Especificaciones.** Este repositorio todavía no contiene código de aplicación. Todo lo que
+> hay aquí es documentación que sirve de fuente de verdad para implementar con desarrollo guiado por
+> especificaciones (Spec Kit) y asistencia de IA.
 
-## Principio de origen
+## Gobernanza
 
-SIFCA **no** se construye a partir de ingeniería inversa de ningún software comercial. Las reglas salen de:
+| Documento | Para qué |
+|---|---|
+| [`constitution.md`](constitution.md) | **La constitución innegociable:** inmutabilidad contable, Clean Architecture estricta, transacciones ACID, aislamiento por tenant, contratos con Zod, dinero exacto, reglas como datos, desarrollo guiado por specs y API desacoplada. Incluye los **gates** G-01…G-12 |
+| [`specs/`](specs/README.md) | Una especificación por caso de uso, con criterios de aceptación **ejecutables** (Gherkin) y la **matriz de trazabilidad** generada |
+| [`01-arquitectura/06-decisiones-adr.md`](01-arquitectura/06-decisiones-adr.md) | Los ADR: **cómo** se cumplen los principios |
 
-1. La normatividad pública colombiana (Estatuto Tributario, decretos reglamentarios, resoluciones DIAN, marco
-   técnico NIIF).
-2. El Anexo Técnico de Factura Electrónica de la DIAN (UBL 2.1).
-3. La documentación pública de APIs de terceros (Alegra) para compatibilidad funcional.
-4. Revisión de un contador público sobre cada regla antes de implementarla.
+Si un ADR, una spec o un plan contradice la constitución, **prevalece la constitución**.
+
+## Decisiones vigentes (resumen)
+
+| Tema | Decisión |
+|---|---|
+| Despliegue | SaaS multiempresa: `tenant_id` + RLS en PostgreSQL (esquema compartido) |
+| Backend | NestJS en capas **Domain → Application → Infrastructure → Presentation** (Clean Architecture) |
+| ORM | **Prisma** (reemplaza a TypeORM), solo en `infrastructure` |
+| Contratos y validación | **Zod** como única fuente de verdad (`packages/contracts`); el OpenAPI se deriva de los esquemas |
+| Emisión DIAN | **Proveedor Tecnológico Autorizado**, desacoplado por el puerto `EInvoiceProvider` |
+| Alcance | **Sin préstamos** (no somos entidad crediticia). **Ventas a crédito y cartera**: cupo, plazos, edades, recibos, mora y bloqueo de despacho |
+| Inventario | Costeo **PEPS** (obligatorio en perecederos) o **promedio ponderado**; **UEPS solo como despacho físico**; ABC, punto de reorden y devoluciones (RMA) |
+| Integraciones | Contratos OpenAPI y webhooks estándar. **Asia-POP: fase futura / experimental**, fuera del núcleo |
 
 ## Mapa de la documentación
 
 | Carpeta / archivo | Contenido |
 |---|---|
-| [`00-alcance-supuestos-y-roadmap.md`](00-alcance-supuestos-y-roadmap.md) | Alcance, fuera de alcance, supuestos, **preguntas abiertas**, riesgos y fases |
-| [`01-arquitectura/`](01-arquitectura/) | Módulos del backend NestJS, modelo de datos PostgreSQL, evaluación de librerías, contrato OpenAPI, integración con Asia-POP, ADRs |
-| [`02-normativa-y-reglas/`](02-normativa-y-reglas/) | Catálogo de reglas contables, impuestos y retenciones, factura electrónica DIAN, inventarios, cartera y préstamos, referencia API Alegra |
-| [`03-procesos-y-flujos/`](03-procesos-y-flujos/) | Diagramas de secuencia y estados de los procesos de negocio |
+| [`00-alcance-supuestos-y-roadmap.md`](00-alcance-supuestos-y-roadmap.md) | Alcance, decisiones (Q-01, Q-02, Q-03, Q-11), fuera de alcance, supuestos, preguntas abiertas, riesgos y fases |
+| [`constitution.md`](constitution.md) | Constitución y gates de calidad |
+| [`specs/`](specs/README.md) | 11 especificaciones con escenarios Gherkin y `traceability-matrix.md` |
+| [`01-arquitectura/`](01-arquitectura/) | Módulos y capas del backend, modelo de datos PostgreSQL, evaluación de librerías, contrato OpenAPI, integración con motores externos, ADRs |
+| [`02-normativa-y-reglas/`](02-normativa-y-reglas/) | Catálogo de reglas: contabilidad, impuestos y retenciones, factura electrónica DIAN, **inventarios (costeo, ABC, ROP, RMA)**, **cartera y ventas a crédito**, referencia API Alegra |
+| [`03-procesos-y-flujos/`](03-procesos-y-flujos/) | Secuencias y estados: flujo de venta, **devoluciones con nota crédito y reingreso a kardex**, control de cupo, reposición y ABC |
 
 ### Orden de lectura sugerido
 
-1. `00-alcance-supuestos-y-roadmap.md` (y responder las preguntas abiertas)
-2. `01-arquitectura/01-vision-general-y-modulos.md`
-3. `02-normativa-y-reglas/README.md` y luego cada catálogo de reglas
-4. `03-procesos-y-flujos/01-flujo-venta-catalogo-a-factura.md`
-5. El resto de `01-arquitectura/` según el módulo que se vaya a construir
+1. `constitution.md`
+2. `00-alcance-supuestos-y-roadmap.md` (y las preguntas abiertas)
+3. `01-arquitectura/01-vision-general-y-modulos.md` y `06-decisiones-adr.md`
+4. `02-normativa-y-reglas/README.md` y cada catálogo de reglas
+5. `03-procesos-y-flujos/` y luego `specs/`
+6. El resto de `01-arquitectura/` según el módulo que se vaya a construir
 
-## Convenciones de los documentos
+## Convenciones
 
 ### Estado de verificación de cada dato normativo
-
-Todo valor, porcentaje o cita normativa lleva uno de estos marcadores:
 
 | Marcador | Significado |
 |---|---|
@@ -47,29 +61,64 @@ Todo valor, porcentaje o cita normativa lleva uno de estos marcadores:
 | ⚠️ | Reportado por fuentes secundarias (prensa, blogs contables); falta confirmar con el texto oficial |
 | 🔶 | Conocimiento general del autor **sin contrastar**; debe validarlo un contador o el texto oficial antes de implementarse |
 
-> **Regla del proyecto:** ninguna regla 🔶 o ⚠️ pasa a código sin que un contador la marque ✅ en el
-> catálogo. Las tarifas, bases y topes se modelan como **datos con vigencia** (ver ADR-0005), nunca como
-> constantes en el código.
+> **Regla del proyecto (constitución VII):** ninguna regla 🔶 o ⚠️ pasa a código de producción sin que un contador
+> la marque ✅. Las tarifas, bases y topes se modelan como **datos con vigencia** (ADR-0005), nunca como
+> constantes. Los umbrales de gestión (ABC, niveles de servicio, mora) son parámetros de negocio configurables,
+> no normativa. El registro de lo verificado está en
+> [`02-normativa-y-reglas/README.md`](02-normativa-y-reglas/README.md).
 
 ### Identificadores trazables
 
 | Prefijo | Qué identifica | Dónde vive |
 |---|---|---|
 | `R-CON-nnn` | Regla contable | `02-normativa-y-reglas/01-…` |
-| `R-IMP-nnn` | Regla de impuestos y retenciones | `02-normativa-y-reglas/02-…` |
-| `R-FE-nnn` | Regla de facturación electrónica | `02-normativa-y-reglas/03-…` |
-| `R-INV-nnn` | Regla de inventarios | `02-normativa-y-reglas/04-…` |
-| `R-CAR-nnn` / `R-PRE-nnn` | Cartera / Préstamos | `02-normativa-y-reglas/05-…` |
+| `R-IMP-nnn` | Impuestos y retenciones | `02-normativa-y-reglas/02-…` |
+| `R-FE-nnn` | Facturación electrónica | `02-normativa-y-reglas/03-…` |
+| `R-INV-nnn` | Inventarios, costeo, ABC, reorden, devoluciones | `02-normativa-y-reglas/04-…` |
+| `R-CAR-nnn` | Cartera, ventas a crédito, cuentas por pagar | `02-normativa-y-reglas/05-…` |
+| `P-I … P-IX` | Principios de la constitución | `constitution.md` |
 | `ADR-nnnn` | Decisión de arquitectura | `01-arquitectura/06-decisiones-adr.md` |
+| `INV-nn` | Invariante del modelo de datos | `01-arquitectura/02-modelo-de-datos-preliminar.md` |
 | `S-nn` / `Q-nn` | Supuesto / Pregunta abierta | `00-alcance-supuestos-y-roadmap.md` |
-| `AP-CR-nn` | Cambio requerido en Asia-POP | `01-arquitectura/05-integracion-asia-pop.md` |
+| `G-nn` | Gate de la verificación de constitución | `constitution.md` |
+| `FR-nnn` / `NNN-nn` | Requisito funcional / escenario de aceptación | `specs/NNN-…/` |
 
-Cada prueba automatizada que se escriba más adelante debe nombrar la(s) regla(s) que cubre
-(por ejemplo `// cubre R-CON-001, R-CON-005`), para poder auditar cobertura normativa.
+Cada escenario Gherkin lleva etiquetas con las reglas que ejerce (`@R-CON-001`, `@P-III`…) y la
+**matriz de trazabilidad** se **genera** (`node scripts/docs.mjs matrix`).
 
 ### Formato
 
-- Markdown con diagramas **Mermaid** (se renderizan en GitHub).
+- Markdown con diagramas **Mermaid** (se renderizan en GitHub). Los diagramas del repositorio se validan al
+  renderizarlos con la herramienta oficial antes de confirmar cambios.
 - Idioma: español. Identificadores de código y de API en inglés.
-- Cifras monetarias de ejemplo en pesos colombianos (COP), con separador de miles `.` en el texto narrativo
-  y valores sin separador en tablas y código.
+- Importes de ejemplo en pesos colombianos (COP).
+
+## Verificación automática
+
+```bash
+node scripts/docs.mjs check            # enlaces, reglas, Gherkin, specs, espejo de la constitución y matriz
+node scripts/docs.mjs check --strict   # además valida los .feature con el parser oficial de Gherkin
+node scripts/docs.mjs matrix           # regenera specs/traceability-matrix.md
+node scripts/docs.mjs sync             # sincroniza .specify/memory/constitution.md con docs/constitution.md
+```
+
+El CI ejecuta `check --strict` (constitución VIII).
+
+## Herramientas de desarrollo guiado por especificaciones
+
+| Herramienta | Dónde | Para qué |
+|---|---|---|
+| Skill `clean-architecture` (`wondelai/skills`) | `.claude/skills/clean-architecture/` | Guía de capas, regla de dependencia y límites; se usa al planificar e implementar |
+| Skills `speckit-*` (`dceoy/speckit-agent-skills`) | `.claude/skills/speckit-*/` | Flujo constitución → specify → clarify → plan → tasks → implement |
+| Andamiaje de Spec Kit | `.specify/` | Plantillas y scripts (generados con el CLI oficial); el espejo de la constitución |
+| `scripts/docs.mjs` | `scripts/` | Gobernanza documental (sin dependencias) |
+
+Instalación de las skills (ya realizada; versiones fijadas en `skills-lock.json`):
+
+```bash
+npx skills add https://github.com/wondelai/skills --skill clean-architecture
+npx skills add dceoy/speckit-agent-skills
+```
+
+> Las skills son contenido de terceros que se ejecuta con los permisos del agente: se revisaron antes de
+> adoptarlas (solo contienen instrucciones en Markdown, sin scripts) y su contenido queda fijado por *hash*.
