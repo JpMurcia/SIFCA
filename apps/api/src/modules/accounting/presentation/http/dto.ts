@@ -55,3 +55,51 @@ export const toVoucherTypeDto = (v: VoucherTypeView) => ({
 });
 
 export const pageOf = <T>(items: readonly T[], nextCursor: string | null) => ({ data: items, page: { nextCursor, hasMore: nextCursor !== null } });
+
+import type { FiscalPeriod } from '../../domain/entities/fiscal-period.js';
+import type { JournalDraft } from '../../domain/entities/journal-draft.js';
+import type { GeneralLedgerView, JournalBookRowView } from '../../application/ports/ledger-reader.js';
+import type { TrialBalanceReport } from '../../application/use-cases/get-reports.js';
+import type { LocalDate } from '../../../../shared-kernel/index.js';
+
+export const toPeriodDto = (p: FiscalPeriod) => ({
+  id: p.id, year: p.year, month: p.month, startsOn: p.startsOn.toString(), endsOn: p.endsOn.toString(), status: p.status,
+  closedAt: p.closedAt, closedBy: p.closedBy,
+});
+
+export const toDraftDto = (d: JournalDraft) => ({
+  id: d.id, voucherType: d.voucherTypeCode, accountingDate: d.accountingDate?.toString() ?? null, description: d.description,
+  lines: d.lines, version: d.version, createdBy: d.createdBy, createdAt: d.createdAt.toISOString(), updatedAt: d.updatedAt.toISOString(),
+});
+
+export const toTrialBalanceDto = (t: TrialBalanceReport) => {
+  const m = (x: { toString(): string }) => x.toString();
+  return {
+    from: t.from.toString(), to: t.to.toString(), level: t.level,
+    rows: t.rows.map((r) => ({
+      accountCode: r.accountCode, accountName: r.accountName, nature: r.nature,
+      openingDebit: m(r.openingDebit), openingCredit: m(r.openingCredit), movementDebit: m(r.movementDebit), movementCredit: m(r.movementCredit),
+      closingDebit: m(r.closingDebit), closingCredit: m(r.closingCredit), contraNature: r.contraNature,
+    })),
+    totals: {
+      openingDebit: m(t.totals.openingDebit), openingCredit: m(t.totals.openingCredit), movementDebit: m(t.totals.movementDebit),
+      movementCredit: m(t.totals.movementCredit), closingDebit: m(t.totals.closingDebit), closingCredit: m(t.totals.closingCredit),
+    },
+    balanced: t.balanced,
+  };
+};
+
+export const toJournalBookDto = (r: JournalBookRowView) => ({
+  entryId: r.entryId, accountingDate: r.accountingDate.toString(), voucherType: r.voucherType, number: r.number, lineNo: r.lineNo,
+  accountCode: r.accountCode, accountName: r.accountName, partyId: r.partyId, debit: r.debit.toString(), credit: r.credit.toString(), description: r.description,
+});
+
+export const toLedgerDto = (v: GeneralLedgerView & { from: LocalDate; to: LocalDate }) => ({
+  accountCode: v.accountCode, accountName: v.accountName, nature: v.nature, from: v.from.toString(), to: v.to.toString(),
+  openingBalance: v.openingBalance.toString(), closingBalance: v.closingBalance.toString(),
+  movements: v.movements.items.map((m) => ({
+    entryId: m.entryId, accountingDate: m.accountingDate.toString(), voucherType: m.voucherType, number: m.number,
+    debit: m.debit.toString(), credit: m.credit.toString(), runningBalance: m.runningBalance.toString(), description: m.description,
+  })),
+  page: { nextCursor: v.movements.nextCursor, hasMore: v.movements.nextCursor !== null },
+});

@@ -11,6 +11,12 @@ export class PrismaAccountRepository implements AccountRepository {
     return new Map(rows.map((r) => [r.code, toAccount(r)]));
   }
 
+  async findByIds(ids: readonly string[]): Promise<Map<string, Account>> {
+    if (ids.length === 0) return new Map();
+    const rows = await currentTx().account.findMany({ where: { id: { in: [...ids] } } });
+    return new Map(rows.map((r) => [r.id, toAccount(r)]));
+  }
+
   async list(filter: AccountFilter, page: PageRequest): Promise<Page<Account>> {
     const after = decodeCursor<{ code: string }>(page.cursor)?.code;
     const rows = await currentTx().account.findMany({

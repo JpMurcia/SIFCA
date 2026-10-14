@@ -13,11 +13,20 @@ import type { JournalEntry } from '../../../src/modules/accounting/domain/entiti
 import type { VoucherType } from '../../../src/modules/accounting/domain/entities/voucher-type.js';
 import type { EntryId, LocalDate, Page, PageRequest, PeriodId, VoucherTypeId } from '../../../src/shared-kernel/index.js';
 import type { InMemoryDb } from './in-memory-db.js';
+import type { JournalDraftRepository } from '../../../src/modules/accounting/application/ports/journal-draft-repository.js';
+import type { TrialBalanceReader } from '../../../src/modules/accounting/application/ports/trial-balance-reader.js';
+import type { AuditEntry, AuditLog, DraftId } from '../../../src/shared-kernel/index.js';
+import { ConflictError, Money } from '../../../src/shared-kernel/index.js';
+import type { JournalDraft } from '../../../src/modules/accounting/domain/entities/journal-draft.js';
+import type { AccountBalanceRaw } from '../../../src/modules/accounting/domain/services/trial-balance-calculator.js';
 
 export class InMemoryAccountRepository implements AccountRepository {
   constructor(private readonly db: InMemoryDb) {}
   async findByCodes(codes: readonly AccountCode[]): Promise<Map<string, Account>> {
     return new Map(codes.flatMap((c) => (this.db.accounts.has(c.value) ? [[c.value, this.db.accounts.get(c.value)!] as const] : [])));
+  }
+  async findByIds(ids: readonly string[]): Promise<Map<string, Account>> {
+    return new Map([...this.db.accounts.values()].filter((a) => ids.includes(a.id)).map((a) => [a.id, a] as const));
   }
   async list(filter: AccountFilter, page: PageRequest): Promise<Page<Account>> {
     const all = [...this.db.accounts.values()]
@@ -111,5 +120,54 @@ export class InMemoryVoucherSequence implements VoucherSequence {
   }
   async peek(typeId: VoucherTypeId, scopeYear: number): Promise<EntryNumber> {
     return EntryNumber.of((this.db.sequences.get(this.key(typeId, scopeYear)) ?? 0) + 1);
+  }
+}
+
+export class InMemoryJournalDraftRepository implements JournalDraftRepository {
+  constructor(private readonly db: InMemoryDb) {}
+  async save(draft: JournalDraft, expectedVersion: number | null): Promise<void> {
+    const current = this.db.drafts.get(draft.id) as JournalDraft | undefined;
+    if (expectedVersion !== null && current?.version !== expectedVersion) throw new ConflictError('El borrador cambió: versión desactualizada');
+    this.db.drafts.set(draft.id, draft);
+  }
+  async findById(id: DraftId): Promise<JournalDraft | null> {
+    return (this.db.drafts.get(id) as JournalDraft | undefined) ?? null;
+  }
+  async discard(id: DraftId): Promise<boolean> {
+    return this.db.drafts.delete(id);
+  }
+  async list(filter: { from?: LocalDate | undefined; to?: LocalDate | undefined }, page: PageRequest): Promise<Page<JournalDraft>> {
+    const items = ([...this.db.drafts.values()] as JournalDraft[]).filter((d) => !!d.accountingDate && (!filter.from || !d.accountingDate.isBefore(filter.from)) && (!filter.to || !d.accountingDate.isAfter(filter.to)) || (!filter.from && !filter.to));
+    return { items: items.slice(0, page.limit), nextCursor: null };
+  }
+  async countInRange(range: { from: LocalDate; to: LocalDate }): Promise<number> {
+    return ([...this.db.drafts.values()] as JournalDraft[]).filter((d) => d.accountingDate?.isBetween(range.from, range.to)).length;
+  }
+}
+
+export class InMemoryAuditLog implements AuditLog {
+  constructor(private readonly db: InMemoryDb) {}
+  async record(entry: AuditEntry): Promise<void> {
+    this.db.audit.push({ ...entry });
+  }
+}
+
+export class InMemoryTrialBalanceReader implements TrialBalanceReader {
+  constructor(private readonly db: InMemoryDb) {}
+  async read(range: { from: LocalDate; to: LocalDate }): Promise<readonly AccountBalanceRaw[]> {
+    const acc = new Map<string, { opening: Money; d: Money; c: Money }>();
+    for (const e of this.db.entries.values()) {
+      if (e.accountingDate.isAfter(range.to)) continue;
+      for (const l of e.lines) {
+        const a = acc.get(l.accountCode) ?? { opening: Money.zero(), d: Money.zero(), c: Money.zero() };
+        if (e.accountingDate.isBefore(range.from)) a.opening = a.opening.add(l.debit).subtract(l.credit);
+        else { a.d = a.d.add(l.debit); a.c = a.c.add(l.credit); }
+        acc.set(l.accountCode, a);
+      }
+    }
+    return [...acc.entries()].map(([code, a]) => ({
+      code, name: this.db.accounts.get(code)?.name ?? code, nature: this.db.accounts.get(code)?.nature ?? null,
+      openingNet: a.opening, movementDebit: a.d, movementCredit: a.c,
+    }));
   }
 }

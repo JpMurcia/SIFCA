@@ -54,6 +54,14 @@ export class PostJournalEntry {
 
   async execute(rawInput: unknown, options: { idempotencyKey?: string | undefined } = {}): Promise<PostResult> {
     this.d.permissions.assert(POST_ENTRY_PERMISSION);
+    return this.executeAuthorized(rawInput, options);
+  }
+
+  /**
+   * Igual que `execute` pero sin exigir el permiso `accounting.entry.post`: para casos de uso del propio módulo que
+   * ya comprobaron su permiso (p. ej. el cierre anual) y generan el comprobante por el mismo camino y las mismas reglas.
+   */
+  async executeAuthorized(rawInput: unknown, options: { idempotencyKey?: string | undefined } = {}): Promise<PostResult> {
     const input = PostJournalEntryRequestSchema.parse(rawInput);
     const key = options.idempotencyKey === undefined ? undefined : IdempotencyKeySchema.parse(options.idempotencyKey);
     const result = await this.d.uow.run(() => this.post(input, key));

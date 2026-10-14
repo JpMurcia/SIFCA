@@ -356,6 +356,7 @@ paths:
                 profitAndLossAccountId: { type: string, format: uuid }
                 yearResultAccountId: { type: string, format: uuid }
                 accountingDate: { type: string, format: date }
+                voucherType: { type: string, pattern: '^[A-Z]{1,5}$', default: CI, description: Tipo de comprobante del cierre. }
       responses:
         "201":
           description: Comprobante de cierre.

@@ -1,4 +1,4 @@
-import { LocalDate, type PeriodId, type UserId } from '../../../../shared-kernel/index.js';
+import { ConflictError, LocalDate, type Instant, type PeriodId, type UserId } from '../../../../shared-kernel/index.js';
 
 export type PeriodStatus = 'OPEN' | 'CLOSED';
 
@@ -14,7 +14,7 @@ export interface FiscalPeriodProps {
   readonly version: number;
 }
 
-/** Período contable mensual. Las transiciones de cierre/reapertura se añaden con la historia US3. */
+/** Período contable mensual. Transiciones: OPEN → CLOSED (cierre) y CLOSED → OPEN (reapertura excepcional, auditada). */
 export class FiscalPeriod {
   private constructor(private readonly props: FiscalPeriodProps) {}
 
@@ -50,6 +50,18 @@ export class FiscalPeriod {
   get closedAt(): string | null { return this.props.closedAt; }
   get closedBy(): UserId | null { return this.props.closedBy; }
   get version(): number { return this.props.version; }
+
+  /** Devuelve el período cerrado (R-CON-011). Las comprobaciones de cierre las hace `PeriodClosePolicy`. */
+  close(by: UserId, at: Instant): FiscalPeriod {
+    if (!this.isOpen()) throw new ConflictError(`El período ${this.year}-${String(this.month).padStart(2, '0')} ya está cerrado`);
+    return new FiscalPeriod({ ...this.props, status: 'CLOSED', closedAt: at.toISOString(), closedBy: by });
+  }
+
+  /** Devuelve el período abierto de nuevo (R-CON-004: operación excepcional con permiso, motivo y bitácora). */
+  reopen(): FiscalPeriod {
+    if (this.isOpen()) throw new ConflictError(`El período ${this.year}-${String(this.month).padStart(2, '0')} ya está abierto`);
+    return new FiscalPeriod({ ...this.props, status: 'OPEN', closedAt: null, closedBy: null });
+  }
 
   isOpen(): boolean { return this.props.status === 'OPEN'; }
   contains(date: LocalDate): boolean { return date.isBetween(this.props.startsOn, this.props.endsOn); }

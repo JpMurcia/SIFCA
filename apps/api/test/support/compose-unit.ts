@@ -4,7 +4,7 @@ import { FiscalPeriod } from '../../src/modules/accounting/domain/entities/fisca
 import { VoucherType } from '../../src/modules/accounting/domain/entities/voucher-type.js';
 import { FakeUnitOfWork, InMemoryDb } from './in-memory/in-memory-db.js';
 import {
-  InMemoryAccountRepository, InMemoryCostCenterRepository, InMemoryFiscalPeriodRepository, InMemoryJournalEntryRepository,
+  InMemoryAccountRepository, InMemoryAuditLog, InMemoryCostCenterRepository, InMemoryJournalDraftRepository, InMemoryTrialBalanceReader, InMemoryFiscalPeriodRepository, InMemoryJournalEntryRepository,
   InMemoryVoucherSequence, InMemoryVoucherTypeRepository,
 } from './in-memory/in-memory-repos.js';
 import { FixedClock } from './fixed-clock.js';
@@ -48,6 +48,9 @@ export function makeUnit(perms: string[] = ['accounting.entry.post', 'accounting
     uow: new FakeUnitOfWork(db),
     ids: new SeqIds(),
     accounts: new InMemoryAccountRepository(db),
+    drafts: new InMemoryJournalDraftRepository(db),
+    audit: new InMemoryAuditLog(db),
+    trialBalance: new InMemoryTrialBalanceReader(db),
     costCenters: new InMemoryCostCenterRepository(db),
     voucherTypes: new InMemoryVoucherTypeRepository(db),
     periods: new InMemoryFiscalPeriodRepository(db),

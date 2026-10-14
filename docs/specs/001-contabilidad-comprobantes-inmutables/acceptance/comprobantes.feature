@@ -122,3 +122,29 @@ Característica: Comprobantes contables inmutables de partida doble
     Dado un documento emitido a las 23:30 hora de Colombia del 31 de octubre de 2026
     Cuando se contabiliza
     Entonces la fecha contable es 2026-10-31 y pertenece al período de octubre
+
+  @R-CON-004
+  Escenario: [001-14] Reabrir un período exige permiso y motivo y queda en la bitácora
+    Dado que el período de septiembre de 2026 está cerrado
+    Cuando un usuario sin el permiso "accounting.period.reopen" intenta reabrir el período de septiembre de 2026
+    Entonces se rechaza con el código "FORBIDDEN"
+    Cuando el contador intenta reabrir el período de septiembre de 2026 sin indicar el motivo
+    Entonces se rechaza con el código "VALIDATION_FAILED"
+    Cuando el contador reabre el período de septiembre de 2026 con el motivo "Corrección de una factura omitida"
+    Entonces el período de septiembre de 2026 queda abierto
+    Y la bitácora registra la reapertura con el motivo y el usuario
+
+  @R-CON-012
+  Escenario: [001-15] El cierre anual cancela las cuentas de resultado con un comprobante reversible
+    Dado los comprobantes de referencia de venta, nota crédito y recibo del catálogo de reglas
+    Cuando el contador hace el cierre anual de 2026 trasladando el resultado a "3605" a través de "5905"
+    Entonces las cuentas de resultado "4135", "4175" y "6135" quedan en cero
+    Y la cuenta "3605" muestra un saldo crédito de 320000
+    Cuando el contador reversa el comprobante de cierre
+    Entonces las cuentas de resultado recuperan sus saldos de 1000000, 200000 y 480000
+
+  @R-CON-010
+  Escenario: [001-16] Los libros son reproducibles para un mismo rango
+    Dado los comprobantes de referencia de venta, nota crédito y recibo del catálogo de reglas
+    Cuando se consulta dos veces el balance de prueba y el libro diario de octubre de 2026
+    Entonces ambas consultas del mismo informe devuelven exactamente el mismo resultado
