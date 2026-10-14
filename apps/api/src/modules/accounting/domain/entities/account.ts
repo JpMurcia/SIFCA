@@ -28,6 +28,8 @@ export class Account {
   get name(): string { return this.props.name; }
   get level(): number { return this.props.level; }
   get nature(): Nature { return this.props.nature; }
+  get allowsPosting(): boolean { return this.props.allowsPosting; }
+  get isActive(): boolean { return this.props.isActive; }
   get requiresParty(): boolean { return this.props.requiresParty; }
   get requiresCostCenter(): boolean { return this.props.requiresCostCenter; }
 

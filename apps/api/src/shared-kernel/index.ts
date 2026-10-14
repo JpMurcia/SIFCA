@@ -8,3 +8,4 @@ export * from './ids.js';
 export * from './domain-error.js';
 export * from './ports/index.js';
 export * from './pagination.js';
+export * from './canonical-json.js';

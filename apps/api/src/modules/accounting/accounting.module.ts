@@ -1,22 +1,68 @@
 import { Module } from '@nestjs/common';
-import { REQUEST_CONTEXT, type RequestContextPort } from '../../shared-kernel/index.js';
-import { ACCOUNT_REPOSITORY } from './application/ports/account-repository.js';
-import { COST_CENTER_REPOSITORY } from './application/ports/cost-center-repository.js';
-import { FISCAL_PERIOD_REPOSITORY } from './application/ports/fiscal-period-repository.js';
-import { VOUCHER_TYPE_REPOSITORY } from './application/ports/voucher-type-repository.js';
+import {
+  AUDIT_LOG, CLOCK, DOMAIN_EVENT_PUBLISHER, ID_GENERATOR, PERMISSION_CHECKER, REQUEST_CONTEXT, UNIT_OF_WORK,
+  type AuditLog, type Clock, type DomainEventPublisher, type IdGenerator, type PermissionChecker, type RequestContextPort, type UnitOfWork,
+} from '../../shared-kernel/index.js';
+import { ACCOUNTING, type AccountingUseCases } from './application/accounting-use-cases.js';
+import { POST_JOURNAL_ENTRY_PORT, PostJournalEntryFacade } from './application/facade.js';
+import { GetJournalEntry } from './application/use-cases/get-journal-entry.js';
+import { ListJournalEntries } from './application/use-cases/list-journal-entries.js';
+import { ListAccounts, ListVoucherTypes } from './application/use-cases/list-reference-data.js';
+import { PostJournalEntry } from './application/use-cases/post-journal-entry.js';
 import { PrismaAccountRepository } from './infrastructure/persistence/prisma-account.repository.js';
 import { PrismaCostCenterRepository } from './infrastructure/persistence/prisma-cost-center.repository.js';
 import { PrismaFiscalPeriodRepository } from './infrastructure/persistence/prisma-fiscal-period.repository.js';
+import { PrismaJournalEntryRepository } from './infrastructure/persistence/prisma-journal-entry.repository.js';
+import { PrismaVoucherSequence } from './infrastructure/persistence/prisma-voucher-sequence.js';
 import { PrismaVoucherTypeRepository } from './infrastructure/persistence/prisma-voucher-type.repository.js';
+import { JournalEntriesController } from './presentation/http/journal-entries.controller.js';
+import { LookupsController } from './presentation/http/lookups.controller.js';
 
-/** Composition root del módulo: enlaza puertos con adaptadores (D-7). Los casos de uso y controladores se añaden por historia. */
+/** Puertos transversales que el módulo necesita (los implementa `platform/`). */
+export interface PlatformPorts {
+  readonly uow: UnitOfWork;
+  readonly permissions: PermissionChecker;
+  readonly requestContext: RequestContextPort;
+  readonly clock: Clock;
+  readonly ids: IdGenerator;
+  readonly events: DomainEventPublisher;
+  readonly audit: AuditLog;
+}
+
+/**
+ * Composition root del módulo (D-7): crea los adaptadores concretos y enlaza los casos de uso. Lo usan el módulo
+ * de Nest y las pruebas de integración/aceptación (sin HTTP).
+ */
+export function composeAccounting(p: PlatformPorts): AccountingUseCases {
+  const accounts = new PrismaAccountRepository();
+  const costCenters = new PrismaCostCenterRepository();
+  const voucherTypes = new PrismaVoucherTypeRepository();
+  const periods = new PrismaFiscalPeriodRepository(p.requestContext);
+  const entries = new PrismaJournalEntryRepository(p.requestContext);
+  const sequence = new PrismaVoucherSequence(p.requestContext);
+  const base = { uow: p.uow, permissions: p.permissions };
+  return {
+    postJournalEntry: new PostJournalEntry({
+      ...base, requestContext: p.requestContext, clock: p.clock, ids: p.ids, accounts, costCenters, voucherTypes, periods, entries, sequence, events: p.events,
+    }),
+    getJournalEntry: new GetJournalEntry({ ...base, entries }),
+    listJournalEntries: new ListJournalEntries({ ...base, entries }),
+    listAccounts: new ListAccounts({ ...base, accounts }),
+    listVoucherTypes: new ListVoucherTypes({ ...base, voucherTypes, sequence, today: () => p.clock.today().year }),
+  };
+}
+
 @Module({
+  controllers: [JournalEntriesController, LookupsController],
   providers: [
-    { provide: ACCOUNT_REPOSITORY, useFactory: () => new PrismaAccountRepository() },
-    { provide: COST_CENTER_REPOSITORY, useFactory: () => new PrismaCostCenterRepository() },
-    { provide: VOUCHER_TYPE_REPOSITORY, useFactory: () => new PrismaVoucherTypeRepository() },
-    { provide: FISCAL_PERIOD_REPOSITORY, inject: [REQUEST_CONTEXT], useFactory: (ctx: RequestContextPort) => new PrismaFiscalPeriodRepository(ctx) },
+    {
+      provide: ACCOUNTING,
+      inject: [UNIT_OF_WORK, PERMISSION_CHECKER, REQUEST_CONTEXT, CLOCK, ID_GENERATOR, DOMAIN_EVENT_PUBLISHER, AUDIT_LOG],
+      useFactory: (uow: UnitOfWork, permissions: PermissionChecker, requestContext: RequestContextPort, clock: Clock, ids: IdGenerator, events: DomainEventPublisher, audit: AuditLog) =>
+        composeAccounting({ uow, permissions, requestContext, clock, ids, events, audit }),
+    },
+    { provide: POST_JOURNAL_ENTRY_PORT, inject: [ACCOUNTING], useFactory: (uc: AccountingUseCases) => new PostJournalEntryFacade(uc.postJournalEntry) },
   ],
-  exports: [],
+  exports: [POST_JOURNAL_ENTRY_PORT],
 })
 export class AccountingModule {}

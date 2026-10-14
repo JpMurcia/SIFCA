@@ -172,13 +172,15 @@ CREATE TRIGGER trg_line_no_truncate BEFORE TRUNCATE ON acc.journal_line
 -- INV-01 (R-CON-001, R-CON-003): cabecera + líneas coherentes y cuadradas al confirmar la transacción.
 CREATE FUNCTION acc.assert_entry_consistent() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE
-  v_entry  uuid := CASE WHEN TG_TABLE_NAME = 'journal_entry' THEN NEW.id ELSE NEW.entry_id END;
+  v_entry  uuid;
   v_lines  int;
   v_debit  numeric;
   v_credit numeric;
   v_hd     numeric;
   v_hc     numeric;
 BEGIN
+  -- Se ramifica con IF: PL/pgSQL resuelve NEW.<campo> al evaluar la expresión, y journal_entry no tiene entry_id.
+  IF TG_TABLE_NAME = 'journal_entry' THEN v_entry := NEW.id; ELSE v_entry := NEW.entry_id; END IF;
   SELECT count(*), COALESCE(sum(debit), 0), COALESCE(sum(credit), 0)
     INTO v_lines, v_debit, v_credit FROM acc.journal_line WHERE entry_id = v_entry;
   SELECT total_debit, total_credit INTO v_hd, v_hc FROM acc.journal_entry WHERE id = v_entry;

@@ -56,4 +56,16 @@ describe('toProblem (research §14)', () => {
     expect(p.status).toBe(500);
     expect(JSON.stringify(p)).not.toMatch(/SELECT|secreto|at /);
   });
+
+  it.each([
+    ['ENTRY_NOT_BALANCED: entry x lines=2', 'ENTRY_NOT_BALANCED', 422],
+    ['PERIOD_CLOSED: 2026-9', 'PERIOD_CLOSED', 409],
+    ['IMMUTABLE_RECORD: UPDATE on acc.journal_entry is not allowed', 'ENTRY_IMMUTABLE', 405],
+    ['ACCOUNT_NOT_POSTABLE: abc', 'VALIDATION_FAILED', 422],
+    ['duplicate key value violates unique constraint "uq_entry_reversal_of"', 'ALREADY_REVERSED', 409],
+  ])('red de seguridad: error de base de datos «%s» → %s', (message, code, status) => {
+    const p = toProblem(Object.assign(new Error('Invalid prisma call'), { cause: new Error(message) }), 'r');
+    expect([p.code, p.status]).toEqual([code, status]);
+    expect(JSON.stringify(p)).not.toMatch(/acc\./);
+  });
 });
