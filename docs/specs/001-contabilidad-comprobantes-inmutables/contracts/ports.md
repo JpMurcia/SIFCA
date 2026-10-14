@@ -29,7 +29,7 @@ usa (`domain/` o `application/`) y los implementa `infrastructure/` o `platform/
 | `VoucherSequence` | `next(typeId: VoucherTypeId, scopeYear: number): Promise<EntryNumber>` (bloquea la fila hasta el *commit*) · `peek(typeId, scopeYear)` | `prisma-voucher-sequence.ts` |
 | `TrialBalanceReader` | `read(query: { from, to, level? }): Promise<TrialBalanceRaw>` (acumulados por cuenta) | `prisma-trial-balance.reader.ts` |
 | `LedgerReader` | `journal(query, page)` · `generalLedger(query, page)` | `prisma-ledger.reader.ts` |
-| `AuditLog` | `record(entry: { action, entityType, entityId, reason?, before?, after? }): Promise<void>` | `platform/audit/prisma-audit-log.ts` |
+| `AuditLog` | `record(entry: { action, entityType, entityId, reason?, before?, after? }): Promise<void>` | `platform/persistence/prisma-audit-log.ts` |
 | `PeriodCloseCheck` (multi-implementación) | `check(period: FiscalPeriod): Promise<readonly CloseBlocker[]>` | Aquí: `BalancedTrialBalanceCheck`, `NoDraftsCheck`. Otras specs registran las suyas (INV-10, INV-13, INV-14) |
 
 ## 3. Fachada pública del módulo (`index.ts`)

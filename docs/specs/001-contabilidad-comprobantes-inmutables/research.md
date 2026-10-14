@@ -283,7 +283,7 @@ despliegue (anotado en `specs/README.md`). Los permisos usados por este feature 
 (append-only: mismos tres niveles de protección) dentro de la misma transacción: `tenant_id, actor_id,
 action, entity_type, entity_id, reason, before, after, occurred_at`. La tabla y el puerto `AuditLog` se crean en
 la migración `platform_roles_audit` porque ninguna otra spec la ha creado todavía; **no pertenece al módulo
-`accounting`**: se declara en `platform/audit` y la futura spec de auditoría la adopta. Lo que `accounting` ve es
+`accounting`**: se declara en `platform/persistence` y la futura spec de auditoría la adopta. Lo que `accounting` ve es
 solo el puerto `AuditLog.record(entry)` (D-6 respetado: no lee ni escribe tablas ajenas; las escribe el adaptador
 de la plataforma).
 

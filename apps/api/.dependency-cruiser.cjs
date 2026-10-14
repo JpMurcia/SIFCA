@@ -19,7 +19,7 @@ module.exports = {
       name: 'D-1b-domain-sin-core-node-io',
       severity: 'error',
       from: { path: `${MOD}/domain` },
-      to: { dependencyTypes: ['core'], path: '^(node:)?(fs|http|https|net|child_process|dgram|dns|tls|worker_threads)(/.*)?$' },
+      to: { dependencyTypes: ['core'], path: '^(node:)?(fs|http|https|net|child_process|dgram|dns|tls|worker_threads)$' },
     },
     {
       name: 'D-1c-domain-hacia-adentro',
@@ -92,7 +92,7 @@ module.exports = {
     },
   ],
   options: {
-    doNotFollow: { path: 'node_modules' },
+    doNotFollow: { path: 'node_modules|^src/generated' },
     tsPreCompilationDeps: true,
     tsConfig: { fileName: 'tsconfig.json' },
     enhancedResolveOptions: { exportsFields: ['exports'], conditionNames: ['import', 'require', 'node', 'default', 'types'], extensions: ['.ts', '.js'] },

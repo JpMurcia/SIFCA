@@ -81,7 +81,7 @@ erDiagram
         text status "POSTED"
         uuid reversal_of FK
         text reversal_reason
-        numeric total_debit
+        numeric total_debit "escala menor o igual a 2"
         numeric total_credit
         text idempotency_key
         text request_hash
@@ -123,7 +123,7 @@ cuando exista la spec de terceros, y mientras tanto el dominio exige solo su pre
 
 ## 2. Tablas, campos y restricciones
 
-Tipos: `NUMERIC(18,2)` para importes (R-CON-009.2); `DATE` para fechas contables (R-CON-014);
+Tipos: `NUMERIC` **sin** precisión declarada más `CHECK (scale(x) <= 2)` y tope `< 10^16` para importes (R-CON-009.2): con `NUMERIC(18,2)` PostgreSQL *redondea en silencio* 1,005 a 1,01 y el `CHECK` de escala sería inútil, mientras que así la base **rechaza** un importe con más de 2 decimales; `DATE` para fechas contables (R-CON-014);
 `TIMESTAMPTZ` para instantes (UTC). Todas las tablas llevan `tenant_id uuid NOT NULL` y RLS forzada (§4).
 
 ### 2.1 `acc.account` (maestro mutable; el plan de cuentas se carga fuera de este feature)
@@ -201,7 +201,7 @@ Un período no se elimina (`BEFORE DELETE` lo rechaza). El historial de cierres 
 | `status` | `text` | NOT NULL, `CHECK (status = 'POSTED')` |
 | `reversal_of` | `uuid` | FK → `acc.journal_entry(id)`, `CHECK (reversal_of <> id)` |
 | `reversal_reason` | `text` | `CHECK ((reversal_of IS NULL) = (reversal_reason IS NULL))` y `CHECK ((source_type = 'REVERSAL') = (reversal_of IS NOT NULL))` |
-| `total_debit`, `total_credit` | `numeric(18,2)` | NOT NULL, `CHECK (total_debit > 0)`, `CHECK (total_debit = total_credit)` (R-CON-001) |
+| `total_debit`, `total_credit` | `numeric` (escala ≤ 2: `ck_entry_scale`) | NOT NULL, `CHECK (total_debit > 0)`, `CHECK (total_debit = total_credit)` (R-CON-001) |
 | `idempotency_key` | `text` | longitud 8–128 |
 | `request_hash` | `char(64)` | `CHECK ((idempotency_key IS NULL) = (request_hash IS NULL))` |
 | `posted_at` | `timestamptz` | NOT NULL (UTC) |
@@ -231,8 +231,8 @@ Un período no se elimina (`BEFORE DELETE` lo rechaza). El historial de cierres 
 | `account_id` | `uuid` | NOT NULL, FK → `acc.account` (INV-03) |
 | `party_id` | `uuid` | sin FK (ver §1) |
 | `cost_center_id` | `uuid` | FK → `acc.cost_center` |
-| `debit` | `numeric(18,2)` | NOT NULL DEFAULT 0, `CHECK (debit >= 0)` |
-| `credit` | `numeric(18,2)` | NOT NULL DEFAULT 0, `CHECK (credit >= 0)` |
+| `debit` | `numeric` | NOT NULL DEFAULT 0, `CHECK (debit >= 0)` |
+| `credit` | `numeric` | NOT NULL DEFAULT 0, `CHECK (credit >= 0)` |
 | | | `CHECK ((debit > 0) <> (credit > 0))` (R-CON-002, INV-02) |
 | `description` | `text` | longitud ≤ 500 |
 | `document_ref` | `text` | longitud ≤ 60 |

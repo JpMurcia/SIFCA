@@ -129,10 +129,10 @@ apps/api/
 │   │   └── ports/ (unit-of-work.ts · clock.ts · request-context.ts · permission-checker.ts)
 │   ├── platform/                                       # adaptadores transversales (composition root)
 │   │   ├── config/ (env.schema.ts)
-│   │   ├── persistence/ (prisma.service.ts · prisma-unit-of-work.ts · tenant-context.ts · sql.ts)
+│   │   ├── persistence/ (prisma.service.ts · prisma-unit-of-work.ts · prisma-audit-log.ts · tenant-context.ts · sql.ts)
 │   │   ├── http/ (problem-details.filter.ts · idempotency.interceptor.ts · request-context.middleware.ts)
 │   │   ├── time/ (system-clock.ts · system-id-generator.ts)
-│   │   └── audit/ (prisma-audit-log.ts)
+│   │   └── events/ (in-memory-event-publisher.ts)
 │   └── modules/accounting/
 │       ├── domain/
 │       │   ├── entities/ (journal-entry.ts · journal-line.ts · account.ts · fiscal-period.ts · voucher-type.ts · journal-draft.ts)

@@ -591,6 +591,8 @@ components:
             - NOT_FOUND
             - CONFLICT
             - IDEMPOTENCY_CONFLICT
+            - UNAUTHENTICATED
+            - INTERNAL_ERROR
         requestId: { type: string }
         errors:
           type: array

@@ -1,8 +1,9 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
-  moduleFormat = "esm"
-  runtime  = "nodejs"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["partialIndexes"]
+  moduleFormat    = "esm"
+  runtime         = "nodejs"
 }
 
 datasource db {
@@ -10,9 +11,190 @@ datasource db {
   schemas  = ["acc", "audit"]
 }
 
-model SpikeThing {
-  id    String  @id @db.Uuid
-  total Decimal @db.Decimal(18, 2)
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model account {
+  id                   String         @id @db.Uuid
+  tenant_id            String         @db.Uuid
+  code                 String
+  name                 String
+  parent_id            String?        @db.Uuid
+  level                Int
+  nature               String
+  allows_posting       Boolean        @default(false)
+  requires_party       Boolean        @default(false)
+  requires_cost_center Boolean        @default(false)
+  is_active            Boolean        @default(true)
+  version              Int            @default(1)
+  account              account?       @relation("accountToaccount", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_account        account[]      @relation("accountToaccount")
+  journal_line         journal_line[]
+
+  @@unique([tenant_id, code], map: "uq_account_tenant_code")
   @@schema("acc")
-  @@map("spike_thing")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model cost_center {
+  id           String         @id @db.Uuid
+  tenant_id    String         @db.Uuid
+  code         String
+  name         String
+  is_active    Boolean        @default(true)
+  journal_line journal_line[]
+
+  @@unique([tenant_id, code], map: "uq_cost_center_code")
+  @@schema("acc")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This table contains exclusion constraints and requires additional setup for migrations. Visit https://pris.ly/d/exclusion-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model fiscal_period {
+  id            String          @id @db.Uuid
+  tenant_id     String          @db.Uuid
+  year          Int
+  month         Int
+  starts_on     DateTime        @db.Date
+  ends_on       DateTime        @db.Date
+  status        String          @default("OPEN")
+  closed_at     DateTime?       @db.Timestamptz(6)
+  closed_by     String?         @db.Uuid
+  version       Int             @default(1)
+  journal_entry journal_entry[]
+
+  @@unique([tenant_id, year, month], map: "uq_period_tenant_year_month")
+  @@schema("acc")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model journal_draft {
+  id              String       @id @db.Uuid
+  tenant_id       String       @db.Uuid
+  voucher_type_id String       @db.Uuid
+  accounting_date DateTime?    @db.Date
+  description     String?
+  lines           Json
+  created_by      String       @db.Uuid
+  created_at      DateTime     @db.Timestamptz(6)
+  updated_at      DateTime     @db.Timestamptz(6)
+  version         Int          @default(1)
+  voucher_type    voucher_type @relation(fields: [voucher_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([tenant_id, accounting_date], map: "ix_draft_date")
+  @@schema("acc")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model journal_entry {
+  id                  String         @id @db.Uuid
+  tenant_id           String         @db.Uuid
+  voucher_type_id     String         @db.Uuid
+  numbering_year      Int
+  number              BigInt
+  accounting_date     DateTime       @db.Date
+  fiscal_period_id    String         @db.Uuid
+  description         String
+  source_type         String
+  source_id           String?        @db.Uuid
+  status              String
+  reversal_of         String?        @unique(map: "uq_entry_reversal_of", where: raw("(reversal_of IS NOT NULL)")) @db.Uuid
+  reversal_reason     String?
+  total_debit         Decimal        @db.Decimal
+  total_credit        Decimal        @db.Decimal
+  idempotency_key     String?
+  request_hash        String?        @db.Char(64)
+  posted_at           DateTime       @db.Timestamptz(6)
+  posted_by           String         @db.Uuid
+  fiscal_period       fiscal_period  @relation(fields: [fiscal_period_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_entry_period")
+  journal_entry       journal_entry? @relation("journal_entryTojournal_entry", fields: [reversal_of], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_entry_reversal_of")
+  other_journal_entry journal_entry? @relation("journal_entryTojournal_entry")
+  voucher_type        voucher_type   @relation(fields: [voucher_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_entry_voucher_type")
+  journal_line        journal_line[]
+
+  @@unique([id, tenant_id, accounting_date], map: "uq_entry_id_tenant_date")
+  @@unique([tenant_id, idempotency_key], map: "uq_entry_idempotency", where: raw("(idempotency_key IS NOT NULL)"))
+  @@unique([tenant_id, voucher_type_id, numbering_year, number], map: "uq_entry_number")
+  @@index([tenant_id, accounting_date, voucher_type_id, number], map: "ix_entry_journal")
+  @@index([tenant_id, fiscal_period_id], map: "ix_entry_period")
+  @@index([tenant_id, source_type, source_id], map: "ix_entry_source")
+  @@schema("acc")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model journal_line {
+  id              String        @id @db.Uuid
+  tenant_id       String        @db.Uuid
+  entry_id        String        @db.Uuid
+  accounting_date DateTime      @db.Date
+  line_no         Int
+  account_id      String        @db.Uuid
+  party_id        String?       @db.Uuid
+  cost_center_id  String?       @db.Uuid
+  debit           Decimal       @default(0) @db.Decimal
+  credit          Decimal       @default(0) @db.Decimal
+  description     String?
+  document_ref    String?
+  due_date        DateTime?     @db.Date
+  account         account       @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_line_account")
+  cost_center     cost_center?  @relation(fields: [cost_center_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_line_cost_center")
+  journal_entry   journal_entry @relation(fields: [entry_id, tenant_id, accounting_date], references: [id, tenant_id, accounting_date], onDelete: NoAction, onUpdate: NoAction, map: "fk_line_entry")
+
+  @@unique([entry_id, line_no], map: "uq_line_entry_lineno")
+  @@index([entry_id], map: "ix_line_entry")
+  @@index([tenant_id, account_id, accounting_date], map: "ix_line_ledger")
+  @@index([tenant_id, party_id, account_id], map: "ix_line_party", where: raw("(party_id IS NOT NULL)"))
+  @@schema("acc")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model voucher_sequence {
+  tenant_id       String       @db.Uuid
+  voucher_type_id String       @db.Uuid
+  scope_year      Int
+  last_number     BigInt       @default(0)
+  voucher_type    voucher_type @relation(fields: [voucher_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([tenant_id, voucher_type_id, scope_year])
+  @@schema("acc")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model voucher_type {
+  id               String             @id @db.Uuid
+  tenant_id        String             @db.Uuid
+  code             String
+  name             String
+  numbering_scope  String
+  journal_draft    journal_draft[]
+  journal_entry    journal_entry[]
+  voucher_sequence voucher_sequence[]
+
+  @@unique([tenant_id, code], map: "uq_voucher_type_code")
+  @@schema("acc")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model audit_log {
+  id          String   @id @db.Uuid
+  tenant_id   String   @db.Uuid
+  actor_id    String   @db.Uuid
+  action      String
+  entity_type String
+  entity_id   String   @db.Uuid
+  reason      String?
+  before      Json?
+  after       Json?
+  request_id  String?
+  occurred_at DateTime @db.Timestamptz(6)
+
+  @@index([tenant_id, entity_type, entity_id, occurred_at], map: "ix_audit_entity")
+  @@schema("audit")
 }
