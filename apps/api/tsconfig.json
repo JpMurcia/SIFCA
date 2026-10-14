@@ -1,0 +1,13 @@
+{
+  "extends": "../../packages/config/tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["src", "test", "prisma", "*.ts", "*.mjs"],
+  "exclude": ["dist", "node_modules"]
+}

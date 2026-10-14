@@ -26,9 +26,9 @@ Consultado en el registro de npm el 2026-10-14 (`npm view <paquete> dist-tags.la
 | Vitest | 5.0.4 | **5.0.x** | ✅ |
 | fast-check | 4.10.2 | **4.10.x** | ✅ |
 | @cucumber/cucumber | 13.3.0 | **13.3.x** (soporta `# language: es`) | ✅ |
-| testcontainers / @testcontainers/postgresql | 12.2.1 | **12.2.x** | ✅ |
+| testcontainers / @testcontainers/postgresql | 12.2.1 | **12.2.0** (misma razón: la 12.2.1 se rechaza por antigüedad mínima) | ✅ |
 | dependency-cruiser | 18.6.0 | **18.6.x** | ✅ |
-| pnpm / Turborepo | 12.11.2 / 2.11.8 | **pnpm 12.x + Turborepo 2.11.x** | ✅ |
+| pnpm / Turborepo | 12.13.0 / 2.11.8 | **pnpm 12.13.0 + Turborepo 2.11.7** (la 2.11.8 se publicó hace menos de 1 día y la política `minimumReleaseAge` de pnpm 12 la rechaza) | ✅ |
 
 > Qué **no** se pudo verificar: la documentación de Prisma (`prisma.io`) no fue accesible desde el entorno de
 > redacción. Por eso las afirmaciones sobre Prisma de este documento se apoyan en el ADR-0004 y se confirman con
@@ -46,6 +46,10 @@ propone actualizaciones por PR, nunca automáticas en `main`.
 (esquemas separados con privilegios distintos)? En versiones 5–6 `multiSchema` era una función de vista previa;
 no pude confirmar su estado en 7.10 (documentación inaccesible; una búsqueda de la cadena en el paquete descargado
 no devolvió resultados concluyentes).
+
+> **Resultado del *spike* S-PRISMA-1 (2026-10-14):** `multiSchema` **funciona en Prisma 7.10.0 sin función en vista
+> previa** (`schemas = [...]` en el `datasource` y `@@schema`). Se usa el plan A; el plan B queda descartado salvo
+> que una versión futura lo cambie. Ver `03-evaluacion-de-librerias.md` §1.5.
 
 **Decisión.**
 

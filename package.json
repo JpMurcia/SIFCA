@@ -1,0 +1,19 @@
+{
+  "name": "sifca",
+  "private": true,
+  "version": "0.0.0",
+  "description": "SIFCA — Sistema Integral Fiscal y Contable Ágil",
+  "engines": { "node": ">=22.18" },
+  "packageManager": "pnpm@12.13.0",
+  "scripts": {
+    "docs:check": "node scripts/docs.mjs check --strict",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test:unit": "turbo run test:unit",
+    "test:arch": "turbo run test:arch"
+  },
+  "devDependencies": {
+    "turbo": "2.11.7"
+  }
+}

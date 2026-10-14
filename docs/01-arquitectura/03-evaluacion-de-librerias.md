@@ -81,6 +81,22 @@ sistema contable (N-2, N-5, N-6). Se acepta esa decisión con estas mitigaciones
 | Transacción con `timeout` explícito: una transacción que lo excede se revierte por completo |
 | Si algún criterio **no** se puede cumplir, se escala al arquitecto principal con la alternativa propuesta (sin cambiar de ORM por iniciativa propia) |
 
+#### Resultado parcial del spike (2026-10-14, spec 001 · T010)
+
+Verificado contra PostgreSQL 16 real con Prisma **7.10.0** + `@prisma/adapter-pg` 7.10.0 (`apps/api/prisma/schema.prisma`):
+
+| Criterio | Resultado |
+|---|---|
+| Varios esquemas (`schemas = ["acc","audit"]` + `@@schema`) | ✅ `prisma validate` y `prisma generate` correctos **sin** marca de función en vista previa. No hace falta el plan B (prefijo `acc_`) |
+| `$transaction` con `maxWait`, `timeout` e `isolationLevel` explícitos | ✅ aceptados |
+| `set_config('app.tenant_id', …, true)` y `SELECT … FOR UPDATE` con `$queryRaw` en la misma transacción | ✅ la variable es visible dentro de la transacción; fuera de ella `current_setting(…, true)` devuelve **cadena vacía** (no `NULL`), por eso las políticas RLS usan `NULLIF(…, '')` |
+| Rollback ante excepción | ✅ la fila no persiste |
+| `Decimal` | ✅ se lee como `Decimal` (decimal.js) sin pasar por `number`; las lecturas SQL crudas usan `::text` |
+
+Los demás criterios (concurrencia, RLS, *constraint trigger*, `REVOKE`, deriva de migración, ida y vuelta de `Decimal`)
+se cubren con las pruebas de integración de la spec 001 (T022–T028, T039–T046). Lo anterior **no** verifica
+comportamiento con un *pooler* de conexiones (queda abierto para el despliegue).
+
 ### 1.6 Historial de la evaluación (Fase 1, para contexto)
 
 Se compararon TypeORM, Prisma y Drizzle frente a N-1…N-9. TypeORM y Drizzle cubrían N-2, N-5 y N-6 sin salirse
@@ -196,6 +212,13 @@ entre campos se describen además en la `description` de cada esquema (`.meta({ 
 evento y un webhook) desde `packages/contracts`; criterios: documento válido OpenAPI 3.1, ejemplos presentes,
 instantánea en CI y rechazo en tiempo de ejecución de un cuerpo con campo desconocido, importe negativo y
 decimal de más.
+
+#### Resultado parcial del spike S-ZOD (2026-10-14, spec 001 · T011)
+
+Con Zod **4.6.7**, `z.toJSONSchema()` produce: `pattern` para el esquema `Money`, `minItems`/`maxItems` para
+`z.array().min(2).max(500)`, `additionalProperties: false` para `.strict()`, y uniones discriminadas como `oneOf`
+con `const`/`enum` (`target: 'openapi-3.0'` o `'draft-2020-12'`). `z.uuid()` acepta UUID v7. Quedan por verificar
+(spec 001, T087): ejemplos, respuestas de error `Problem` y la comparación con el contrato.
 
 ## 5. Otras decisiones de librerías
 

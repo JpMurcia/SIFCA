@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  moduleFormat = "esm"
+  runtime  = "nodejs"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["acc", "audit"]
+}
+
+model SpikeThing {
+  id    String  @id @db.Uuid
+  total Decimal @db.Decimal(18, 2)
+  @@schema("acc")
+  @@map("spike_thing")
+}
