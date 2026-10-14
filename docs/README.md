@@ -4,9 +4,10 @@
 desde cero, para gestión contable, fiscal y administrativa de empresas colombianas, con una vitrina comercial
 pública y un back-office ERP.
 
-> **Estado: Fase 1 — Especificaciones.** Este repositorio todavía no contiene código de aplicación. Todo lo que
-> hay aquí es documentación que sirve de fuente de verdad para implementar con desarrollo guiado por
-> especificaciones (Spec Kit) y asistencia de IA.
+> **Estado (14-oct-2026):** la documentación es la fuente de verdad para implementar con desarrollo guiado por
+> especificaciones (Spec Kit) y asistencia de IA. Ya existe código del **backend de contabilidad** (spec 001, en
+> `apps/api/`); las demás especificaciones y la interfaz de usuario están por construir. Visión general de todo lo
+> hecho y lo investigado: [`informe-del-proyecto.md`](informe-del-proyecto.md).
 
 ## Gobernanza
 
@@ -36,20 +37,23 @@ Si un ADR, una spec o un plan contradice la constitución, **prevalece la consti
 | Carpeta / archivo | Contenido |
 |---|---|
 | [`00-alcance-supuestos-y-roadmap.md`](00-alcance-supuestos-y-roadmap.md) | Alcance, decisiones (Q-01, Q-02, Q-03, Q-11), fuera de alcance, supuestos, preguntas abiertas, riesgos y fases |
+| [`informe-del-proyecto.md`](informe-del-proyecto.md) | **Informe consolidado:** qué se hizo, qué se investigó (con su grado de certeza), resultados, pendientes |
 | [`constitution.md`](constitution.md) | Constitución y gates de calidad |
 | [`specs/`](specs/README.md) | 11 especificaciones con escenarios Gherkin y `traceability-matrix.md` |
 | [`01-arquitectura/`](01-arquitectura/) | Módulos y capas del backend, modelo de datos PostgreSQL, evaluación de librerías, contrato OpenAPI, integración con motores externos, ADRs |
 | [`02-normativa-y-reglas/`](02-normativa-y-reglas/) | Catálogo de reglas: contabilidad, impuestos y retenciones, factura electrónica DIAN, **inventarios (costeo, ABC, ROP, RMA)**, **cartera y ventas a crédito**, referencia API Alegra |
+| [`04-diseno-ux/`](04-diseno-ux/README.md) | **Insumos para la maqueta** (Claude Design): brief, navegación, catálogo de pantallas, sistema de diseño, benchmark |
 | [`03-procesos-y-flujos/`](03-procesos-y-flujos/) | Secuencias y estados: flujo de venta, **devoluciones con nota crédito y reingreso a kardex**, control de cupo, reposición y ABC |
 
 ### Orden de lectura sugerido
 
-1. `constitution.md`
+1. `informe-del-proyecto.md` y `constitution.md`
 2. `00-alcance-supuestos-y-roadmap.md` (y las preguntas abiertas)
 3. `01-arquitectura/01-vision-general-y-modulos.md` y `06-decisiones-adr.md`
 4. `02-normativa-y-reglas/README.md` y cada catálogo de reglas
 5. `03-procesos-y-flujos/` y luego `specs/`
 6. El resto de `01-arquitectura/` según el módulo que se vaya a construir
+7. `04-diseno-ux/` si vas a maquetar o diseñar la interfaz
 
 ## Convenciones
 
