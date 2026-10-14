@@ -4,7 +4,8 @@ import {
   type AuditLog, type Clock, type DomainEventPublisher, type IdGenerator, type PermissionChecker, type RequestContextPort, type UnitOfWork,
 } from '../../shared-kernel/index.js';
 import { ACCOUNTING, type AccountingUseCases } from './application/accounting-use-cases.js';
-import { POST_JOURNAL_ENTRY_PORT, PostJournalEntryFacade } from './application/facade.js';
+import { POST_JOURNAL_ENTRY_PORT, PostJournalEntryFacade, REVERSE_JOURNAL_ENTRY_PORT, ReverseJournalEntryFacade } from './application/facade.js';
+import { ReverseJournalEntry } from './application/use-cases/reverse-journal-entry.js';
 import { GetJournalEntry } from './application/use-cases/get-journal-entry.js';
 import { ListJournalEntries } from './application/use-cases/list-journal-entries.js';
 import { ListAccounts, ListVoucherTypes } from './application/use-cases/list-reference-data.js';
@@ -41,10 +42,10 @@ export function composeAccounting(p: PlatformPorts): AccountingUseCases {
   const entries = new PrismaJournalEntryRepository(p.requestContext);
   const sequence = new PrismaVoucherSequence(p.requestContext);
   const base = { uow: p.uow, permissions: p.permissions };
+  const postDeps = { ...base, requestContext: p.requestContext, clock: p.clock, ids: p.ids, accounts, costCenters, voucherTypes, periods, entries, sequence, events: p.events };
   return {
-    postJournalEntry: new PostJournalEntry({
-      ...base, requestContext: p.requestContext, clock: p.clock, ids: p.ids, accounts, costCenters, voucherTypes, periods, entries, sequence, events: p.events,
-    }),
+    postJournalEntry: new PostJournalEntry(postDeps),
+    reverseJournalEntry: new ReverseJournalEntry(postDeps),
     getJournalEntry: new GetJournalEntry({ ...base, entries }),
     listJournalEntries: new ListJournalEntries({ ...base, entries }),
     listAccounts: new ListAccounts({ ...base, accounts }),
@@ -61,8 +62,9 @@ export function composeAccounting(p: PlatformPorts): AccountingUseCases {
       useFactory: (uow: UnitOfWork, permissions: PermissionChecker, requestContext: RequestContextPort, clock: Clock, ids: IdGenerator, events: DomainEventPublisher, audit: AuditLog) =>
         composeAccounting({ uow, permissions, requestContext, clock, ids, events, audit }),
     },
+    { provide: REVERSE_JOURNAL_ENTRY_PORT, inject: [ACCOUNTING], useFactory: (uc: AccountingUseCases) => new ReverseJournalEntryFacade(uc.reverseJournalEntry) },
     { provide: POST_JOURNAL_ENTRY_PORT, inject: [ACCOUNTING], useFactory: (uc: AccountingUseCases) => new PostJournalEntryFacade(uc.postJournalEntry) },
   ],
-  exports: [POST_JOURNAL_ENTRY_PORT],
+  exports: [POST_JOURNAL_ENTRY_PORT, REVERSE_JOURNAL_ENTRY_PORT],
 })
 export class AccountingModule {}

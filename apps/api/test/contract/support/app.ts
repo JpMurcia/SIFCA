@@ -22,18 +22,20 @@ export interface TestApp {
 }
 
 /** Arranca la API real (Nest) contra una base de pruebas y siembra un tenant con plan de cuentas y año 2026. */
-export async function startApp(db: TestDb): Promise<TestApp> {
+export async function startApp(db: TestDb, opts: { tenantId?: string; seed?: boolean } = {}): Promise<TestApp> {
   process.env.DATABASE_URL = db.urls.app;
   process.env.JWT_DEV_SECRET = JWT_SECRET;
   process.env.NODE_ENV = 'test';
   process.env.TX_MAX_WAIT_MS = '30000';
   process.env.TX_TIMEOUT_MS = '60000';
-  const tenantId = randomUUID();
+  const tenantId = opts.tenantId ?? randomUUID();
   const userId = randomUUID();
-  await db.withTenant(tenantId, async (c) => {
-    await seedTestChart(c, tenantId);
-    await seedFiscalYear(c, tenantId, 2026);
-  }, db.owner);
+  if (opts.seed !== false) {
+    await db.withTenant(tenantId, async (c) => {
+      await seedTestChart(c, tenantId);
+      await seedFiscalYear(c, tenantId, 2026);
+    }, db.owner);
+  }
   const mod = await Test.createTestingModule({ imports: [AppModule] }).compile();
   const app = mod.createNestApplication();
   app.setGlobalPrefix('api/v1');

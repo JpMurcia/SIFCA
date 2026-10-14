@@ -198,10 +198,9 @@ paths:
       summary: Reversa un comprobante (contraasiento)
       description: |
         Crea un comprobante de reversión con los lados invertidos que referencia al original. El efecto neto de
-        ambos sobre cada cuenta es cero. Un comprobante se reversa una sola vez (`ALREADY_REVERSED`).
+        ambos sobre cada cuenta es cero. Un comprobante se reversa una sola vez (`ALREADY_REVERSED`), lo que hace la
+        operación segura ante reintentos sin necesidad de `Idempotency-Key`.
       x-required-permission: accounting.entry.reverse
-      parameters:
-        - $ref: "#/components/parameters/IdempotencyKey"
       requestBody:
         required: true
         content:

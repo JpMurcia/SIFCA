@@ -1,12 +1,14 @@
 import { setWorldConstructor, World } from '@cucumber/cucumber';
 import { makePgUnit, type PgUnit } from '../../support/compose-pg.js';
 import { createTestDatabase, type TestDb } from '../../integration/support/postgres-harness.js';
+import { startApp, type TestApp } from '../../contract/support/app.js';
 import { toProblem } from '../../../src/platform/http/problem-details.js';
 
 /** Estado compartido por los pasos de un escenario. Se crea una base nueva (clon de la plantilla) por escenario. */
 export class SifcaWorld extends World {
   db!: TestDb;
   unit!: PgUnit;
+  private httpApp: TestApp | undefined;
   /** Cuerpo del comprobante que se va a contabilizar (lo arman los pasos «Dado»). */
   body: Record<string, unknown> = {};
   /** Resultado de la última operación. */
@@ -22,7 +24,13 @@ export class SifcaWorld extends World {
   async seedCompany(): Promise<void> {
     this.unit = await makePgUnit(this.db);
   }
+  /** API HTTP real (Nest) sobre el mismo tenant del escenario; se levanta solo cuando un paso la necesita. */
+  async api(): Promise<TestApp> {
+    this.httpApp ??= await startApp(this.db, { tenantId: this.unit.tenantId, seed: false });
+    return this.httpApp;
+  }
   async dispose(): Promise<void> {
+    await this.httpApp?.close();
     await this.unit?.close();
     await this.db?.close();
   }

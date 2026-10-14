@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Headers, HttpCode, Inject, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, HttpCode, Inject, Param, Patch, Post, Put, Query, Res } from '@nestjs/common';
+import { EntryImmutable } from '../../domain/errors/accounting-errors.js';
 import { ACCOUNTING, type AccountingUseCases } from '../../application/accounting-use-cases.js';
 import { pageOf, toEntryDto, toSummaryDto } from './dto.js';
 
@@ -28,5 +29,28 @@ export class JournalEntriesController {
   @HttpCode(200)
   async get(@Param('entryId') entryId: string) {
     return toEntryDto(await this.uc.getJournalEntry.execute(entryId));
+  }
+
+  /** Corrección = contraasiento (R-CON-005). */
+  @Post(':entryId/reversal')
+  async reverse(@Param('entryId') entryId: string, @Body() body: unknown) {
+    const { entry } = await this.uc.reverseJournalEntry.execute(entryId, body);
+    return toEntryDto(entry);
+  }
+
+  /** Los comprobantes contabilizados no se editan ni se eliminan (principio I): 405 ENTRY_IMMUTABLE. */
+  @Put(':entryId')
+  replace(): never {
+    throw new EntryImmutable();
+  }
+
+  @Patch(':entryId')
+  update(): never {
+    throw new EntryImmutable();
+  }
+
+  @Delete(':entryId')
+  remove(): never {
+    throw new EntryImmutable();
   }
 }
