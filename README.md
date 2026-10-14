@@ -33,7 +33,7 @@ node scripts/docs.mjs check --strict
 | Ruta | Contenido | Estado |
 |---|---|---|
 | [`docs/`](docs/README.md) | Constitución, 11 especificaciones con escenarios Gherkin, 95 reglas normativas, arquitectura, ADR, flujos, **diseño de interfaz** | ✅ |
-| [`docs/04-diseno-ux/`](docs/04-diseno-ux/README.md) | Brief para **Claude Design**, navegación, catálogo de pantallas, sistema de diseño y benchmark | ✅ propuesta |
+| [`docs/04-diseno-ux/`](docs/04-diseno-ux/README.md) | Brief para **Claude Design**, navegación, catálogo de pantallas, sistema de diseño, benchmark, **integraciones y migración de datos** | ✅ propuesta |
 | `apps/api/` | API NestJS (Clean Architecture): módulo `accounting` completo, migraciones SQL con inmutabilidad y RLS | ✅ spec 001 |
 | `packages/contracts/` | Esquemas Zod: única fuente de verdad de los contratos | ✅ |
 | `apps/admin`, `apps/storefront`, `apps/mobile` | Back-office (Vite), vitrina (Next.js), móvil (Expo) | ⏳ sin crear |

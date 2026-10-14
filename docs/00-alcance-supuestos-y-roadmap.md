@@ -112,6 +112,7 @@ Se documentan para que el diseño **no los bloquee**, pero no se especifican en 
 | **F5 — Logística avanzada** | **ABC**, **ROP/stock de seguridad**, conteos cíclicos, alertas y reportes | Ejemplos numéricos de R-INV-020…023 y R-INV-030…034 reproducidos |
 | **F6 — Vitrina pública** | Sitios por empresa, catálogo, pedidos web con reserva | Pedido web → factura de extremo a extremo |
 | **F7 — Móvil y webhooks** | App Expo, webhooks completos, paleta de comandos completa | — |
+| **F8 — Integraciones y migración** | Configuración por empresa, conectores (Alegra de solo lectura y archivos CSV/XLSX), asistente de migración con mapeos, ensayo y conciliación, sincronización opcional. Diseño: [`04-diseno-ux/06-…`](04-diseno-ux/06-integraciones-migracion-y-configuracion.md) | Migrar una empresa de prueba con conciliación en cero por cuenta, tercero e ítem y deshacer la corrida sin perder la inmutabilidad |
 | **Futura / experimental** | Integración con motores externos de documentos y catálogos (Asia-POP) consumiendo los contratos de SIFCA | No bloquea ninguna fase anterior |
 
 La paleta de comandos y la API con API Keys se construyen **desde F2**, porque condicionan el diseño de

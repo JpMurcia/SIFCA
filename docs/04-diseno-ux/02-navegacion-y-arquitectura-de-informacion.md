@@ -93,8 +93,12 @@ flowchart LR
     end
 
     subgraph Integ["Integraciones 📐"]
-        G1["API Keys"]
-        G2["Webhooks y entregas"]
+        G1["Conectores"]
+        G2["Migración de datos"]
+        G3["Mapeos"]
+        G4["Ejecuciones y errores"]
+        G5["API Keys"]
+        G6["Webhooks y entregas"]
     end
 
     subgraph Conf["Configuración 💡"]
@@ -102,6 +106,8 @@ flowchart LR
         K2["Usuarios y roles"]
         K3["Numeración de comprobantes"]
         K4["Parámetros"]
+        K6["Cuentas por defecto"]
+        K7["Plantillas y alertas"]
         K5["Bitácora de auditoría"]
     end
 
@@ -164,9 +170,13 @@ Orden de arriba hacia abajo. Los grupos se pueden contraer; el menú se puede re
 | | Proveedores | `/terceros/proveedores` | `parties.read` 💡 | 📐 | 005 |
 | **Catálogo y vitrina** | Publicación | `/canal/catalogo` | `catalog.publish` 💡 | 📐 | 002 |
 | | Pedidos web | `/canal/pedidos` | `sales.order.read` 💡 | 📐 | 002 |
-| **Integraciones** | API Keys | `/integraciones/api-keys` | `integrations.manage` 💡 | 📐 | 011 |
+| **Integraciones** | Conectores | `/integraciones/conectores` | `integrations.manage` 💡 | 💡 | 014 (propuesta) |
+| | Migración de datos | `/integraciones/migracion` | `integrations.migrate` 💡 | 💡 | 015 (propuesta) |
+| | Mapeos | `/integraciones/migracion/:id/mapeos` | `integrations.migrate` 💡 | 💡 | 015 (propuesta) |
+| | Ejecuciones y errores | `/integraciones/ejecuciones` | `integrations.read` 💡 | 💡 | 014/015 |
+| | API Keys | `/integraciones/api-keys` | `integrations.manage` 💡 | 📐 | 011 |
 | | Webhooks | `/integraciones/webhooks` | `integrations.manage` 💡 | 📐 | 011 |
-| **Configuración** | Empresa · Usuarios y roles · Numeración · Parámetros · Bitácora | `/configuracion/…` | spec de IAM pendiente | 💡 | (spec 012) |
+| **Configuración** | Empresa · Usuarios y roles · Numeración · Parámetros · Cuentas por defecto · Plantillas y alertas · Bitácora | `/configuracion/…` | spec de IAM pendiente | 💡 | 012, 013 (propuesta) |
 
 > Los permisos marcados 💡 son **nombres propuestos** para mantener un esquema `modulo.recurso.accion`; los marcados ✅
 > existen hoy en el backend y están listados en
@@ -251,6 +261,27 @@ flowchart TD
     Y -->|"Rechazada"| X2["Corregir y reenviar conservando el número"]
     Z -->|"Devolución"| N["Nota crédito y reingreso al kardex"]
 ```
+
+### 7.3 Migrar desde otro sistema (💡 specs 014 y 015, fase F8)
+
+```mermaid
+flowchart TD
+    A["Conectores"] -->|"Elegir Alegra o archivos"| B["Credenciales y Probar conexión"]
+    B -->|"Asistente de migración"| C["Origen, fecha de corte y estrategia"]
+    C --> D["Qué traer y Mapeos"]
+    D --> E["Revisión de datos"]
+    E --> F["Ensayo sin efectos"]
+    F -->|"Hay problemas que Bloquean"| D
+    F -->|"Sin bloqueos"| G["Ejecución con progreso"]
+    G -->|"Errores"| H["Ejecuciones y errores - reintentar"]
+    H --> G
+    G --> I["Conciliación origen contra SIFCA"]
+    I -->|"No cuadra"| D
+    I -->|"Cuadra"| J["Cierre de la migración"]
+    J -->|"Deshacer corrida"| K["Reversiones, nunca borrado"]
+```
+
+Detalle de cada pantalla (IN.1–IN.10) en [`06-integraciones-migracion-y-configuracion.md`](06-integraciones-migracion-y-configuracion.md).
 
 ## 8. Qué muestra cada tipo de documento en su cabecera
 

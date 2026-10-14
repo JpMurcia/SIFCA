@@ -1,6 +1,6 @@
 # Brief maestro para Claude Design — maqueta de SIFCA
 
-> **Cómo usarlo:** pega este documento completo en Claude Design y adjunta `02-…`, `03-…` y `04-…` de esta carpeta.
+> **Cómo usarlo:** pega este documento completo en Claude Design y adjunta `02-…`, `03-…`, `04-…` y `06-…` de esta carpeta.
 > Pide la maqueta por **tandas** (§9). Todo lo que necesitas está aquí; los anexos añaden detalle por pantalla.
 
 ---
@@ -32,7 +32,7 @@ construir**. No hay interfaz todavía: esta maqueta será la primera.
 | **Cartera / cobrador** | Cobra, aplica recibos, gestiona mora | Edades de cartera, estado de cuenta, compromisos de pago |
 | **Bodeguero / jefe de inventario** | Recibe, despacha, cuenta, repone | Existencias, kardex, conteos, alertas de reposición |
 | **Gerente / dueño** | Mira el estado del negocio | Tablero simple, alertas, cartera, balance |
-| **Integrador (técnico)** | Conecta sistemas por API | API Keys, webhooks, registros de entrega |
+| **Integrador (técnico)** | Conecta sistemas por API y **migra datos** desde otro sistema | Conectores, claves, webhooks, importación con vista previa, mapeos, conciliación |
 | **Visitante de la vitrina** | Navega el catálogo y hace un pedido | Simplicidad, confianza, rapidez en móvil |
 
 ## 3. Principios de diseño (obligatorios)
@@ -48,6 +48,9 @@ construir**. No hay interfaz todavía: esta maqueta será la primera.
 7. **Teclado primero** (paleta `Ctrl/Cmd+K`, atajos visibles) y el ratón también.
 8. **El color nunca es el único mensaje**; **débito y crédito se distinguen por columna, no por color** (no usar rojo/verde para eso).
 9. **Un solo patrón** de lista, documento, diálogo de motivo y grilla de líneas en toda la aplicación.
+10. **Todo es configurable por empresa** (cuentas por defecto, numeración, impuestos con vigencia, umbrales, mapeos de
+    migración, límites de integración) y cada cambio deja bitácora; lo que **no** se configura son los invariantes
+    contables (partida doble, inmutabilidad, períodos cerrados, aislamiento). Ver `06-…`.
 
 ## 4. Reglas del dominio que la interfaz debe respetar
 
@@ -76,6 +79,8 @@ Barra superior: empresa · botón de búsqueda `Ctrl K` · **chip del período**
 Menú lateral (contraíble a íconos), en este orden:
 **Inicio · Ventas · Cartera · Compras · Inventario · Contabilidad · Impuestos · Factura electrónica · Terceros ·
 Catálogo y vitrina · Integraciones · Configuración.**
+**Integraciones** contiene: Conectores · **Migración de datos** · Mapeos · Ejecuciones y errores · API Keys · Webhooks.
+**Configuración** contiene: Empresa · Usuarios y roles · Numeración · Parámetros · Cuentas por defecto · Plantillas · Bitácora.
 Profundidad máxima: grupo → pantalla → pestaña. **Contabilidad** contiene: Comprobantes · Nuevo comprobante ·
 Borradores · Plan de cuentas · Libro diario · Libro mayor · Balance de prueba · Períodos · Cierre anual.
 
@@ -96,7 +101,8 @@ Borradores · Plan de cuentas · Libro diario · Libro mayor · Balance de prueb
 |---|---|---|
 | **P1 — con detalle máximo** | Cascarón (barra superior + menú + paleta) · **Contabilidad completa**: Lista de comprobantes · **Editor de comprobante** · Detalle (con diálogo *Reversar*) · Borradores · Libro diario · Libro mayor · **Balance de prueba** · **Períodos** (cerrar/reabrir) · Cierre anual · Plan de cuentas | Es lo único con backend real; permite validar el diseño contra el sistema |
 | **P2 — a nivel de campos y estados** | Terceros (cliente con crédito) · **Factura de venta** (con línea de tiempo DIAN y retención de crédito) · Cartera por edades · Recibo de caja · Nota crédito/devolución | Flujo comercial principal |
-| **P3 — esquema** | Ítems · Existencias y Kardex · ABC y conteos · Reposición · Compras · Factura electrónica (documentos y rangos) · Impuestos · API Keys y Webhooks · Bitácora | Completa el mapa |
+| **P3 — esquema** | Ítems · Existencias y Kardex · ABC y conteos · Reposición · Compras · Factura electrónica (documentos y rangos) · Impuestos · API Keys y Webhooks · Bitácora · **Configuración por empresa** | Completa el mapa |
+| **P3 — flujo completo** | **Integraciones y migración de datos** (asistente de 9 pasos desde Alegra o archivos, mapeos, ensayo, conciliación, ejecuciones) | Es un flujo guiado y debe poder recorrerse; es fase final (F8) pero se diseña desde ya |
 | **P4 — después** | Vitrina pública (inicio, catálogo, ficha, pedido) · App móvil | Fases posteriores |
 
 **Fuera de alcance (no maquetar):** préstamos y financiación, nómina, activos fijos, información exógena y declaraciones,
@@ -141,8 +147,10 @@ septiembre (cerrado); cuenta `130505` sin tercero; cierre de octubre bloqueado p
    corregir → cerrado) → reabrir con motivo*.
 3. **Tanda 3 — Comercial (P2):** terceros con crédito, factura (con retención por cupo y línea de tiempo DIAN), cartera,
    recibo, nota crédito.
-4. **Tanda 4 — Inventario, compras, impuestos, FE e integraciones (P3).**
-5. **Tanda 5 — Vitrina y móvil (P4).**
+4. **Tanda 4 — Inventario, compras, impuestos y FE (P3).**
+5. **Tanda 5 — Integraciones, migración y configuración (P3):** pantallas IN.1–IN.10 y el patrón de configuración de
+   `06-…`; prototipo clicable *conectar Alegra → mapear → ensayar → ejecutar → conciliar*.
+6. **Tanda 6 — Vitrina y móvil (P4).**
 
 ## 10. Entregables esperados por tanda
 
@@ -164,10 +172,14 @@ septiembre (cerrado); cuenta `130505` sin tercero; cierre de octubre bloqueado p
 - [ ] La **paleta `Ctrl+K`** funciona (acciones, pantallas, registros; prefijos `>`, `@`, `#`).
 - [ ] Débito y crédito se distinguen por **columna**, nunca solo por color; todo estado lleva texto o ícono.
 - [ ] Formatos `es-CO` en todas las cifras y fechas; contrastes de `04-…` §2 respetados.
+- [ ] El asistente de migración no deja ejecutar con problemas que **Bloquean**, es reanudable y termina en una **conciliación** con sello en texto.
+- [ ] Deshacer una corrida avisa que se generan reversiones; las credenciales del conector se ven enmascaradas y Alegra figura como **solo lectura**.
+- [ ] Cada pantalla de configuración tiene pestaña **Historial** y el aviso «no afecta documentos ya contabilizados».
 
 ## 12. Qué NO hacer
 
 - No inventar funcionalidades fuera de alcance (préstamos, nómina, etc.) ni menús que no estén en este mapa.
+- No dejar fijo en pantalla lo que `06-…` §5 define como configurable; no ofrecer configurar los invariantes de `06-…` §6.
 - No copiar la interfaz, los íconos ni la marca de otro software contable: la propuesta es **propia**.
 - No usar números decimales con punto en pantalla (`1,190,000.00`); respetar `es-CO`.
 - No mostrar botones de edición en documentos inmutables; no ocultar saldos «raros».

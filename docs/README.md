@@ -42,7 +42,7 @@ Si un ADR, una spec o un plan contradice la constitución, **prevalece la consti
 | [`specs/`](specs/README.md) | 11 especificaciones con escenarios Gherkin y `traceability-matrix.md` |
 | [`01-arquitectura/`](01-arquitectura/) | Módulos y capas del backend, modelo de datos PostgreSQL, evaluación de librerías, contrato OpenAPI, integración con motores externos, ADRs |
 | [`02-normativa-y-reglas/`](02-normativa-y-reglas/) | Catálogo de reglas: contabilidad, impuestos y retenciones, factura electrónica DIAN, **inventarios (costeo, ABC, ROP, RMA)**, **cartera y ventas a crédito**, referencia API Alegra |
-| [`04-diseno-ux/`](04-diseno-ux/README.md) | **Insumos para la maqueta** (Claude Design): brief, navegación, catálogo de pantallas, sistema de diseño, benchmark |
+| [`04-diseno-ux/`](04-diseno-ux/README.md) | **Insumos para la maqueta** (Claude Design): brief, navegación, catálogo de pantallas, sistema de diseño, benchmark, **integraciones, migración y configuración** |
 | [`03-procesos-y-flujos/`](03-procesos-y-flujos/) | Secuencias y estados: flujo de venta, **devoluciones con nota crédito y reingreso a kardex**, control de cupo, reposición y ABC |
 
 ### Orden de lectura sugerido

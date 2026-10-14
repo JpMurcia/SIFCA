@@ -170,6 +170,18 @@ asociada y enlace a la pantalla que la resuelve.
 Para documentos con ciclo de vida (factura → DIAN): pasos horizontales con el actual resaltado, hora de cada transición
 y, si falla, el motivo completo con acción de reintento.
 
+### 6.11 Componentes de integración y configuración
+
+| Componente | Comportamiento |
+|---|---|
+| **Asistente por pasos** | Lista de pasos con estado (pendiente · actual · completo · con problema), avance guardado y botón *Volver*; cada paso dice qué sigue y qué se puede deshacer |
+| **Tabla de mapeo** | Valor de origen → valor en SIFCA, con confianza (`Exacto` · `Sugerido` · `Sin resolver`) en **texto e ícono**; filtro «solo sin resolver»; plantillas reutilizables |
+| **Barra de progreso por entidad** | Leídos / procesados / con error, `aria-live` educado, botones Pausar y Reanudar |
+| **Informe de ensayo** | Conteos por entidad y tabla de problemas con severidad `Bloquea` (peligro) o `Advierte` (advertencia) |
+| **Panel de conciliación** | Origen · SIFCA · Diferencia; sello `Cuadra` / `No cuadra` con texto; diferencia alineada a la derecha con signo |
+| **Campo de secreto** | Enmascarado, con «Mostrar» temporal y «Copiar»; los secretos de una sola vez se muestran con advertencia |
+| **Formulario de configuración** | Lista a la izquierda, formulario a la derecha, «vigencia desde», motivo en cambios sensibles, pestaña Historial |
+
 ## 7. Formatos `es-CO` (obligatorios)
 
 | Dato | Presentación | Entrada | En la API |

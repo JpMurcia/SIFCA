@@ -29,6 +29,7 @@ pública colombiana y buenas prácticas, con **desarrollo guiado por especificac
 | 4 | **Plan y tareas de la spec 001** (`/speckit-plan`, `/speckit-tasks`) | `plan.md`, `research.md`, `data-model.md`, contrato OpenAPI validado, `quickstart.md`, `tasks.md` (94 tareas, pruebas primero) | `specs/001-…/` |
 | 5 | **Implementación de la spec 001** (`/speckit-implement`) | Monorepo, backend de contabilidad completo, migraciones con inmutabilidad y RLS, pruebas, rendimiento medido | `apps/api/`, `packages/` |
 | 6 | **Insumos de diseño de interfaz** (este encargo) | Brief para Claude Design, navegación, catálogo de pantallas, sistema de diseño, benchmark y hoja de captura | [`04-diseno-ux/`](04-diseno-ux/README.md) |
+| 7 | **Integraciones, migración de datos y configuración** (fase F8 en el radar) | Documento [`04-diseno-ux/06-…`](04-diseno-ux/06-integraciones-migracion-y-configuracion.md): conectores, Alegra como origen (con certeza de cada dato), reglas de migración MG-01…MG-09, pantallas IN.1–IN.10, catálogo de configuración por empresa, lo no configurable; roadmap F8 y specs 013–015 propuestas. El brief se publicó además como documento compartible | `04-diseno-ux/06-…`, `00-alcance…` §7, `specs/README.md` |
 
 ## 3. Inventario de artefactos
 
@@ -167,6 +168,7 @@ Ver [`04-diseno-ux/05-referencias-y-benchmark.md`](04-diseno-ux/05-referencias-y
 | 6 | **Capturas de SamitSQL** (hoja `05-… §3`) para contrastar navegación y vocabulario | Calidad de la propuesta de UX | Quien tenga licencia o demo |
 | 7 | Probar la ruta de Testcontainers/Docker (aquí se usó un PostgreSQL local) | CI en la nube | Equipo |
 | 8 | Preguntas abiertas Q-04…Q-14 | Varias specs | Contador y producto |
+| 9 | **F8 — Integraciones y migración**: descargar la documentación oficial de Alegra, validar con el contador las reglas MG-01…MG-09 y escribir las specs 013–015; decidir ya la tabla de referencias externas y el origen `MIGRATION` | Migrar clientes desde otro sistema | Producto, contador, arquitecto |
 
 Riesgos principales: cambios normativos (RK-01), errores de redondeo contra la DIAN (RK-02), dependencia del PTA
 (RK-03), concurrencia (RK-04 — cubierta en contabilidad con 1.000 contabilizaciones simultáneas), alcance excesivo

@@ -15,6 +15,15 @@ leyó la documentación oficial. Las fuentes, de mayor a menor confianza:
 > `docs/02-normativa-y-reglas/referencias/alegra/`, reemplazar las filas 🔶 de este documento por datos ✅ y
 > versionar el cambio. No se debe construir la fachada opcional de compatibilidad (§5) sin ese paso.
 
+**Actualización (14-oct-2026).** Una herramienta de terceros que envuelve la API
+([`alegra-cli`](https://github.com/jjuanrivvera/alegra-cli), ⚠️) lista además los recursos `sellers`, `users`, `terms`,
+`currencies`, `number-templates`, `global-invoices`, `recurring-invoices`, `income-debit-notes`, `remissions`,
+`additional-charges`, `reconciliations`, `warehouse-transfers`, `inventory-adjustments`, `variant-attributes`,
+`cost-centers`, `custom-fields`, `reports` y `webhook-subscriptions`; el filtro `type` en contactos (p. ej. `client`) y
+la autenticación *Bearer* para aplicaciones de marketplace con OAuth. Esto **no** es documentación oficial y no cambia
+la tarea pendiente de arriba. El uso de la API para **migrar datos** (conector de solo lectura, mapeos, conciliación)
+está en [`04-diseno-ux/06-integraciones-migracion-y-configuracion.md`](../04-diseno-ux/06-integraciones-migracion-y-configuracion.md).
+
 ## 1. Para qué sirve esta referencia
 
 1. **Compatibilidad funcional:** SIFCA debe ofrecer lo que un usuario de Alegra espera (contactos, ítems,
@@ -124,3 +133,5 @@ descripción de ningún producto en particular):
 - [ ] Confirmar la forma del bloque de estado fiscal de la factura y sus valores.
 - [ ] Confirmar límites de tasa documentados y el comportamiento de `429`.
 - [ ] Decidir si se justifica construir la fachada opcional de §5.
+- [ ] Confirmar los **eventos de webhooks** de Alegra y si sirven para sincronizar (preguntas abiertas de la migración).
+- [ ] Confirmar qué entrega Alegra de **costo y existencias por bodega** (necesario para las existencias iniciales).

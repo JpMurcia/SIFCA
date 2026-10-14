@@ -21,6 +21,15 @@ Cada **caso de uso** de SIFCA tiene su especificación en `docs/specs/NNN-nombre
 | [010](010-motor-impuestos-y-retenciones/spec.md) | Motor de impuestos y retenciones con vigencias | R-IMP | F3 |
 | [011](011-multitenancy-api-y-webhooks/spec.md) | Aislamiento por tenant, API Keys, idempotencia y webhooks | Constitución IV, IX | F2 |
 
+## Especificaciones propuestas (aún sin `spec.md`)
+
+| # | Caso de uso | Fase | Detalle |
+|---|---|---|---|
+| 012 | Identidad, roles y permisos (IAM) | F2 | Pendiente: ver «Dependencias y pendientes» abajo |
+| 013 | Configuración por empresa (parámetros con vigencia y bitácora, cuentas por defecto, numeración, plantillas, alertas) | F2–F8 | [`04-diseno-ux/06-…`](../04-diseno-ux/06-integraciones-migracion-y-configuracion.md) §5–6 |
+| 014 | Conectores e integración (Alegra de solo lectura, archivos CSV/XLSX, referencias externas, cola de trabajos) | F8 | `06-…` §2–4 y §7 |
+| 015 | Migración de datos (saldos iniciales, cartera abierta, existencias, histórico opcional, conciliación, deshacer por reversión) | F8 | `06-…` §3.3 y §4; reglas MG-01…MG-09 por validar con el contador |
+
 ## Estructura de una especificación
 
 ```text
@@ -95,5 +104,6 @@ que complementa los gates G-01…G-03.
 |---|---|---|
 | **Spec 012 — Identidad, roles y permisos (IAM)** | Ninguna spec cubre autenticación, usuarios ni permisos (`accounting.entry.post`, `accounting.period.close`, `accounting.period.reopen`…). La spec 001 usa un adaptador **provisional** (JWT de desarrollo) que se niega a arrancar con `NODE_ENV=production`. Debe existir antes del primer despliegue | `001/research.md` §11 |
 | *Outbox* transaccional | Hoy los eventos de dominio se publican en memoria (sin efectos externos); la spec 011 los lleva al *outbox* | `001/plan.md` G-05 |
+| Radar F8 (integraciones y migración) | Decidir desde ya la tabla de **referencias externas**, el origen `MIGRATION` en comprobantes y la cola de trabajos largos; ver `04-diseno-ux/06-…` §7 | `04-diseno-ux/06-…` |
 | «Contabilizar desde un borrador» | El modelo lo admite (`draftId` opcional); hoy se envía el comprobante completo a `POST /journal-entries` | `001/research.md` §13 |
 | Validación del contador de R-CON-001…014 | Sin ella no hay liberación a producción (`node scripts/check-rules-verified.mjs`) | `001/tasks.md` T092 |

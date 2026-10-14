@@ -336,6 +336,10 @@ Si dos tarifas coinciden con igual especificidad el cálculo falla y se avisa al
 
 ### B.14 Integraciones — `/integraciones/api-keys`, `/integraciones/webhooks`
 
+> Los **conectores, la migración de datos desde Alegra o archivos, los mapeos y la conciliación** (IN.1–IN.8) y la
+> **configuración por empresa** están en [`06-integraciones-migracion-y-configuracion.md`](06-integraciones-migracion-y-configuracion.md).
+> Aquí quedan las dos pantallas ya especificadas en la spec 011.
+
 API Keys: nombre, prefijo, **alcances mínimos**, vencimiento, último uso, estado. **La clave completa se muestra una
 sola vez** al crearla (pantalla de copiado con advertencia) y luego solo el prefijo; acción **Rotar** y **Revocar**.
 Webhooks: URL, eventos suscritos, secreto de firma, estado; **entregas** (intentos, código de respuesta, próximo
