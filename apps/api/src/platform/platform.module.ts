@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, Inject, Injectable, Module, type OnModuleDestroy } from '@nestjs/common';
 import {
   AUDIT_LOG, CLOCK, DOMAIN_EVENT_PUBLISHER, ID_GENERATOR, PERMISSION_CHECKER, REQUEST_CONTEXT, UNIT_OF_WORK,
   type AuditLog, type Clock, type IdGenerator, type RequestContextPort,
@@ -15,6 +15,15 @@ import { SystemIdGenerator } from './time/system-id-generator.js';
 export const ENV = Symbol('Env');
 export const PRISMA = Symbol('PrismaService');
 
+/** Cierra el pool de conexiones al apagar la aplicación (apagado ordenado; evita conexiones huérfanas). */
+@Injectable()
+class PrismaShutdown implements OnModuleDestroy {
+  constructor(@Inject(PRISMA) private readonly prisma: PrismaService) {}
+  async onModuleDestroy(): Promise<void> {
+    await this.prisma.close();
+  }
+}
+
 /**
  * Composition root de los adaptadores transversales (D-7): implementa los puertos de `shared-kernel` una sola vez
  * para todos los módulos.
@@ -24,6 +33,7 @@ export const PRISMA = Symbol('PrismaService');
   providers: [
     { provide: ENV, useFactory: (): Env => loadEnv() },
     { provide: PRISMA, inject: [ENV], useFactory: (env: Env) => new PrismaService(env.DATABASE_URL) },
+    PrismaShutdown,
     { provide: REQUEST_CONTEXT, useValue: AlsRequestContext },
     { provide: CLOCK, useClass: SystemClock },
     { provide: ID_GENERATOR, useClass: SystemIdGenerator },
