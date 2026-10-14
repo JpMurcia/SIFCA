@@ -18,7 +18,10 @@
     "test:acceptance": "NODE_OPTIONS=--import=tsx cucumber-js --config cucumber.mjs",
     "test:perf": "vitest run --project performance",
     "prisma:generate": "prisma generate",
-    "seed:test-chart": "tsx prisma/seed-test-chart.ts"
+    "seed:test-chart": "tsx prisma/seed-test-chart.ts",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:drift": "prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code",
+    "dev:token": "tsx prisma/dev-token.ts"
   },
   "dependencies": {
     "@nestjs/common": "12.1.3",

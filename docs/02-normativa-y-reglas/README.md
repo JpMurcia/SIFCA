@@ -57,10 +57,25 @@ Al redactar esta documentación se intentó contrastar los datos críticos. Resu
 | Fórmulas de **ABC (Pareto)** y **punto de reorden** (`ROP = d·L + SS`, `SS = z·√(L·σd² + d²·σL²)`) y valores de `z` (1,2816; 1,6449; 1,96; 2,0537; 2,3263) | Teoría estándar de inventarios; los números de los ejemplos se verificaron por cálculo. Los **umbrales** (80/95 %, niveles de servicio, ventanas) son parámetros de negocio, no normativa | ✅ aritmética · decisión de negocio (parámetros) | — |
 | Tratamiento de **retenciones sufridas** y de la diferencia de costo en devoluciones | Decisión contable pendiente | 🔶 | Q-14 |
 | Plazo por defecto de las transacciones interactivas de Prisma ≈ 5 s; opciones `maxWait`, `timeout`, `isolationLevel` | Confirmado en documentación y guías de terceros | ✅ | [Prisma docs (Postgres)](https://www.prisma.io/docs/v6/postgres/database/connection-pooling) |
-| `FOR UPDATE` vía `$queryRaw`, `set_config` con RLS y soporte multiesquema de Prisma | No verificados en este entorno; se comprueban en el spike S-PRISMA | 🔶 | — |
+| `FOR UPDATE` vía `$queryRaw`, `set_config` con RLS y soporte multiesquema de Prisma (7.10.0 + `@prisma/adapter-pg`) | Verificados empíricamente contra PostgreSQL 16 (spike S-PRISMA-1 y pruebas de integración de la spec 001): `schemas = [...]` + `@@schema` funcionan sin función en vista previa; `set_config(…, true)` y `SELECT … FOR UPDATE` operan dentro de `$transaction`; fuera de la transacción `current_setting` devuelve cadena vacía | ✅ (empírico) | `apps/api/test/integration/` |
 | Zod 4: conversión nativa a JSON Schema (`z.toJSONSchema`, destinos `draft-2020-12` y `openapi-3.0`); los refinamientos no se reflejan | Documentación oficial de Zod | ✅ | [zod.dev/json-schema](https://zod.dev/json-schema) |
 | `nestjs-zod` y su generación de OpenAPI | No verificado | 🔶 | — |
 
 > **Acción previa a la Fase 2:** (1) descargar a este repositorio, como referencia local versionada, el
 > Anexo Técnico vigente, la resolución de numeración y la tabla de retención oficial; (2) el contador marca
 > ✅ lo que corresponda; (3) se cargan los vectores de prueba oficiales del Anexo como fixtures.
+
+
+## Cómo se marca la validación del contador (puerta de producción)
+
+Una regla del catálogo pasa de 🔶/⚠️ a **validada** cuando un contador la revisa y se añade, **dentro de la sección de
+la regla**, esta línea:
+
+```text
+**Validación del contador:** ✅ AAAA-MM-DD · Nombre Apellido (T.P. nnnn)
+```
+
+`node scripts/check-rules-verified.mjs docs/specs/<spec>` lista las reglas que cita la spec y **falla** (código 1) si
+alguna no tiene esa línea; el *job* `release-gate` de `.github/workflows/ci.yml` lo ejecuta al etiquetar una versión
+(`v*`). El desarrollo y las pruebas no se bloquean (constitución VII y gate G-10: lo provisional se construye y se
+prueba, pero no se despliega a producción).

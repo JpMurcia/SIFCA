@@ -56,7 +56,7 @@ export function createRequestContextMiddleware(secret: string) {
         requestId,
       });
     if (!token) return reject('Falta el encabezado Authorization: Bearer');
-    jwtVerify(token, key, { algorithms: ['HS256'] }).then(
+    jwtVerify(token, key, { algorithms: ['HS256'], requiredClaims: ['exp', 'sub'] }).then(
       ({ payload }) => {
         const tid = payload.tid;
         const perms = payload.perms;

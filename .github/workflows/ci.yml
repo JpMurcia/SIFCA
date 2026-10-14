@@ -3,7 +3,9 @@ name: ci
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
+  workflow_dispatch:
 
 jobs:
   api:
@@ -33,6 +35,13 @@ jobs:
         run: pnpm --filter @sifca/api prisma:generate && pnpm --filter @sifca/contracts build
       - name: Tipos
         run: pnpm --filter @sifca/api typecheck
+      - name: Migraciones aplicadas sin deriva respecto de schema.prisma
+        run: |
+          psql "$SIFCA_TEST_PG_ADMIN_URL" -f infra/postgres/init/00-roles.sql
+          psql "$SIFCA_TEST_PG_ADMIN_URL" -c "CREATE DATABASE sifca_drift OWNER sifca_owner"
+          psql "${SIFCA_TEST_PG_ADMIN_URL%/postgres}/sifca_drift" -c "CREATE EXTENSION IF NOT EXISTS btree_gist"
+          DATABASE_MIGRATION_URL=postgresql://sifca_owner:sifca_owner_dev@localhost:5432/sifca_drift pnpm --filter @sifca/api prisma:migrate
+          DATABASE_MIGRATION_URL=postgresql://sifca_owner:sifca_owner_dev@localhost:5432/sifca_drift pnpm --filter @sifca/api prisma:drift
       - name: Pruebas unitarias
         run: pnpm --filter @sifca/api test:unit
       - name: Arquitectura (D-1…D-7, ciclos)
@@ -43,3 +52,19 @@ jobs:
         run: pnpm --filter @sifca/api test:contract
       - name: Aceptación (Gherkin de la spec)
         run: pnpm --filter @sifca/api test:acceptance
+
+  # Puerta de liberación a producción (constitución VII, G-10): se ejecuta al etiquetar una versión o a mano.
+  # Falla mientras alguna regla citada por una spec siga sin la validación del contador.
+  release-gate:
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reglas validadas por el contador
+        run: |
+          for spec in docs/specs/0*/; do
+            node scripts/check-rules-verified.mjs "$spec"
+          done

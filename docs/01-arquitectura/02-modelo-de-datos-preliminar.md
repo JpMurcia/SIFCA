@@ -506,6 +506,7 @@ erDiagram
     VOUCHER_TYPE ||--o{ VOUCHER_SEQUENCE : "consecutivo"
     PARTY ||--o{ JOURNAL_LINE : "tercero"
     COST_CENTER ||--o{ JOURNAL_LINE : "analítica"
+    VOUCHER_TYPE ||--o{ JOURNAL_DRAFT : "clasifica"
     POSTING_RULE ||--o{ POSTING_RULE_LINE : "define"
     ACCOUNT ||--o{ POSTING_RULE_LINE : "usa"
 
@@ -542,14 +543,16 @@ erDiagram
         text numbering_scope "TENANT, YEAR"
     }
     VOUCHER_SEQUENCE {
-        uuid voucher_type_id FK
-        int scope_year
+        uuid tenant_id PK
+        uuid voucher_type_id PK
+        int scope_year PK
         bigint last_number
     }
     JOURNAL_ENTRY {
         uuid id PK
         uuid tenant_id FK
         uuid voucher_type_id FK
+        int numbering_year "0 si el tipo numera por TENANT"
         bigint number
         date accounting_date
         uuid fiscal_period_id FK
@@ -557,16 +560,20 @@ erDiagram
         text source_type "SALES_DOCUMENT, RECEIPT, PURCHASE_DOCUMENT, STOCK_ADJUSTMENT, MANUAL ..."
         uuid source_id
         text status "POSTED"
-        uuid reversal_of FK
-        uuid reversed_by FK
-        numeric total_debit
+        uuid reversal_of FK "único; «reversado» se deduce de su existencia"
+        text reversal_reason
+        numeric total_debit "escala menor o igual a 2"
         numeric total_credit
+        text idempotency_key
+        text request_hash
         timestamptz posted_at
         uuid posted_by
     }
     JOURNAL_LINE {
         uuid id PK
+        uuid tenant_id "denormalizado de la cabecera"
         uuid entry_id FK
+        date accounting_date "denormalizado; FK compuesta"
         int line_no
         uuid account_id FK
         uuid party_id FK
@@ -582,6 +589,14 @@ erDiagram
         uuid tenant_id FK
         text code
         text name
+    }
+    JOURNAL_DRAFT {
+        uuid id PK
+        uuid tenant_id FK
+        uuid voucher_type_id FK
+        date accounting_date
+        jsonb lines "mutable; admite descuadre; bloquea el cierre"
+        int version
     }
     POSTING_RULE {
         uuid id PK
@@ -728,8 +743,8 @@ empresa), `files.stored_file` (objeto en almacenamiento, hash SHA-256, tipo, tam
 | INV-02 | Una línea tiene débito **o** crédito, positivo | R-CON-002 | `CHECK ((debit > 0) <> (credit > 0))` y `CHECK (debit >= 0 AND credit >= 0)` |
 | INV-03 | Solo se contabiliza en cuentas auxiliares activas | R-CON-003 | FK + *trigger* que verifica `allows_posting` |
 | INV-04 | No se contabiliza en períodos cerrados | R-CON-004 | *Trigger* en `journal_entry` contra `fiscal_period.status` |
-| INV-05 | Los comprobantes son inmutables | R-CON-005, constitución I | (1) el rol de la aplicación NO tiene `UPDATE`/`DELETE` sobre `journal_entry`/`journal_line`; (2) *trigger* que rechaza la mutación (salvo el campo `reversed_by`, solo hacia adelante) |
-| INV-06 | Consecutivos sin saltos ni duplicados | R-CON-006, R-FE-004 | `UNIQUE (tenant_id, voucher_type_id, number)` + asignación con `SELECT … FOR UPDATE` en la misma transacción |
+| INV-05 | Los comprobantes son inmutables | R-CON-005, constitución I | (1) el rol de la aplicación NO tiene `UPDATE`/`DELETE` sobre `journal_entry`/`journal_line`; (2) *trigger* `BEFORE UPDATE OR DELETE` y `BEFORE TRUNCATE` que rechaza **toda** mutación, incluso del propietario. Sin excepciones: «reversado» no se guarda en el original, se deduce de la existencia de otro comprobante con `reversal_of` apuntando a él (índice único parcial) |
+| INV-06 | Consecutivos sin saltos ni duplicados | R-CON-006, R-FE-004 | `UNIQUE (tenant_id, voucher_type_id, numbering_year, number)` + asignación con `UPDATE acc.voucher_sequence SET last_number = last_number + 1 … RETURNING` en la misma transacción (el bloqueo de fila dura hasta el *commit*; `numbering_year` = 0 si el tipo numera por empresa o el año contable si numera por año) |
 | INV-07 | El movimiento de stock y el consumo de capas son inmutables; la corrección es un movimiento inverso | R-INV-004, constitución I | Privilegios y *trigger* análogos a INV-05 en `stock_movement` y `cost_layer_consumption` |
 | INV-08 | No hay stock negativo salvo bodega que lo permita | R-INV-007 | `CHECK (on_hand >= 0)` condicional vía *trigger* sobre `stock_balance` |
 | INV-09 | Un documento aceptado por la DIAN no se modifica; se corrige con nota crédito/débito | R-FE-009 | Máquina de estados en dominio + *trigger* sobre `sales_document` |
@@ -764,7 +779,7 @@ FOR EACH ROW EXECUTE FUNCTION acc.reject_mutation();
 | Descontar stock | Bloqueo de la fila de `stock_balance` (y de `item_cost` para el promedio) en orden determinista `(item_id, warehouse_id, lot_id)` para evitar *deadlocks* |
 | Doble envío del mismo `POST` | `Idempotency-Key` (§7.4 de `01-…`) |
 | Edición simultánea de maestros | Bloqueo optimista con `version` |
-| Nivel de aislamiento | `READ COMMITTED` por defecto + bloqueos explícitos; `SERIALIZABLE` solo para cierre de período |
+| Nivel de aislamiento | `READ COMMITTED` por defecto + bloqueos explícitos. El cierre de período **no** usa `SERIALIZABLE`: contabilizar toma `SELECT … FOR SHARE` sobre el período y cerrar toma `FOR UPDATE`, lo que serializa ambas operaciones (spec 001, research §6); los reportes usan `REPEATABLE READ` de solo lectura |
 
 ## 5. Índices y rendimiento (puntos de partida)
 

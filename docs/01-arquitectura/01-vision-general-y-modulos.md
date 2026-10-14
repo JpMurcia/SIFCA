@@ -270,12 +270,31 @@ Fase 2):
 **Resultado de diseño: 7/7 cubiertas ⇒ banda objetivo 9–10.** Es una evaluación del diseño propuesto; la
 puntuación real se mide cuando exista código y debe mantenerse en esa banda.
 
+#### Puntuación sobre código real (spec 001 · T093, 2026-10-14)
+
+Mismo diagnóstico aplicado al módulo `accounting` ya implementado. Cada respuesta se **demuestra con una prueba que
+falla si se rompe** (se comprobó introduciendo violaciones a propósito).
+
+| # | Pregunta | ¿Cumple? | Evidencia ejecutable |
+|---|---|:-:|---|
+| 1 | ¿Se prueban las reglas de negocio sin base de datos, servidor web ni framework? | ✅ | 112 pruebas unitarias de dominio y casos de uso con dobles en memoria (`test/unit/`); propiedades con `fast-check` |
+| 2 | ¿Todas las dependencias apuntan hacia adentro? | ✅ | `test/architecture/layers.spec.ts` (dependency-cruiser D-1…D-7) y `no-framework-in-domain.spec.ts` (ni imports de frameworks ni `Date.now()`) |
+| 3 | ¿Se puede cambiar la base de datos sin tocar la lógica? | ✅ | `no-prisma-outside-infra.spec.ts`: Prisma solo en `infrastructure/persistence` y `platform/persistence`; los casos de uso se prueban con repositorios en memoria |
+| 4 | ¿Los casos de uso son independientes del mecanismo de entrega? | ✅ | Los mismos casos de uso los ejecutan HTTP (`test/contract`), Cucumber (`test/acceptance`) y la fachada `PostJournalEntryPort` |
+| 5 | ¿El framework está confinado al círculo exterior? | ✅ | NestJS solo en `presentation/`, `*.module.ts` y `platform/`; el dominio y la aplicación no lo importan (D-1, D-2) |
+| 6 | ¿El grafo de componentes no tiene ciclos? | ✅ | `no-cycles.spec.ts`; `module-facade-only.spec.ts` (D-5); `AccountingUseCases` y `ACCOUNTING` viven en `application/` para evitar el ciclo módulo ↔ controlador |
+| 7 | ¿Una *composition root* enlaza todo? | ✅ | `composeAccounting()` en `accounting.module.ts` crea los adaptadores; ningún caso de uso los instancia |
+
+**Resultado: 7/7 ⇒ banda 9–10 (se mantiene).** Hallazgos corregidos durante la implementación: el adaptador de auditoría
+estaba en `platform/audit` y rompía la regla D-4 (Prisma fuera de persistencia) → se movió a `platform/persistence`; el
+token `ACCOUNTING` creaba un ciclo con los controladores → se movió a `application/`.
+
 ## 5. Estructura del repositorio (monorepo)
 
 ```text
 sifca/
 ├── apps/
-│   ├── api/            # NestJS (HTTP + worker, mismos módulos)
+│   ├── api/            # NestJS (HTTP + worker, mismos módulos). src/shared-kernel (puro), src/platform (adaptadores transversales del composition root: UnitOfWork de Prisma, reloj, errores HTTP, auditoría), src/modules/<módulo>
 │   ├── admin/          # React + Vite (back-office, SPA tras login)
 │   ├── storefront/     # Next.js (vitrinas públicas, SEO y SSR)
 │   └── mobile/         # Expo / React Native

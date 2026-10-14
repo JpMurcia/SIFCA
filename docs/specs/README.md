@@ -87,3 +87,13 @@ que complementa los gates G-01…G-03.
 
 > **Nota sobre `plan.md`:** la plantilla de Spec Kit propone una estructura de código genérica; para SIFCA el
 > plan DEBE usar la estructura de capas de `docs/01-arquitectura/01-vision-general-y-modulos.md` §4 y §5.
+
+
+## Dependencias y pendientes detectados al planificar la spec 001
+
+| Pendiente | Detalle | Dónde |
+|---|---|---|
+| **Spec 012 — Identidad, roles y permisos (IAM)** | Ninguna spec cubre autenticación, usuarios ni permisos (`accounting.entry.post`, `accounting.period.close`, `accounting.period.reopen`…). La spec 001 usa un adaptador **provisional** (JWT de desarrollo) que se niega a arrancar con `NODE_ENV=production`. Debe existir antes del primer despliegue | `001/research.md` §11 |
+| *Outbox* transaccional | Hoy los eventos de dominio se publican en memoria (sin efectos externos); la spec 011 los lleva al *outbox* | `001/plan.md` G-05 |
+| «Contabilizar desde un borrador» | El modelo lo admite (`draftId` opcional); hoy se envía el comprobante completo a `POST /journal-entries` | `001/research.md` §13 |
+| Validación del contador de R-CON-001…014 | Sin ella no hay liberación a producción (`node scripts/check-rules-verified.mjs`) | `001/tasks.md` T092 |

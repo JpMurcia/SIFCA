@@ -141,6 +141,10 @@ seguridad.
 *Trigger* sobre `voucher_sequence` (único dato mutable cerca del núcleo): solo permite
 `NEW.last_number = OLD.last_number + 1` y prohíbe `DELETE`. La aplicación tiene `UPDATE` solo sobre esa columna.
 
+**Medido (T085, 2026-10-14, PostgreSQL 16 local con `fsync=off`, 1 máquina):** 1.000 contabilizaciones simultáneas del
+mismo tipo en **6,2 s** (≈160/s) con números 1…1000 contiguos; comprobante de 50 líneas **p95 45 ms** (mediana 33 ms).
+Los valores en un servidor con `fsync` activo serán mayores; los objetivos del plan (60 s y 200 ms) se cumplen con holgura.
+
 **Rendimiento.** Es un punto caliente por (tenant, tipo): el rendimiento máximo es del orden de cientos de
 contabilizaciones por segundo por tipo, suficiente para el MVP. Si algún día fuera insuficiente, se tendría que
 cambiar a numeración con huecos permitidos, lo cual R-CON-006 prohíbe; por eso se acepta la serialización.
@@ -360,6 +364,7 @@ mismo comprobante es `ALREADY_REVERSED` (índice único parcial en `reversal_of`
   ejecuciones sucesivas.
 - **Diario**: lista cronológica `(accounting_date, voucher_type, number, line_no)`, paginación por cursor sobre
   esa clave compuesta. **Mayor**: movimientos por cuenta con saldo acumulado calculado por ventana SQL.
+- **Medido (T085)**: balance de prueba de un mes con **1.000.000 de líneas**: **p95 775 ms**, mediana 566 ms (objetivo ≤ 3 s), con la agregación sobre `journal_line` sin vista materializada; la carga de 1 M de líneas tardó 13 s. Por eso la vista materializada de períodos cerrados **no** se construye todavía.
 - **Rendimiento**: índice `journal_line (tenant_id, account_id, accounting_date)`; el modelo preliminar ya prevé
   congelar el balance de períodos cerrados (vista materializada). **No se incluye** en este feature; se decide por
   métricas de la prueba de carga (evitar optimización prematura).
