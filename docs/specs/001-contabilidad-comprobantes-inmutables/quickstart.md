@@ -12,18 +12,18 @@ de la implementación; usa solo comandos y llamadas HTTP.
 | Herramienta | Versión |
 |---|---|
 | Node.js | ≥ 22.18 (`.nvmrc`) |
-| pnpm | 12.13.x |
+| npm | ≥ 11.20.0 (`npm install -g npm@11.20.0`; npm 10 falla al resolver el árbol de dependencias) |
 | PostgreSQL 16 | con Docker (`infra/docker-compose.dev.yml`) o sin Docker (`infra/postgres/local-cluster.sh start`, puerto 54329) |
 
-> pnpm 12 rechaza versiones publicadas hace menos de 1 día (`minimumReleaseAge`) y bloquea los *scripts* de instalación
-> salvo los permitidos en `pnpm-workspace.yaml` (`allowBuilds`).
+> npm 11 bloquea los *scripts* de instalación salvo los aprobados en `allowScripts` del `package.json` raíz
+> (`@prisma/engines`, `prisma`, `esbuild`). `.npmrc` activa `engine-strict` para exigir las versiones de Node y npm.
 
 ## 2. Levantar el entorno
 
 ```bash
-pnpm install
-pnpm --filter @sifca/contracts build                         # esquemas Zod compilados (los consume la API)
-pnpm --filter @sifca/api prisma:generate                     # cliente de Prisma (src/generated/, no se versiona)
+npm install
+npm run build -w @sifca/contracts                         # esquemas Zod compilados (los consume la API)
+npm run prisma:generate -w @sifca/api                     # cliente de Prisma (src/generated/, no se versiona)
 
 # Base de datos (los roles sifca_owner / sifca_app / sifca_readonly los crea infra/postgres/init/00-roles.sql)
 docker compose -f infra/docker-compose.dev.yml up -d         # o: infra/postgres/local-cluster.sh start
@@ -36,10 +36,10 @@ export DATABASE_URL=postgresql://sifca_app:sifca_app_dev@127.0.0.1:5432/sifca   
 export JWT_DEV_SECRET=quickstart-secret-0123456789                                            # solo desarrollo
 export SIFCA_TENANT_ID=0195f3a0-0000-7000-8000-00000000d00d
 
-pnpm --filter @sifca/api prisma:migrate                      # migraciones (RLS, REVOKE, triggers) como sifca_owner
-pnpm --filter @sifca/api prisma:drift                        # «No difference detected»: schema.prisma = base migrada
-pnpm --filter @sifca/api seed:test-chart                     # plan de cuentas de PRUEBA, tipos de comprobante y año 2026 (no es el PUC real)
-pnpm --filter @sifca/api start:dev                           # API en http://localhost:3000/api/v1 (Swagger UI en /api/docs)
+npm run prisma:migrate -w @sifca/api                      # migraciones (RLS, REVOKE, triggers) como sifca_owner
+npm run prisma:drift -w @sifca/api                        # «No difference detected»: schema.prisma = base migrada
+npm run seed:test-chart -w @sifca/api                     # plan de cuentas de PRUEBA, tipos de comprobante y año 2026 (no es el PUC real)
+npm run start:dev -w @sifca/api                           # API en http://localhost:3000/api/v1 (Swagger UI en /api/docs)
 ```
 
 La aplicación se conecta con `sifca_app` (sin `UPDATE`/`DELETE` sobre los comprobantes); las migraciones y la siembra
@@ -49,7 +49,7 @@ de autenticación (falta la spec de IAM).
 ## 3. Recorrido manual (las tres historias)
 
 ```bash
-export TOKEN=$(pnpm -s --filter @sifca/api dev:token)        # JWT de desarrollo con los permisos de contracts/ports.md §5
+export TOKEN=$(npm run -s dev:token -w @sifca/api)        # JWT de desarrollo con los permisos de contracts/ports.md §5
 api() { curl -sS -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" "$@"; }
 
 # US1 — Contabilizar un comprobante que cuadra  → 201, number = 1
@@ -97,12 +97,12 @@ PGPASSWORD=sifca_owner_dev psql -h 127.0.0.1 -U sifca_owner sifca -c "BEGIN" -c 
 
 ```bash
 export SIFCA_TEST_PG_ADMIN_URL=postgresql://postgres@127.0.0.1:54329/postgres   # sin esto se usa Testcontainers (requiere Docker)
-pnpm --filter @sifca/api test:unit          # dominio y casos de uso (sin base de datos)
-pnpm --filter @sifca/api test:integration   # Testcontainers: triggers, privilegios, RLS, concurrencia, atomicidad
-pnpm --filter @sifca/api test:acceptance    # Cucumber ejecuta docs/specs/001-…/acceptance/comprobantes.feature
-pnpm --filter @sifca/api test:contract      # respuestas ⊂ contracts/accounting.v1.openapi.yaml
-pnpm --filter @sifca/api test:arch          # reglas D-1…D-7, ciclos, sin number monetario
-pnpm --filter @sifca/api test:perf          # 1.000 contabilizaciones simultáneas y balance de 1.000.000 de líneas
+npm run test:unit -w @sifca/api          # dominio y casos de uso (sin base de datos)
+npm run test:integration -w @sifca/api   # Testcontainers: triggers, privilegios, RLS, concurrencia, atomicidad
+npm run test:acceptance -w @sifca/api    # Cucumber ejecuta docs/specs/001-…/acceptance/comprobantes.feature
+npm run test:contract -w @sifca/api      # respuestas ⊂ contracts/accounting.v1.openapi.yaml
+npm run test:arch -w @sifca/api          # reglas D-1…D-7, ciclos, sin number monetario
+npm run test:perf -w @sifca/api          # 1.000 contabilizaciones simultáneas y balance de 1.000.000 de líneas
 node scripts/docs.mjs check --strict # documentación y trazabilidad
 ```
 

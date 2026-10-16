@@ -23,35 +23,36 @@ jobs:
       SIFCA_TEST_PG_ADMIN_URL: postgresql://postgres:postgres@localhost:5432/postgres
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+          cache: npm
+      # npm 10 (el que trae Node 22) falla al resolver este monorepo; se fija la versión del packageManager.
+      - run: npm install -g npm@11.20.0
+      - run: npm ci
       - name: Documentación y especificaciones
         run: node scripts/docs.mjs check --strict
       - name: Generar cliente de Prisma y compilar contratos
-        run: pnpm --filter @sifca/api prisma:generate && pnpm --filter @sifca/contracts build
+        run: npm run prisma:generate -w @sifca/api && npm run build -w @sifca/contracts
       - name: Tipos
-        run: pnpm --filter @sifca/api typecheck
+        run: npm run typecheck -w @sifca/api
       - name: Migraciones aplicadas sin deriva respecto de schema.prisma
         run: |
           psql "$SIFCA_TEST_PG_ADMIN_URL" -f infra/postgres/init/00-roles.sql
           psql "$SIFCA_TEST_PG_ADMIN_URL" -c "CREATE DATABASE sifca_drift OWNER sifca_owner"
           psql "${SIFCA_TEST_PG_ADMIN_URL%/postgres}/sifca_drift" -c "CREATE EXTENSION IF NOT EXISTS btree_gist"
-          DATABASE_MIGRATION_URL=postgresql://sifca_owner:sifca_owner_dev@localhost:5432/sifca_drift pnpm --filter @sifca/api prisma:migrate
-          DATABASE_MIGRATION_URL=postgresql://sifca_owner:sifca_owner_dev@localhost:5432/sifca_drift pnpm --filter @sifca/api prisma:drift
+          DATABASE_MIGRATION_URL=postgresql://sifca_owner:sifca_owner_dev@localhost:5432/sifca_drift npm run prisma:migrate -w @sifca/api
+          DATABASE_MIGRATION_URL=postgresql://sifca_owner:sifca_owner_dev@localhost:5432/sifca_drift npm run prisma:drift -w @sifca/api
       - name: Pruebas unitarias
-        run: pnpm --filter @sifca/api test:unit
+        run: npm run test:unit -w @sifca/api
       - name: Arquitectura (D-1…D-7, ciclos)
-        run: pnpm --filter @sifca/api test:arch
+        run: npm run test:arch -w @sifca/api
       - name: Integración (PostgreSQL real: triggers, privilegios, RLS, concurrencia)
-        run: pnpm --filter @sifca/api test:integration
+        run: npm run test:integration -w @sifca/api
       - name: Contrato HTTP
-        run: pnpm --filter @sifca/api test:contract
+        run: npm run test:contract -w @sifca/api
       - name: Aceptación (Gherkin de la spec)
-        run: pnpm --filter @sifca/api test:acceptance
+        run: npm run test:acceptance -w @sifca/api
 
   # Puerta de liberación a producción (constitución VII, G-10): se ejecuta al etiquetar una versión o a mano.
   # Falla mientras alguna regla citada por una spec siga sin la validación del contador.

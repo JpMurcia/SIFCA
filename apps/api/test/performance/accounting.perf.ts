@@ -8,7 +8,7 @@ import { createTestDatabase, type TestDb } from '../integration/support/postgres
  *   · 1.000 contabilizaciones simultáneas del mismo tipo en ≤ 60 s, sin saltos ni duplicados (SC-003)
  *   · comprobante de ≤ 50 líneas: p95 ≤ 200 ms en el servidor
  *   · balance de prueba de un mes con 1.000.000 de líneas: p95 ≤ 3 s
- * Se ejecuta con `pnpm test:perf` (no forma parte del CI normal). PERF_LINES reduce la carga del balance.
+ * Se ejecuta con `npm run test:perf -w @sifca/api` (no forma parte del CI normal). PERF_LINES reduce la carga del balance.
  */
 let db: TestDb;
 let u: PgUnit;

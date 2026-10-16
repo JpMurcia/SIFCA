@@ -243,7 +243,7 @@ escenarios al ejecutar `/speckit-specify`.
 #### Ola 0 — Fundaciones
 
 **SPEC-000-fundaciones-backend** ✅ — *entregada dentro de la spec 001 (tareas T001–T040).*
-- **Alcance:** monorepo pnpm + Turborepo; `apps/api` NestJS en capas Domain → Application → Infrastructure →
+- **Alcance:** monorepo con npm workspaces + Turborepo; `apps/api` NestJS en capas Domain → Application → Infrastructure →
   Presentation; Prisma solo en infraestructura; contratos Zod en `packages/contracts` con OpenAPI derivado;
   multiempresa por `tenant_id` con RLS (`app.tenant_id` por transacción) y roles `sifca_owner`/`sifca_app`;
   errores `application/problem+json` con `code` estable; logs estructurados con pino y `requestId`; reloj inyectable.
@@ -553,7 +553,7 @@ ya está en 000; esta spec entrega el resto.*
 
 ### 3.1 Diseño
 
-- **Un solo punto de entrada** `pnpm --filter @sifca/api db:seed` con dos perfiles acumulativos:
+- **Un solo punto de entrada** `npm run db:seed -w @sifca/api` con dos perfiles acumulativos:
   - `base` — estructura y saldos de apertura. Se puede ejecutar desde que existan 013, 018, 020 y 021.
   - `demo` — operaciones del período **ejecutadas con los casos de uso reales** (no con SQL), para que kardex, cartera
     y contabilidad cuadren por construcción. Requiere 002, 003, 004 y 009 (con el adaptador PTA falso).
@@ -565,7 +565,7 @@ ya está en 000; esta spec entrega el resto.*
 - **Seguridad:** se niega a ejecutarse con `NODE_ENV=production`. Las contraseñas se toman de `SIFCA_SEED_PASSWORD`
   y se convierten a argon2id **al sembrar**; no se versiona ningún hash ni contraseña. Todos los usuarios quedan con
   «cambiar contraseña al ingresar».
-- **Verificación:** `pnpm --filter @sifca/api db:seed:verify` comprueba los invariantes de §3.6 y falla si alguno no
+- **Verificación:** `npm run db:seed:verify -w @sifca/api` comprueba los invariantes de §3.6 y falla si alguno no
   se cumple (se ejecuta en CI).
 
 ### 3.2 Empresa demo

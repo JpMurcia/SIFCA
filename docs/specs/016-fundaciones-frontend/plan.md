@@ -137,7 +137,7 @@ apps/admin/                          # NUEVO
 └── package.json  # dev, build, preview, test:unit, test:component, test:arch, test:e2e, storybook, perf
 ```
 
-**Structure Decision**: aplicación separada `apps/admin` en el monorepo pnpm + Turborepo existente (ya previsto en el
+**Structure Decision**: aplicación separada `apps/admin` en el monorepo existente (npm workspaces + Turborepo) (ya previsto en el
 README y en ADR-0001). Los tokens van en un paquete propio porque los reutilizarán `apps/storefront` (024) y
 `apps/mobile` (025). Dentro de `apps/admin`, la regla de dependencias es `app → shell → modules → platform/ui`, con
 `ui` sin dependencias internas y módulos aislados entre sí (research §12). CI agrega un *job* `admin` (unidad,

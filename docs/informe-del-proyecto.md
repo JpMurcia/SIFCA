@@ -104,7 +104,7 @@ umbrales y niveles de servicio son **parámetros de negocio** configurables.
 | Prisma: `set_config` para RLS y `SELECT … FOR UPDATE` dentro de la transacción; opciones de tiempo y aislamiento | Funcionan; fuera de la transacción `current_setting` devuelve cadena vacía (no nulo) | ✅ (empírico) |
 | Prisma: migraciones escritas a mano y sin deriva (`migrate diff`) | Aplican y no hay diferencia con `schema.prisma` | ✅ |
 | Zod 4: `z.toJSONSchema` produce patrones, límites de arreglos y uniones | Compatible con OpenAPI 3.1 | ✅ (spike S-ZOD, parcial) |
-| pnpm 12: política de antigüedad mínima (1 día) y scripts de instalación bloqueados | Obligó a bajar turbo a 2.11.7 y testcontainers a 12.2.0 | ✅ |
+| pnpm 12: política de antigüedad mínima (1 día) y scripts de instalación bloqueados | Obligó a bajar turbo a 2.11.7 y testcontainers a 12.2.0. **El 16-oct-2026 el monorepo pasó a npm workspaces (npm ≥ 11.20.0)** | ✅ |
 | Sitios no accesibles desde el entorno de redacción | `prisma.io`, DIAN, Alegra | — (se documentó como 🔶/⚠️) |
 
 ### 4.4 Rendimiento medido (spec 001)
@@ -180,11 +180,11 @@ Riesgos principales: cambios normativos (RK-01), errores de redondeo contra la D
 node scripts/docs.mjs check --strict                        # documentación, trazabilidad y Gherkin (parser oficial)
 export SIFCA_TEST_PG_ADMIN_URL=postgresql://postgres@127.0.0.1:54329/postgres   # o dejar que use Docker
 infra/postgres/local-cluster.sh start                       # PostgreSQL local sin Docker
-pnpm install && pnpm --filter @sifca/contracts build && pnpm --filter @sifca/api prisma:generate
-pnpm --filter @sifca/api test:unit && pnpm --filter @sifca/api test:arch
-pnpm --filter @sifca/api test:integration && pnpm --filter @sifca/api test:contract
-pnpm --filter @sifca/api test:acceptance                    # los 21 escenarios Gherkin de la spec 001
-pnpm --filter @sifca/api test:perf                          # carga: 1.000 simultáneas y balance de 1 M de líneas
+npm install && npm run build -w @sifca/contracts && npm run prisma:generate -w @sifca/api
+npm run test:unit -w @sifca/api && npm run test:arch -w @sifca/api
+npm run test:integration -w @sifca/api && npm run test:contract -w @sifca/api
+npm run test:acceptance -w @sifca/api                    # los 21 escenarios Gherkin de la spec 001
+npm run test:perf -w @sifca/api                          # carga: 1.000 simultáneas y balance de 1 M de líneas
 node scripts/check-rules-verified.mjs docs/specs/001-contabilidad-comprobantes-inmutables   # falla hasta que el contador valide
 ```
 

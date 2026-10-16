@@ -80,13 +80,13 @@ node scripts/docs.mjs check --strict
 
 ## Inicializar el entorno local
 
-Requisitos: Node 22.18+ (`.nvmrc`), pnpm y PostgreSQL 16+ (Docker o el clúster local sin Docker).
+Requisitos: Node 22.18+ (`.nvmrc`), **npm ≥ 11.20.0** (`npm install -g npm@11.20.0`) y PostgreSQL 16+ (Docker o el clúster local sin Docker).
 
 ```bash
 # 1. Dependencias y código generado
-pnpm install
-pnpm --filter @sifca/contracts build
-pnpm --filter @sifca/api prisma:generate
+npm install
+npm run build -w @sifca/contracts
+npm run prisma:generate -w @sifca/api
 
 # 2. Base de datos (elige una)
 infra/postgres/local-cluster.sh start                    # sin Docker, puerto 54329
@@ -95,7 +95,7 @@ docker compose -f infra/docker-compose.dev.yml up -d     # con Docker, puerto 54
 # 3. Migraciones (inmutabilidad, RLS y roles) con el rol propietario; ajusta host, puerto y base a tu opción
 export DATABASE_MIGRATION_URL=postgresql://sifca_owner:sifca_owner_dev@127.0.0.1:5432/sifca
 export DATABASE_URL=postgresql://sifca_app:sifca_app_dev@127.0.0.1:5432/sifca
-pnpm --filter @sifca/api prisma:migrate
+npm run prisma:migrate -w @sifca/api
 ```
 
 Paso a paso (creación de la base y roles, arranque de la API): [`quickstart.md`](docs/specs/001-contabilidad-comprobantes-inmutables/quickstart.md).
@@ -104,11 +104,11 @@ Paso a paso (creación de la base y roles, arranque de la API): [`quickstart.md`
 
 | Comando | Qué siembra | Disponible |
 |---|---|---|
-| `SIFCA_TENANT_ID=<uuid> pnpm --filter @sifca/api seed:test-chart` | Plan de cuentas de prueba, tipos de comprobante y año fiscal 2026 para un tenant | ✅ hoy |
-| `JWT_DEV_SECRET=… SIFCA_TENANT_ID=<uuid> pnpm --filter @sifca/api dev:token` | JWT de desarrollo con todos los permisos de contabilidad (adaptador provisional) | ✅ hoy |
-| `pnpm --filter @sifca/api db:seed` (perfil `base`) | Comercializadora Andina S.A.S. (NIT 900.123.456-8), usuarios `admin@`, `aux@` y `ventas@andina.com`, PUC base, impuestos y UVT 2026, 5 ítems con kardex, 3 clientes, apertura de $ 1.000.000 | ⏳ con las specs 013, 018, 020 y 021 |
-| `SEED_PROFILE=demo pnpm --filter @sifca/api db:seed` | Facturas, nota crédito y recibo por casos de uso: cartera al día, en alerta y en mora | ⏳ con las specs 002, 003, 004 y 009 |
-| `pnpm --filter @sifca/api db:seed:verify` | Comprueba balance cuadrado, kardex = 1435, cartera = 1305 y estados de crédito | ⏳ con el perfil `base` |
+| `SIFCA_TENANT_ID=<uuid> npm run seed:test-chart -w @sifca/api` | Plan de cuentas de prueba, tipos de comprobante y año fiscal 2026 para un tenant | ✅ hoy |
+| `JWT_DEV_SECRET=… SIFCA_TENANT_ID=<uuid> npm run dev:token -w @sifca/api` | JWT de desarrollo con todos los permisos de contabilidad (adaptador provisional) | ✅ hoy |
+| `npm run db:seed -w @sifca/api` (perfil `base`) | Comercializadora Andina S.A.S. (NIT 900.123.456-8), usuarios `admin@`, `aux@` y `ventas@andina.com`, PUC base, impuestos y UVT 2026, 5 ítems con kardex, 3 clientes, apertura de $ 1.000.000 | ⏳ con las specs 013, 018, 020 y 021 |
+| `SEED_PROFILE=demo npm run db:seed -w @sifca/api` | Facturas, nota crédito y recibo por casos de uso: cartera al día, en alerta y en mora | ⏳ con las specs 002, 003, 004 y 009 |
+| `npm run db:seed:verify -w @sifca/api` | Comprueba balance cuadrado, kardex = 1435, cartera = 1305 y estados de crédito | ⏳ con el perfil `base` |
 
 Las semillas se niegan a correr con `NODE_ENV=production`; las contraseñas salen de `SIFCA_SEED_PASSWORD` y se
 convierten a argon2id al sembrar (no se versionan hashes). Plan completo y cifras esperadas:
@@ -118,7 +118,7 @@ convierten a argon2id al sembrar (no se versionan hashes). Plan completo y cifra
 
 ```bash
 export SIFCA_TEST_PG_ADMIN_URL=postgresql://postgres@127.0.0.1:54329/postgres
-pnpm --filter @sifca/api test:unit && pnpm --filter @sifca/api test:integration && pnpm --filter @sifca/api test:acceptance
+npm run test:unit -w @sifca/api && npm run test:integration -w @sifca/api && npm run test:acceptance -w @sifca/api
 ```
 
 Recorrido manual de la API: [`quickstart.md`](docs/specs/001-contabilidad-comprobantes-inmutables/quickstart.md).

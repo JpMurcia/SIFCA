@@ -246,11 +246,15 @@ con `const`/`enum` (`target: 'openapi-3.0'` o `'draft-2020-12'`). `z.uuid()` ace
 
 | Opción | Evaluación |
 |---|---|
-| **pnpm workspaces + Turborepo** | ● ligera, caché de tareas, curva baja. Recomendada |
+| pnpm workspaces + Turborepo | ● ligera, caché de tareas, curva baja. Usada hasta el 16-oct-2026 |
+| **npm workspaces (npm ≥ 11.20) + Turborepo** | ● estándar de Node, sin herramienta extra; `allowScripts` controla los scripts de instalación; Turborepo aporta la caché de tareas. **Vigente** |
 | Nx | ● potente (grafo de proyectos, generadores, límites de módulos); más pesada |
-| npm/yarn workspaces sin orquestador | ◐ suficiente al inicio, sin caché de tareas |
+| yarn workspaces sin orquestador | ◐ suficiente al inicio, sin caché de tareas |
 
-Recomendación provisional: **pnpm + Turborepo**. Si la verificación de límites entre módulos (D-3, D-5) se
+**Decisión (16-oct-2026): npm workspaces + Turborepo**, por pedido del equipo de que todo corra con npm. Se requiere
+npm ≥ 11.20.0: npm 10.9 falla al calcular el árbol de dependencias de este monorepo (`Cannot read properties of null
+(reading 'edgesOut')`). Las pruebas de la API (unidad, arquitectura, integración, contrato y aceptación) pasan igual que
+con pnpm. Si la verificación de límites entre módulos (D-3, D-5) se
 quiere automatizar con la herramienta del monorepo, Nx lo trae resuelto; con Turborepo se usa
 `dependency-cruiser`/`eslint-plugin-boundaries`.
 
@@ -267,4 +271,4 @@ quiere automatizar con la herramienta del monorepo, Nx lo trae resuelto; con Tur
 | UI vitrina | Next.js + Tailwind + shadcn/ui | Provisional | — |
 | Formularios | React Hook Form + `zodResolver` | Provisional | Spike S-UI |
 | Cola | pg-boss | Provisional | Volumen real |
-| Monorepo | pnpm + Turborepo | Provisional | — |
+| Monorepo | **npm workspaces (≥ 11.20) + Turborepo** | Vigente | Pruebas de la API en verde con npm |

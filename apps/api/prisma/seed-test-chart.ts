@@ -1,5 +1,5 @@
 /**
- * `pnpm --filter @sifca/api seed:test-chart` — siembra el plan de cuentas de PRUEBA, tipos de comprobante y el año
+ * `npm run seed:test-chart -w @sifca/api` — siembra el plan de cuentas de PRUEBA, tipos de comprobante y el año
  * fiscal 2026 para el tenant indicado (SIFCA_TENANT_ID). NO es el PUC de producción. Usa el rol sifca_owner.
  */
 import { randomUUID } from 'node:crypto';

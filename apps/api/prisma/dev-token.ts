@@ -1,5 +1,5 @@
 /**
- * `pnpm --filter @sifca/api dev:token` — imprime un JWT de DESARROLLO (HS256) con todos los permisos de contabilidad.
+ * `npm run dev:token -w @sifca/api` — imprime un JWT de DESARROLLO (HS256) con todos los permisos de contabilidad.
  * Variables: JWT_DEV_SECRET (obligatoria), SIFCA_TENANT_ID (obligatoria), SIFCA_USER_ID (opcional).
  * Es el adaptador provisional hasta que exista la spec de IAM (no sirve en producción).
  */

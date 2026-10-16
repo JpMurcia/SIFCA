@@ -35,6 +35,10 @@ Consultado en el registro de npm el 2026-10-14 (`npm view <paquete> dist-tags.la
 > el *spike* **S-PRISMA** (ver §2). Las versiones se fijan exactas en `package.json` (sin `^`) y se actualizan
 > con una tarea explícita.
 
+> **Actualización 16-oct-2026:** el monorepo pasó de pnpm a **npm workspaces (npm ≥ 11.20.0)**; el lockfile es
+> `package-lock.json` y los scripts de instalación permitidos están en `allowScripts`. Ver
+> `docs/01-arquitectura/03-evaluacion-de-librerias.md` §6.
+
 **Decisión de manejo de versiones.** Versiones exactas fijadas + `pnpm-lock.yaml` versionado; Renovate/Dependabot
 propone actualizaciones por PR, nunca automáticas en `main`.
 

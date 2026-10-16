@@ -37,7 +37,7 @@ Monorepo de `plan.md` → *Project Structure*: back-office en `apps/admin/` (có
 
 **Purpose**: crear `apps/admin` y `packages/design-tokens` dentro del monorepo y dejar listas las herramientas.
 
-- [ ] T001 Crear `apps/admin/package.json` (`name: @sifca/admin`, `type: module`, `private`) con dependencias exactas de `plan.md` → *Primary Dependencies* (React 19.3, Vite 8.3, `@vitejs/plugin-react` 6.1, TanStack Router 1.170 / Query 5.104 / Table 9.3 / Virtual 3.14, `radix-ui` 1.8, Tailwind 4.3 + `@tailwindcss/vite`, React Hook Form 7.90, `@hookform/resolvers` 5.9, cmdk 1.1.1, decimal.js 10.6.0, `@fontsource-variable/inter`, `@fontsource-variable/jetbrains-mono`, `@sifca/contracts` y `@sifca/design-tokens` como `workspace:*`) y *scripts* `dev`, `build`, `preview`, `typecheck`, `lint`, `test:unit`, `test:component`, `test:arch`, `test:e2e`, `storybook`, `perf`; ejecutar `pnpm install` y versionar `pnpm-lock.yaml`
+- [ ] T001 Crear `apps/admin/package.json` (`name: @sifca/admin`, `type: module`, `private`) con dependencias exactas de `plan.md` → *Primary Dependencies* (React 19.3, Vite 8.3, `@vitejs/plugin-react` 6.1, TanStack Router 1.170 / Query 5.104 / Table 9.3 / Virtual 3.14, `radix-ui` 1.8, Tailwind 4.3 + `@tailwindcss/vite`, React Hook Form 7.90, `@hookform/resolvers` 5.9, cmdk 1.1.1, decimal.js 10.6.0, `@fontsource-variable/inter`, `@fontsource-variable/jetbrains-mono`, `@sifca/contracts` y `@sifca/design-tokens` como `workspace:*`) y *scripts* `dev`, `build`, `preview`, `typecheck`, `lint`, `test:unit`, `test:component`, `test:arch`, `test:e2e`, `storybook`, `perf`; ejecutar `npm install` y versionar `pnpm-lock.yaml`
 - [ ] T002 [P] Crear `apps/admin/tsconfig.json` que extiende `packages/config/tsconfig.base.json` (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) con `jsx: react-jsx`, `lib: [DOM, ES2023]` y alias `@/*` → `src/*`
 - [ ] T003 [P] Crear `apps/admin/index.html` (`<html lang="es-CO">`, `<meta name="viewport">`, raíz `#root`) y `apps/admin/src/app/main.tsx` que monta `<App/>` vacío
 - [ ] T004 Crear `apps/admin/vite.config.ts` con React, Tailwind, alias `@`, y *proxy* de `/api` hacia `SIFCA_API_URL` (por defecto `http://localhost:3000`) que **añade** `Authorization: Bearer ${SIFCA_DEV_TOKEN}` en el servidor (research §5); y un *plugin* que **aborta** `vite build` cuando `mode === 'production'` y `SIFCA_AUTH_MODE` es `dev-proxy` o está vacío, con el mensaje «El back-office no puede compilarse para producción sin la spec 012 (autenticación)» (FR-021)
@@ -77,7 +77,7 @@ empezar hasta terminar esta fase.**
 - [ ] T022 En `apps/api/src/platform/config/env.schema.ts` añadir `SIFCA_DEV_COMPANY_NAME` (texto 1–200, por defecto «Empresa de desarrollo»), `SIFCA_DEV_COMPANY_NIT` (formato `NNNNNNNNN-D`, **DV validado con el algoritmo de la DIAN**, pesos 3,7,13,17,19,23,29,37,41,43,47,53,59,67,71 desde la derecha; residuo 0 o 1 → DV = residuo, si no 11 − residuo; R-FE-012) y `SIFCA_DEV_USER_NAME` (1–120, por defecto «Usuario de desarrollo»); prueba unitaria en `apps/api/test/unit/platform/env-nit.spec.ts` con `900123456-8` válido y `900123456-7` rechazado
 - [ ] T023 Crear `apps/api/src/platform/http/me.controller.ts` (`GET /me`, sin permiso específico, toma usuario, empresa y permisos de `RequestContext` y `workingDate` = hoy en `America/Bogota` desde el puerto `Clock`; responde validando con `SessionContextSchema`) y registrarlo en `apps/api/src/platform/platform.module.ts`; hace pasar T020
 - [ ] T024 Implementar el filtro `number` en `apps/api/src/modules/accounting/application/ports/journal-entry-repository.ts` (`JournalEntryFilter.number?`), `application/use-cases/list-journal-entries.ts` e `infrastructure/persistence/prisma-journal-entry.repository.ts` (orden: más recientes primero); hace pasar T021
-- [ ] T025 Actualizar `docs/specs/001-contabilidad-comprobantes-inmutables/contracts/accounting.v1.openapi.yaml` con el parámetro `number` y ejecutar `pnpm --filter @sifca/api test:contract` en verde
+- [ ] T025 Actualizar `docs/specs/001-contabilidad-comprobantes-inmutables/contracts/accounting.v1.openapi.yaml` con el parámetro `number` y ejecutar `npm run test:contract -w @sifca/api` en verde
 
 ### Plataforma del cliente
 
@@ -98,7 +98,7 @@ empezar hasta terminar esta fase.**
 - [ ] T040 Crear el arnés de pruebas de componentes: `apps/admin/test/component/setup.ts` (Testing Library, `jest-dom`, MSW `setupServer`), `apps/admin/test/component/handlers/problems.ts` (un *handler* por cada `code` de `contracts/ui-error-catalog.md` con el cuerpo `problem+json` correspondiente) y `apps/admin/test/component/render.tsx` (renderiza con *providers*, sesión simulada y permisos configurables)
 - [ ] T041 Crear el arnés E2E: `apps/admin/test/e2e/support/fixtures.ts` (crea *tenant* con `seed:test-chart`, genera tokens con permisos configurables vía `dev:token`, arranca/usa la API) y `apps/admin/test/e2e/steps/common.steps.ts` con los pasos de `Antecedentes` («la empresa … con NIT …», «el período … abierto/cerrado») y «un usuario con el permiso …»
 
-**Checkpoint**: `pnpm --filter @sifca/admin dev` muestra una página en blanco con estilos y la sesión cargada; `/me`
+**Checkpoint**: `npm run dev -w @sifca/admin` muestra una página en blanco con estilos y la sesión cargada; `/me`
 y el filtro `number` en verde; arneses listos.
 
 ---
@@ -244,9 +244,9 @@ y densidad y recargar.
 
 - [ ] T086 [P] Prueba de accesibilidad `apps/admin/test/e2e/a11y.spec.ts` con `@axe-core/playwright`: cascarón, paleta abierta, página 403 y lista de comprobantes, en tema Claro y Slate y en las tres densidades → **cero violaciones AA** (SC-002); texto al 200 % y ancho 768 px sin desborde horizontal de la página
 - [ ] T087 [P] Configurar Lighthouse CI en `apps/admin/lighthouserc.json` (*preview* con red limitada a 10 Mbps): LCP < 2,5 s; *bundle* inicial ≤ **250 KB gzip** (SC-004); *script* `perf`
-- [ ] T088 [P] Completar Storybook (FR-022): una historia por componente de `src/ui/` y `src/shell/` en ambos temas y tres densidades, con `addon-a11y` sin violaciones; `pnpm --filter @sifca/admin build-storybook` en CI
+- [ ] T088 [P] Completar Storybook (FR-022): una historia por componente de `src/ui/` y `src/shell/` en ambos temas y tres densidades, con `addon-a11y` sin violaciones; `npm run build-storybook -w @sifca/admin` en CI
 - [ ] T089 [P] Prueba de SC-006 en `apps/admin/test/arch/registry-extension.spec.ts`: un manifiesto de prueba con una pantalla nueva aparece en menú, paleta y guardas sin tocar `src/shell/`
-- [ ] T090 Verificar FR-021: `SIFCA_AUTH_MODE=dev-proxy pnpm --filter @sifca/admin build --mode production` **falla** con el mensaje de T004 (prueba en `apps/admin/test/unit/build-guard.spec.ts`) y el *bundle* de `--mode e2e` no contiene `SIFCA_DEV_TOKEN` ni ningún JWT (búsqueda en `dist/`)
+- [ ] T090 Verificar FR-021: `SIFCA_AUTH_MODE=dev-proxy npm run build -w @sifca/admin -- --mode production` **falla** con el mensaje de T004 (prueba en `apps/admin/test/unit/build-guard.spec.ts`) y el *bundle* de `--mode e2e` no contiene `SIFCA_DEV_TOKEN` ni ningún JWT (búsqueda en `dist/`)
 - [ ] T091 [P] Actualizar documentación: `README.md` (cómo levantar el back-office y estado de la spec 016), `docs/roadmap-specs.md` (estado de SPEC-016) y `docs/04-diseno-ux/04-sistema-de-diseno.md` (enlace a Storybook y a `packages/design-tokens`)
 - [ ] T092 Ejecutar el recorrido de [`quickstart.md`](quickstart.md) completo, `node scripts/docs.mjs check --strict` y todos los *jobs* de CI en verde; marcar las tareas como completadas
 

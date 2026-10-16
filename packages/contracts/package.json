@@ -11,5 +11,5 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": { "zod": "4.6.7" },
-  "devDependencies": { "@sifca/config": "workspace:*", "typescript": "5.9.3" }
+  "devDependencies": { "@sifca/config": "*", "typescript": "5.9.3" }
 }

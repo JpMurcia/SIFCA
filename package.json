@@ -3,8 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "description": "SIFCA — Sistema Integral Fiscal y Contable Ágil",
-  "engines": { "node": ">=22.18" },
-  "packageManager": "pnpm@12.13.0",
+  "engines": {
+    "node": ">=22.18",
+    "npm": ">=11.20.0"
+  },
+  "packageManager": "npm@11.20.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "docs:check": "node scripts/docs.mjs check --strict",
     "build": "turbo run build",
@@ -15,5 +22,14 @@
   },
   "devDependencies": {
     "turbo": "2.11.7"
+  },
+  "allowScripts": {
+    "@prisma/engines": true,
+    "prisma": true,
+    "esbuild": true,
+    "@scarf/scarf": false,
+    "cpu-features": false,
+    "protobufjs": false,
+    "ssh2": false
   }
 }
