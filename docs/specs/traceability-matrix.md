@@ -9,7 +9,7 @@
 | Indicador | Valor |
 |---|---:|
 | Especificaciones | 12 |
-| Requisitos funcionales (FR) | 155 |
+| Requisitos funcionales (FR) | 157 |
 | Escenarios ejecutables | 169 |
 | Reglas definidas en el catálogo | 95 |
 | Reglas con cobertura (FR o escenario) | 85 |
@@ -32,7 +32,7 @@
 | R-CON-011 | Cierre mensual | 001/FR-011, 007/FR-006, 016/FR-003 | 001-12, 007-08, 016-01 |
 | R-CON-012 | Cierre anual | 001/FR-012 | 001-15 |
 | R-CON-013 | Naturaleza de las cuentas | 001/FR-010 | 001-11 |
-| R-CON-014 | Fecha, hora y zona | 001/FR-013, 016/FR-016 | 001-13 |
+| R-CON-014 | Fecha, hora y zona | 001/FR-013, 016/FR-016, 016/FR-024 | 001-13 |
 | R-IMP-001 | Tarifas de IVA | 004/FR-006, 010/FR-001 | 004-13, 010-02 |
 | R-IMP-002 | Base gravable | 010/FR-002 | — |
 | R-IMP-003 | IVA por línea y redondeo | 002/FR-004, 010/FR-003 | 002-01, 010-01 |
@@ -120,7 +120,7 @@
 | [009-facturacion-electronica-pta](009-facturacion-electronica-pta/spec.md) | Facturación electrónica mediante Proveedor Tecnológico Autorizado | 13 | 15 | 12 |
 | [010-motor-impuestos-y-retenciones](010-motor-impuestos-y-retenciones/spec.md) | Motor de impuestos y retenciones con vigencias | 12 | 14 | 12 |
 | [011-multitenancy-api-y-webhooks](011-multitenancy-api-y-webhooks/spec.md) | Aislamiento por tenant, API Keys, idempotencia y webhooks | 11 | 15 | 0 |
-| [016-fundaciones-frontend](016-fundaciones-frontend/spec.md) | Fundaciones del back-office web (cascarón, estados globales y cliente de contratos) | 22 | 12 | 6 |
+| [016-fundaciones-frontend](016-fundaciones-frontend/spec.md) | Fundaciones del back-office web (cascarón, estados globales y cliente de contratos) | 24 | 12 | 6 |
 
 ## 3. Principios de la constitución → escenarios
 

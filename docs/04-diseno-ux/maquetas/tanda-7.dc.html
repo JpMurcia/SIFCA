@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<script src="./sifca-icons.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E3E7EC;font-family:Inter,system-ui,sans-serif;color:#1B2430;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}a{color:#0B5CAD}a:hover{color:#084A8C}button,input,textarea{font-family:inherit}input::placeholder{color:inherit;opacity:.55}.dv-turn{padding:40px 44px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Inter,system-ui,sans-serif;color:#1a1a1a}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 Inter,system-ui,sans-serif;color:rgba(0,0,0,.6)}.dv-card{border:1px solid rgba(0,0,0,.1);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden}.dv-opt:target .dv-oid{background:#0B5CAD;color:#fff}.dv-h{font:600 15px/1.2 Inter,system-ui,sans-serif;color:#1B2430;margin:44px 0 16px}@media (prefers-reduced-motion:reduce){*{transition:none!important}}</style>
+</helmet>
+<section class="dv-turn" id="t7">
+<div class="dv-thd"><a class="dv-tid" href="#t7">7</a><span class="dv-tname">Tanda 7 · Pendientes de la auditoría · Ventas, cartera, compras, inventario, FE, usuarios y plantillas, cierre de migración, sin permiso, esqueleto, densidad y 1024 px</span></div>
+
+<div style="max-width:1320px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:24px 28px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr);gap:32px;font-size:13px;line-height:1.55;color:#1B2430">
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Qué cubre</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;text-wrap:pretty">
+<li><b>Ventas:</b> cotizaciones y pedidos con conversión y cupo del cliente.</li>
+<li><b>Cartera:</b> estado de cuenta web con saldo corrido y edades.</li>
+<li><b>Compras:</b> órdenes con recepción parcial y devolución a proveedor.</li>
+<li><b>Inventario:</b> maestro de ítems, ajustes y traslados, conteo físico y reposición.</li>
+<li><b>Impuestos:</b> retenciones y UVT con vigencia, motivo e historial.</li>
+<li><b>FE:</b> rangos de numeración y cola de contingencia.</li>
+<li><b>Configuración:</b> usuarios, roles con matriz de permisos y plantillas PDF.</li>
+<li><b>IN.3 paso 9:</b> cierre de la migración.</li>
+<li><b>§4.5 y §6:</b> sin permiso, esqueleto, vacío, densidades Compacta, Normal y Cómoda, y 1024 px.</li>
+</ul>
+</div>
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Logos e íconos</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;text-wrap:pretty">
+<li>Logo SIFCA claro u oscuro según el tema, en la barra superior y en el pie de cada plantilla PDF.</li>
+<li>Íconos del set SIFCA en el menú (también colapsado a 1024 px), botones, estados y avisos.</li>
+<li>El logo de la empresa en las plantillas es un espacio reservado: se carga en Configuración › Empresa.</li>
+</ul>
+<div style="margin-top:12px;font-size:12px;color:#4B5767;text-wrap:pretty"><b>Supuestos:</b> clientes, proveedores, resoluciones DIAN y usuarios son de ejemplo. Los saldos de Droguería Vida Plena siguen las tandas anteriores.</div>
+</div>
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Pruébalo</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;text-wrap:pretty">
+<li>Cotizaciones: envía COT-120 y convierte COT-118 en pedido; luego factúralo.</li>
+<li>Órdenes: registra la recepción de OC-31.</li>
+<li>Conteo: digita las dos cantidades que faltan y genera el ajuste.</li>
+<li>Retenciones: programa una nueva tarifa con motivo; registra la UVT 2027 y mira cómo cambian las bases.</li>
+<li>Contingencia: pulsa Transmitir ahora.</li>
+<li>Roles: cambia permisos de Vendedor y guarda.</li>
+<li>Plantillas: apaga el logo, cambia el color y el documento.</li>
+<li>Migración: marca la confirmación y cierra.</li>
+</ul>
+<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:baseline"><sc-for list="{{ jump }}" as="j" hint-placeholder-count="12"><a class="dv-oid" href="#{{ j }}">{{ j }}</a></sc-for></div>
+</div>
+</div>
+
+<sc-for list="{{ screens }}" as="sc" hint-placeholder-count="6">
+<div>
+<h3 class="dv-h">{{ sc.title }}</h3>
+<div style="display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap">
+<sc-for list="{{ sc.items }}" as="w" hint-placeholder-count="2">
+<div class="dv-opt" id="{{ w.id }}">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ w.id }}">{{ w.id }}</a>{{ w.label }}</div>
+<div class="dv-card" style="{{ w.vars }}">
+
+<div style="height:56px;flex:none;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid var(--bd);background:var(--glass);backdrop-filter:blur(16px) saturate(1.4);position:relative;z-index:2">
+<div style="display:flex;align-items:center;gap:10px;flex:none;width:{{ w.brandW }}"><div role="img" aria-label="SIFCA" title="SIFCA" style="width:34px;height:34px;flex:none;background:var(--logo) center/contain no-repeat"></div><div style="display:flex;flex-direction:column;line-height:1.25;min-width:0"><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ w.co }}</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">NIT {{ w.nit }}</span></div></div>
+<div style="flex:1;max-width:520px;margin:0 auto;height:36px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--mu);display:flex;align-items:center;gap:10px;padding:0 8px 0 12px;font-size:13px;box-shadow:var(--e1)"><sf-icon name="search" style="width:15px;height:15px"></sf-icon><span style="flex:1;white-space:nowrap">Buscar o ejecutar…</span><span style="font:500 11px 'JetBrains Mono',monospace;padding:2px 6px;border:1px solid var(--bd);border-radius:5px;background:var(--sf)">Ctrl K</span></div>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:14px;background:var(--okb);color:var(--ok);font-size:12px;font-weight:600;white-space:nowrap"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--okb)"></span>Oct 2026 · abierto</span>
+<span style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);display:flex;align-items:center;gap:6px;font-size:13px"><sf-icon name="bell" style="width:15px;height:15px"></sf-icon><span style="min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--pr);color:var(--onpr);font-size:11px;font-weight:700;display:grid;place-items:center">{{ w.alerts }}</span></span>
+<span style="width:32px;height:32px;border-radius:50%;background:var(--sf2);display:grid;place-items:center;font-size:12px;font-weight:600">{{ w.avatar }}</span>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex">
+<nav style="width:{{ w.navW }};flex:none;background:var(--side);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:12px 10px;gap:2px;overflow:hidden">
+<sc-for list="{{ w.groups }}" as="g" hint-placeholder-count="12">
+<div style="display:flex;flex-direction:column">
+<div title="{{ g.name }}" style="height:32px;display:flex;align-items:center;gap:10px;padding:0 6px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:{{ g.weight }}" style-hover="background:var(--hov)"><span style="width:24px;height:22px;flex:none;border-radius:6px;background:{{ g.tileBg }};color:{{ g.tileFg }};display:grid;place-items:center"><sf-icon name="{{ g.code }}" style="width:15px;height:15px"></sf-icon></span><sc-if value="{{ w.wide }}" hint-placeholder-val="{{ true }}"><span style="flex:1;white-space:nowrap">{{ g.name }}</span></sc-if></div>
+<sc-if value="{{ g.showChildren }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 40px"><sc-for list="{{ g.children }}" as="c" hint-placeholder-count="4"><div style="height:28px;display:flex;align-items:center;padding:0 8px;border-radius:6px;font-size:13px;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};font-weight:{{ c.weight }};white-space:nowrap" style-hover="background:var(--hov)">{{ c.name }}</div></sc-for></div></sc-if>
+</div>
+</sc-for>
+</nav>
+
+<main style="flex:1;min-width:0;position:relative;background:var(--app);display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex:none;flex-wrap:wrap">
+<div style="min-width:0"><div style="font-size:12px;color:var(--mu)">{{ w.crumb }}</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:6px;flex-wrap:wrap"><h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-.01em;white-space:nowrap">{{ w.title }}</h1>
+<sc-for list="{{ w.badges }}" as="b" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:6px;font-size:12px;font-weight:600;background:{{ b.bg }};color:{{ b.fg }};white-space:nowrap">{{ b.t }}<b style="font-family:'JetBrains Mono',monospace">{{ b.ref }}</b></span></sc-for>
+</div></div>
+<div style="display:flex;gap:8px;align-items:center;flex:none">
+<sc-for list="{{ w.actions }}" as="a" hint-placeholder-count="2"><button onClick="{{ a.on }}" title="{{ a.tip }}" style="height:36px;padding:0 14px;border-radius:8px;border:{{ a.bd }};background:{{ a.bg }};color:{{ a.fg }};font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;cursor:{{ a.cur }};box-shadow:{{ a.sh }};white-space:nowrap">{{ a.label }}<sc-if value="{{ a.k }}" hint-placeholder-val="{{ false }}"><span style="font:500 11px 'JetBrains Mono',monospace;opacity:.75">{{ a.k }}</span></sc-if></button></sc-for>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;overflow:auto">
+
+<sc-if value="{{ w.isDenied }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100%;display:grid;place-items:center;padding:40px 28px">
+<div role="alert" style="max-width:520px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+<span style="width:56px;height:56px;border-radius:50%;background:var(--neb);color:var(--ne);display:grid;place-items:center"><sf-icon name="lock" style="width:26px;height:26px"></sf-icon></span>
+<div style="font-size:20px;font-weight:600">No tienes acceso a Usuarios y roles</div>
+<div style="font-size:14px;line-height:1.55;color:var(--mu);text-wrap:pretty">Tu rol <b style="color:var(--tx)">Vendedor</b> no incluye este permiso. Pide acceso a un administrador de Comercializadora Andina S.A.S.</div>
+<span style="font:500 12px 'JetBrains Mono',monospace;padding:5px 9px;border-radius:6px;background:var(--sf);border:1px solid var(--bd)">config.users.view</span>
+<div style="width:100%;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;text-align:left"><span style="width:32px;height:32px;border-radius:50%;background:var(--sf2);display:grid;place-items:center;font-size:12px;font-weight:600;flex:none">JM</span><div style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:13px;font-weight:600">Juliana Murcia</span><span style="font-size:12px;color:var(--mu)">Administrador · jmurcia@andina.co</span></div></div>
+<div style="display:flex;gap:8px"><button onClick="{{ goHome }}" style="height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;font-weight:600;cursor:pointer">Volver al inicio</button><button onClick="{{ askAccess }}" style="height:36px;padding:0 14px;border-radius:8px;border:0;background:var(--pr);color:var(--onpr);font-size:13px;font-weight:600;cursor:pointer">Solicitar acceso</button></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isSkel }}" hint-placeholder-val="{{ false }}">
+<div aria-busy="true" aria-label="Cargando ítems" style="padding:12px 28px 24px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;gap:8px;height:40px;align-items:center;border-bottom:1px solid var(--bd)"><span style="width:90px;height:12px;border-radius:6px;background:var(--sf2)"></span><span style="width:110px;height:12px;border-radius:6px;background:var(--sf2)"></span></div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden">
+<div style="height:36px;background:var(--sf);border-bottom:1px solid var(--bd)"></div>
+<sc-for list="{{ skel }}" as="s" hint-placeholder-count="10"><div style="height:{{ w.rowH }};display:grid;grid-template-columns:88px minmax(0,1fr) 110px 110px 130px 120px;gap:20px;align-items:center;padding:0 12px;border-bottom:1px solid var(--bd)"><span style="height:10px;border-radius:5px;background:var(--sf2);width:60px"></span><span style="height:10px;border-radius:5px;background:var(--sf2);width:{{ s.a }}"></span><span style="height:10px;border-radius:5px;background:var(--sf2);width:{{ s.b }}"></span><span style="height:10px;border-radius:5px;background:var(--sf2);width:60%;justify-self:end"></span><span style="height:10px;border-radius:5px;background:var(--sf2);width:70%;justify-self:end"></span><span style="height:18px;border-radius:6px;background:var(--sf2);width:72px"></span></div></sc-for>
+</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;align-self:start"><span style="height:16px;width:60%;border-radius:6px;background:var(--sf2)"></span><span style="height:10px;width:35%;border-radius:5px;background:var(--sf2)"></span><sc-for list="{{ skel }}" as="s" hint-placeholder-count="6"><span style="height:10px;border-radius:5px;background:var(--sf2);width:{{ s.a }}"></span></sc-for><div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><sf-icon name="refresh" style="width:14px;height:14px"></sf-icon>Cargando 1.236 ítems…</div></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isStd }}" hint-placeholder-val="{{ true }}">
+<div style="padding:12px 28px 24px;display:flex;flex-direction:column;gap:12px">
+
+<sc-if value="{{ w.hasBanner }}" hint-placeholder-val="{{ false }}"><div role="{{ w.banner.role }}" style="display:flex;gap:12px;align-items:flex-start;padding:12px 16px;border-radius:10px;background:{{ w.banner.bg }};color:{{ w.banner.fg }}"><sf-icon name="{{ w.banner.icon }}" style="width:18px;height:18px;margin-top:1px"></sf-icon><div style="display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.5"><b>{{ w.banner.t }}</b><span style="color:var(--tx);text-wrap:pretty">{{ w.banner.b }}</span></div></div></sc-if>
+
+<sc-if value="{{ w.hasSteps }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;box-shadow:var(--e1)"><sc-for list="{{ w.steps }}" as="s" hint-placeholder-count="9"><div style="flex:1;min-width:0;display:flex;align-items:center;gap:8px"><span style="width:24px;height:24px;flex:none;border-radius:50%;background:{{ s.bg }};color:{{ s.fg }};display:grid;place-items:center;font-size:11px;font-weight:700"><sc-if value="{{ s.done }}" hint-placeholder-val="{{ true }}"><sf-icon name="check" stroke="3" style="width:12px;height:12px"></sf-icon></sc-if><sc-if value="{{ s.notDone }}" hint-placeholder-val="{{ false }}">{{ s.n }}</sc-if></span><span style="font-size:12px;font-weight:{{ s.fw }};color:{{ s.tc }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.l }}</span></div></sc-for></div></sc-if>
+
+<sc-if value="{{ w.hasTabs }}" hint-placeholder-val="{{ false }}"><div role="tablist" style="display:flex;gap:4px;border-bottom:1px solid var(--bd)"><sc-for list="{{ w.tabs }}" as="t" hint-placeholder-count="2"><button role="tab" aria-selected="{{ t.sel }}" data-noico="1" onClick="{{ t.pick }}" style="height:40px;border:0;border-bottom:2px solid {{ t.bd }};background:transparent;color:{{ t.fg }};font-size:13px;font-weight:{{ t.fw }};padding:0 12px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ t.name }}<span style="font-size:11px;font-weight:600;padding:0 6px;height:18px;border-radius:9px;background:var(--sf2);color:var(--mu);display:grid;place-items:center">{{ t.n }}</span></button></sc-for></div></sc-if>
+
+<sc-if value="{{ w.hasKpis }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px"><sc-for list="{{ w.kpis }}" as="k" hint-placeholder-count="4"><div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;box-shadow:var(--e1);display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-size:12px;color:var(--mu)">{{ k.l }}</span><span style="font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;color:{{ k.fg }};white-space:nowrap">{{ k.v }}</span><sc-if value="{{ k.sub }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:var(--mu)">{{ k.sub }}</span></sc-if></div></sc-for></div></sc-if>
+
+<div style="display:grid;grid-template-columns:{{ w.bodyCols }};gap:16px;align-items:start">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;min-width:0">
+<div style="display:grid;grid-template-columns:{{ w.cols }};height:36px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><sc-for list="{{ w.heads }}" as="h" hint-placeholder-count="6"><span style="padding:0 10px;display:flex;justify-content:{{ h.jc }};white-space:nowrap">{{ h.t }}</span></sc-for></div>
+<sc-if value="{{ w.isEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:56px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span style="width:44px;height:44px;border-radius:50%;background:var(--okb);color:var(--ok);display:grid;place-items:center"><sf-icon name="check" style="width:22px;height:22px"></sf-icon></span><span style="font-size:15px;font-weight:600">{{ w.empty.t }}</span><span style="max-width:420px;font-size:13px;line-height:1.5;color:var(--mu);text-wrap:pretty">{{ w.empty.b }}</span><button style="margin-top:4px;height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;font-weight:600;cursor:pointer">{{ w.empty.a }}</button></div></sc-if>
+<sc-for list="{{ w.rows }}" as="r" hint-placeholder-count="6"><div onClick="{{ r.pick }}" style="display:grid;grid-template-columns:{{ r.cols }};height:{{ r.h }};align-items:center;border-bottom:1px solid var(--bd);background:{{ r.bg }};cursor:{{ r.cur }}" style-hover="background:var(--hov)">
+<sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="6"><div style="padding:0 10px;min-width:0;display:flex;align-items:center;justify-content:{{ c.jc }};font:{{ c.font }};color:{{ c.fg }};font-variant-numeric:tabular-nums">
+<sc-if value="{{ c.isText }}" hint-placeholder-val="{{ true }}"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.t }}</span></sc-if>
+<sc-if value="{{ c.isBadge }}" hint-placeholder-val="{{ false }}"><span style="height:22px;padding:0 8px;border-radius:6px;background:{{ c.bg }};color:{{ c.bfg }};font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;overflow:hidden">{{ c.t }}<b style="font-family:'JetBrains Mono',monospace">{{ c.ref }}</b></span></sc-if>
+<sc-if value="{{ c.isBar }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;width:100%"><span style="flex:1;height:6px;border-radius:3px;background:var(--sf2);overflow:hidden"><span style="display:block;height:100%;width:{{ c.w }};background:{{ c.c }};border-radius:3px"></span></span><span style="font-size:12px;color:var(--mu);min-width:40px;text-align:right">{{ c.t }}</span></span></sc-if>
+<sc-if value="{{ c.isInput }}" hint-placeholder-val="{{ false }}"><input aria-label="Cantidad contada" value="{{ c.v }}" onChange="{{ c.on }}" onClick="{{ c.stop }}" inputMode="numeric" placeholder="—" style="width:88px;height:{{ c.ih }};border:1px solid {{ c.ibd }};border-radius:6px;background:var(--bg);color:var(--tx);text-align:right;padding:0 8px;font:inherit;outline-color:var(--ring)"></input></sc-if>
+<sc-if value="{{ c.isCheck }}" hint-placeholder-val="{{ false }}"><button role="checkbox" aria-checked="{{ c.aria }}" aria-label="Seleccionar" data-noico="1" onClick="{{ c.toggle }}" style="width:18px;height:18px;border-radius:4px;border:1.5px solid {{ c.cbd }};background:{{ c.cbg }};color:var(--onpr);padding:0;display:grid;place-items:center;cursor:pointer"><sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><sf-icon name="check" stroke="3" style="width:12px;height:12px"></sf-icon></sc-if></button></sc-if>
+</div></sc-for>
+</div></sc-for>
+<sc-if value="{{ w.hasFoot }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 12px;font-size:12px;color:var(--mu);background:var(--sf);text-wrap:pretty">{{ w.foot }}</div></sc-if>
+</div>
+
+<sc-if value="{{ w.hasPanel }}" hint-placeholder-val="{{ false }}">
+<aside style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:18px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:16px;font-weight:600">{{ w.panel.title }}</span><sc-for list="{{ w.panel.badges }}" as="b" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:600;background:{{ b.bg }};color:{{ b.fg }};white-space:nowrap">{{ b.t }}<b style="font-family:'JetBrains Mono',monospace">{{ b.ref }}</b></span></sc-for></div><span style="font-size:13px;color:var(--mu)">{{ w.panel.sub }}</span></div>
+<sc-for list="{{ w.panel.sections }}" as="s" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-if value="{{ s.t }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">{{ s.t }}</div></sc-if>
+<sc-if value="{{ s.isKv }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px"><sc-for list="{{ s.items }}" as="i" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px;font-size:13px"><span style="color:var(--mu)">{{ i.l }}</span><span style="font:{{ i.font }};min-width:0;overflow-wrap:anywhere">{{ i.v }}</span></div></sc-for></div></sc-if>
+<sc-if value="{{ s.isList }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column"><sc-for list="{{ s.items }}" as="i" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid var(--bd);font-size:13px"><div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:{{ i.fw }};text-wrap:pretty">{{ i.l }}</span><sc-if value="{{ i.sub }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:var(--mu)">{{ i.sub }}</span></sc-if></div><span style="font-variant-numeric:tabular-nums;font-weight:{{ i.fw }};color:{{ i.fg }};white-space:nowrap">{{ i.r }}</span></div></sc-for></div></sc-if>
+<sc-if value="{{ s.isBars }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:8px"><sc-for list="{{ s.items }}" as="i" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:72px minmax(0,1fr) 120px;gap:10px;align-items:center;font-size:13px"><span style="color:var(--mu)">{{ i.l }}</span><span style="height:8px;border-radius:4px;background:var(--sf2);overflow:hidden"><span style="display:block;height:100%;width:{{ i.w }};background:{{ i.c }}"></span></span><span style="text-align:right;font-variant-numeric:tabular-nums">{{ i.r }}</span></div></sc-for></div></sc-if>
+<sc-if value="{{ s.isMatrix }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;border:1px solid var(--bd);border-radius:10px;overflow:hidden"><div style="display:grid;grid-template-columns:minmax(0,1fr) repeat(4,64px);height:32px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu)"><span style="padding:0 10px">Módulo</span><sc-for list="{{ s.heads }}" as="h" hint-placeholder-count="4"><span style="text-align:center">{{ h }}</span></sc-for></div><sc-for list="{{ s.items }}" as="m" hint-placeholder-count="7"><div style="display:grid;grid-template-columns:minmax(0,1fr) repeat(4,64px);height:36px;align-items:center;border-top:1px solid var(--bd);font-size:13px"><span style="padding:0 10px">{{ m.l }}</span><sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="4"><span style="display:grid;place-items:center"><button role="checkbox" aria-checked="{{ c.aria }}" aria-label="{{ c.lab }}" data-noico="1" onClick="{{ c.toggle }}" style="width:18px;height:18px;border-radius:4px;border:1.5px solid {{ c.cbd }};background:{{ c.cbg }};color:var(--onpr);padding:0;display:grid;place-items:center;cursor:{{ c.cur }};opacity:{{ c.op }}"><sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><sf-icon name="check" stroke="3" style="width:12px;height:12px"></sf-icon></sc-if></button></span></sc-for></div></sc-for></div></sc-if>
+<sc-if value="{{ s.isNote }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;background:{{ s.bg }};font-size:13px;line-height:1.5;text-wrap:pretty"><span style="color:{{ s.fg }};display:flex;margin-top:1px"><sf-icon name="{{ s.icon }}" style="width:16px;height:16px"></sf-icon></span><span>{{ s.note }}</span></div></sc-if>
+<sc-if value="{{ s.isOpts }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:2px"><sc-for list="{{ s.items }}" as="o" hint-placeholder-count="4"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:36px;font-size:13px"><span style="text-wrap:pretty">{{ o.l }}</span><button role="switch" aria-checked="{{ o.aria }}" aria-label="{{ o.l }}" onClick="{{ o.toggle }}" style="width:36px;height:20px;flex:none;border-radius:10px;border:0;background:{{ o.bg }};padding:2px;display:flex;justify-content:{{ o.jc }};cursor:pointer"><span style="width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)"></span></button></div></sc-for></div></sc-if>
+<sc-if value="{{ s.isForm }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:10px"><sc-for list="{{ s.items }}" as="f" hint-placeholder-count="3"><label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--mu)">{{ f.l }}<input value="{{ f.v }}" onChange="{{ f.on }}" placeholder="{{ f.ph }}" style="height:34px;border:1px solid {{ f.bd }};border-radius:8px;background:var(--bg);color:var(--tx);padding:0 10px;font-size:13px;outline-color:var(--ring)"></input><sc-if value="{{ f.err }}" hint-placeholder-val="{{ false }}"><span style="color:var(--wa)">{{ f.err }}</span></sc-if></label></sc-for></div></sc-if>
+<sc-if value="{{ s.isSwatch }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:10px"><sc-for list="{{ s.items }}" as="o" hint-placeholder-count="4"><button aria-label="{{ o.l }}" title="{{ o.l }}" data-noico="1" onClick="{{ o.pick }}" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--card);background:{{ o.c }};box-shadow:{{ o.ring }};cursor:pointer;padding:0"></button></sc-for></div></sc-if>
+<sc-if value="{{ s.isPreview }}" hint-placeholder-val="{{ false }}">
+<div style="background:#E9EDF2;border-radius:10px;padding:18px;display:flex;justify-content:center">
+<div style="width:100%;max-width:560px;background:#fff;color:#1B2430;box-shadow:0 6px 16px -4px rgba(16,24,40,.18);padding:28px 30px;display:flex;flex-direction:column;gap:16px;font-size:11px;line-height:1.45">
+<div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:2px solid {{ tpl.accent }};padding-bottom:12px">
+<div style="display:flex;gap:12px;align-items:center"><sc-if value="{{ tpl.showLogo }}" hint-placeholder-val="{{ true }}"><div style="width:52px;height:52px;border:1.5px dashed #7B8794;border-radius:8px;display:grid;place-items:center;font-size:9px;color:#4B5767;text-align:center;line-height:1.2">Logo de la empresa</div></sc-if><div style="display:flex;flex-direction:column"><b style="font-size:12px">Comercializadora Andina S.A.S.</b><span>NIT 900.123.456-7 · Responsable de IVA</span><span>Cra. 43A # 14-109, Medellín · (604) 444 1200</span></div></div>
+<div style="text-align:right;display:flex;flex-direction:column;gap:2px"><b style="font-size:12px;color:{{ tpl.accent }};text-transform:uppercase;letter-spacing:.03em">{{ tpl.docTitle }}</b><span style="font:600 13px 'JetBrains Mono',monospace">{{ tpl.num }}</span><span>{{ tpl.date }}</span></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="display:flex;flex-direction:column"><span style="color:#4B5767">{{ tpl.partyL }}</span><b>{{ tpl.party }}</b><span>NIT {{ tpl.partyNit }}</span></div><div style="display:flex;flex-direction:column;text-align:right"><span style="color:#4B5767">{{ tpl.metaL }}</span><b>{{ tpl.meta }}</b></div></div>
+<div style="display:flex;flex-direction:column"><div style="display:grid;grid-template-columns:minmax(0,1fr) 50px 90px 100px;gap:8px;padding:5px 6px;background:#F4F6F8;font-weight:600;color:#4B5767"><sc-for list="{{ tpl.heads }}" as="h" hint-placeholder-count="4"><span style="text-align:{{ h.al }}">{{ h.t }}</span></sc-for></div><sc-for list="{{ tpl.lines }}" as="l" hint-placeholder-count="2"><div style="display:grid;grid-template-columns:minmax(0,1fr) 50px 90px 100px;gap:8px;padding:5px 6px;border-bottom:1px solid #E1E5EA;font-variant-numeric:tabular-nums"><span>{{ l.d }}</span><span style="text-align:right">{{ l.q }}</span><span style="text-align:right">{{ l.p }}</span><span style="text-align:right">{{ l.t }}</span></div></sc-for></div>
+<div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-end">
+<div style="display:flex;flex-direction:column;gap:6px;max-width:260px"><sc-if value="{{ tpl.showCart }}" hint-placeholder-val="{{ false }}"><span>{{ tpl.cart }}</span></sc-if><sc-if value="{{ tpl.showSign }}" hint-placeholder-val="{{ false }}"><div style="margin-top:14px;width:180px;border-top:1px solid #1B2430;padding-top:3px;color:#4B5767">Firma y sello · recibido</div></sc-if></div>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:200px;font-variant-numeric:tabular-nums"><sc-for list="{{ tpl.totals }}" as="t" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;gap:12px;font-weight:{{ t.fw }};color:{{ t.fg }}"><span>{{ t.l }}</span><span>{{ t.v }}</span></div></sc-for></div>
+</div>
+<sc-if value="{{ tpl.showDian }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:12px;align-items:center;padding:8px;border:1px solid #E1E5EA;border-radius:6px"><div style="width:52px;height:52px;flex:none;border:1.5px dashed #7B8794;display:grid;place-items:center;font-size:9px;color:#4B5767">QR</div><span style="color:#4B5767;text-wrap:pretty">Resolución DIAN 18764052210384 del 16/03/2025, prefijo FEV del 1 al 5.000, vigencia 24 meses. CUFE <span style="font-family:'JetBrains Mono',monospace">8f2a…c41b</span></span></div></sc-if>
+<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #E1E5EA;padding-top:8px;color:#4B5767"><span>Página 1 de 1</span><span style="display:flex;align-items:center;gap:6px">Generado con<img src="assets/sifca-claro-lockup.png" alt="SIFCA" style="height:16px;width:auto;display:block"></img></span></div>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ w.panel.hasActs }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;padding-top:4px;border-top:1px solid var(--bd)"><sc-for list="{{ w.panel.acts }}" as="a" hint-placeholder-count="2"><button onClick="{{ a.on }}" title="{{ a.tip }}" style="height:36px;margin-top:12px;padding:0 14px;border-radius:8px;border:{{ a.bd }};background:{{ a.bg }};color:{{ a.fg }};font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;cursor:{{ a.cur }};box-shadow:{{ a.sh }};white-space:nowrap">{{ a.label }}<sc-if value="{{ a.k }}" hint-placeholder-val="{{ false }}"><span style="font:500 11px 'JetBrains Mono',monospace;opacity:.75">{{ a.k }}</span></sc-if></button></sc-for></div></sc-if>
+</aside>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ w.hasToast }}" hint-placeholder-val="{{ false }}"><div role="status" style="position:absolute;right:24px;bottom:24px;max-width:420px;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e3);padding:12px 16px;display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;z-index:5"><span style="width:22px;height:22px;flex:none;border-radius:50%;background:var(--okb);color:var(--ok);display:grid;place-items:center"><sf-icon name="check" stroke="3" style="width:12px;height:12px"></sf-icon></span><span style="text-wrap:pretty">{{ w.toast }}</span></div></sc-if>
+</main>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;mostrarSlate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Lienzo&quot;},&quot;densidad&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Compacta&quot;,&quot;Normal&quot;,&quot;Cómoda&quot;],&quot;default&quot;:&quot;Normal&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Lienzo&quot;}}">
+const TH = {
+  light: {'--logo':'url(assets/sifca-claro-mark.png)','--app':'#F4F6F8','--bg':'#FFFFFF','--card':'#FFFFFF','--side':'#FAFBFC','--sf':'#F4F6F8','--sf2':'#E9EDF2','--hov':'#F3F6F9','--bd':'#E1E5EA','--bds':'#7B8794','--tx':'#1B2430','--mu':'#4B5767','--pr':'#0B5CAD','--prh':'#094C8F','--onpr':'#FFFFFF','--prs':'#E8F1FB','--ok':'#17663E','--okb':'#E6F4EA','--wa':'#7A4B00','--wab':'#FFF1D6','--er':'#A8201A','--erb':'#FDECEA','--ne':'#3F4A59','--neb':'#E9EDF2','--ring':'#0B5CAD','--glass':'rgba(255,255,255,.8)','--e1':'0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06)','--e2':'0 6px 16px -4px rgba(16,24,40,.12),0 2px 4px rgba(16,24,40,.05)','--e3':'0 28px 56px -16px rgba(16,24,40,.32),0 4px 10px rgba(16,24,40,.08)'},
+  dark: {'--logo':'url(assets/sifca-oscuro-mark.png)','--app':'#1E293B','--bg':'#1E293B','--card':'#273548','--side':'#1A2434','--sf':'#2D3D53','--sf2':'#36485F','--hov':'#2F405A','--bd':'#3A4C63','--bds':'#7D8EA5','--tx':'#E8EDF3','--mu':'#AEBACB','--pr':'#7DB7F2','--prh':'#A0CBF6','--onpr':'#0B1B2E','--prs':'#2A4466','--ok':'#86D9A8','--okb':'#1F4034','--wa':'#F2C879','--wab':'#463A23','--er':'#FFA197','--erb':'#4D2C30','--ne':'#CBD4DF','--neb':'#3A4A60','--ring':'#7DB7F2','--glass':'rgba(39,53,72,.82)','--e1':'0 1px 2px rgba(0,0,0,.22)','--e2':'0 8px 20px -6px rgba(0,0,0,.42)','--e3':'0 32px 64px -16px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04)'}
+};
+const fmn = c => { c = Math.abs(Math.round(c)); return String(Math.floor(c/100)).replace(/\B(?=(\d{3})+(?!\d))/g,'.') + ',' + String(c%100).padStart(2,'0'); };
+const fm = c => (c < 0 ? '− $ ' : '$ ') + fmn(c);
+const fi = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const ANDINA = ['Comercializadora Andina S.A.S.','900.123.456-7'], PAPEL = ['Papelería Los Andes S.A.S.','901.555.210-3'];
+const GROUPS = [['IN','Inicio'],['VE','Ventas'],['CA','Cartera'],['CO','Compras'],['IV','Inventario'],['CT','Contabilidad'],['IM','Impuestos'],['FE','Factura electrónica'],['TE','Terceros'],['VI','Catálogo y vitrina'],['IG','Integraciones'],['CF','Configuración']];
+const CHILD = {IM:['Tarifas y vigencias','Retenciones y UVT'], VE:['Facturas','Cotizaciones','Pedidos','Notas crédito y débito','Punto de venta'], CA:['Cartera por edades','Recibos de caja','Estado de cuenta','Cupos y retenciones'], CO:['Órdenes','Facturas de proveedor','Comprobantes de egreso','Devoluciones'], IV:['Ítems','Existencias','Kardex','Ajustes y traslados','ABC y conteos','Reposición'], FE:['Documentos y estado DIAN','Rangos de numeración','Cola de contingencia'], IG:['Conectores','Migración de datos','Mapeos','Ejecuciones y errores','Sincronización','API Keys','Webhooks y entregas'], CF:['Empresa','Usuarios y roles','Numeración','Parámetros','Cuentas por defecto','Plantillas','Bitácora']};
+const TONE = {ok:['var(--okb)','var(--ok)'], wa:['var(--wab)','var(--wa)'], er:['var(--erb)','var(--er)'], ne:['var(--neb)','var(--ne)'], in:['var(--prs)','var(--pr)']};
+const DEN = {Compacta:{h:28, fs:13}, Normal:{h:36, fs:14}, 'Cómoda':{h:44, fs:16}};
+// code, name, group, unit, exist, cost, price, principal, min, max
+const ITEMS = [
+  ['PA-001','Resma carta 75 g','Papelería','Resma',420,1350000,1850000,336,100,600],
+  ['PA-014','Cuaderno argollado 100 h','Papelería','Und',860,610000,980000,688,200,1000],
+  ['PA-022','Marcadores borrables x12','Papelería','Caja',34,2150000,3200000,27,40,100],
+  ['TI-085','Tóner HP 85A','Tintas','Und',6,14200000,18900000,5,10,30],
+  ['AS-003','Jabón líquido 3.785 ml','Aseo','Galón',58,1780000,2600000,46,20,90],
+  ['AS-010','Toalla de manos x150','Aseo','Paquete',12,890000,1350000,10,20,80],
+  ['EM-002','Caja corrugada 40×30×30','Empaque','Und',1240,210000,390000,992,300,1500],
+  ['PA-031','Carpeta AZ oficio','Papelería','Und',18,760000,1150000,14,40,120]
+];
+const PROV = {'Papelería':['Distribuidora Papelera Nacional','830.104.552-1'], 'Tintas':['Tintas y Tóner de Colombia','900.877.340-6'], 'Aseo':['Químicos Limpiamax','901.230.118-9'], 'Empaque':['Plásticos del Valle','805.019.443-2']};
+const CLI = {'Droguería Vida Plena':'800.245.117-3','Ferretería El Tornillo':'900.311.072-5','Supermercado La 14 Norte':'890.300.346-1','Colegio San Marcos':'811.042.990-8','Hotel Cordillera':'900.654.201-4','Distribuidora Ríos':'901.118.734-0'};
+const totS = lines => { const s = lines.reduce((a,[i,q]) => a + q*ITEMS[i][6], 0), iva = Math.round(s*.19); return {s, iva, t: s + iva}; };
+const totC = lines => { const s = lines.reduce((a,[i,q]) => a + q*ITEMS[i][5], 0), iva = Math.round(s*.19); return {s, iva, t: s + iva}; };
+const Q0 = () => [
+  {n:'COT-118', f:'02/10/2026', cli:'Droguería Vida Plena', v:'17/10/2026', lines:[[0,120],[4,30]], st:'Aceptada'},
+  {n:'COT-119', f:'06/10/2026', cli:'Ferretería El Tornillo', v:'21/10/2026', lines:[[6,200],[1,40]], st:'Enviada'},
+  {n:'COT-120', f:'09/10/2026', cli:'Supermercado La 14 Norte', v:'24/10/2026', lines:[[0,300],[1,250],[2,40]], st:'Borrador'},
+  {n:'COT-121', f:'10/10/2026', cli:'Colegio San Marcos', v:'25/10/2026', lines:[[1,150],[7,60]], st:'Enviada'},
+  {n:'COT-115', f:'20/09/2026', cli:'Hotel Cordillera', v:'05/10/2026', lines:[[4,60],[5,80]], st:'Vencida'},
+  {n:'COT-112', f:'15/09/2026', cli:'Distribuidora Ríos', v:'30/09/2026', lines:[[6,500]], st:'Convertida', ref:'PED-061'}
+];
+const P0 = () => [
+  {n:'PED-061', f:'25/09/2026', cli:'Distribuidora Ríos', from:'COT-112', lines:[[6,500]], st:'Facturado', ref:'FV-38'},
+  {n:'PED-062', f:'07/10/2026', cli:'Droguería Vida Plena', from:'Directo', lines:[[0,60]], st:'Por facturar'},
+  {n:'PED-063', f:'11/10/2026', cli:'Colegio San Marcos', from:'Vitrina web', lines:[[1,300]], st:'Parcial', ref:'120 de 300'}
+];
+const QT = {Borrador:'ne', Enviada:'in', Aceptada:'ok', Vencida:'wa', Convertida:'ne', 'Por facturar':'in', Facturado:'ok', Parcial:'wa'};
+const OC0 = () => [
+  {n:'OC-30', f:'18/09/2026', g:'Papelería', ent:'25/09/2026', lines:[[0,400,400],[1,600,600]], st:'Recibida', ref:'FC-18'},
+  {n:'OC-31', f:'03/10/2026', g:'Papelería', ent:'10/10/2026', lines:[[0,500,300],[7,100,60]], st:'Parcial'},
+  {n:'OC-32', f:'08/10/2026', g:'Tintas', ent:'20/10/2026', lines:[[3,20,0]], st:'Aprobada'},
+  {n:'OC-33', f:'12/10/2026', g:'Aseo', ent:'—', lines:[[4,80,0],[5,100,0]], st:'Borrador'}
+];
+const OT = {Borrador:'ne', Aprobada:'in', Parcial:'wa', Recibida:'ok'};
+const DV0 = () => [
+  {n:'DP-3', f:'22/09/2026', g:'Empaque', oc:'OC-27', mot:'Cajas aplastadas en el transporte', lines:[[6,150]], st:'Aplicada', ref:'NC-P-7'},
+  {n:'DP-4', f:'13/10/2026', g:'Papelería', oc:'OC-31', mot:'Resmas con humedad', lines:[[0,20]], st:'Esperando nota crédito'}
+];
+const AJ0 = () => [
+  {n:'AI-9', f:'12/10/2026', mot:'Avería en bodega', bod:'Principal', lines:[[3,-2],[0,-5]], st:'Contabilizado', ref:'AJ-5'},
+  {n:'AI-10', f:'14/10/2026', mot:'Sobrante en recepción', bod:'Principal', lines:[[6,40]], st:'Borrador'}
+];
+const TR0 = () => [
+  {n:'TR-4', f:'07/10/2026', o:'Principal', d:'Punto de venta Norte', lines:[[1,120],[0,40]], st:'Recibido'},
+  {n:'TR-5', f:'13/10/2026', o:'Principal', d:'Punto de venta Norte', lines:[[2,10],[4,12]], st:'En tránsito'}
+];
+const CQ0 = () => [
+  {n:'FEV-4608', h:'13:44', cli:'Droguería Vida Plena', t:416500000, tries:3, err:'Tiempo de espera agotado (DIAN)', st:'q'},
+  {n:'FEV-4609', h:'13:58', cli:'Ferretería El Tornillo', t:139468000, tries:3, err:'Tiempo de espera agotado (DIAN)', st:'q'},
+  {n:'POS-12427', h:'14:06', cli:'Consumidor final', t:5355000, tries:2, err:'Servicio no disponible (503)', st:'q'},
+  {n:'FEV-4610', h:'14:21', cli:'Colegio San Marcos', t:257040000, tries:2, err:'Servicio no disponible (503)', st:'q'},
+  {n:'FEV-4611', h:'14:40', cli:'Hotel Cordillera', t:314160000, tries:1, err:'FAK24 · El NIT del adquirente no está registrado', st:'rej'}
+];
+const CQT = {q:['En cola','wa'], tx:['Transmitiendo…','in'], ok:['Aceptada','ok'], rej:['Rechazada','er']};
+const RANGES = [
+  {p:'FEV', res:'18764052210384', d:'16/03/2025', from:1, to:5000, used:4612, v:'16/03/2027', st:['Por agotarse','wa'], alerts:[['Al 90 % del rango','Enviado 02/10/2026'],['30 días antes de vencer','Pendiente']]},
+  {p:'POS', res:'18764052210385', d:'02/11/2024', from:1, to:20000, used:12430, v:'02/11/2026', st:['Vence en 19 días','wa'], alerts:[['Al 90 % del rango','Pendiente'],['30 días antes de vencer','Enviado 03/10/2026']]},
+  {p:'DS', res:'18764052210390', d:'10/06/2025', from:1, to:500, used:88, v:'10/06/2027', st:['Activa','ok'], alerts:[['Al 90 % del rango','Pendiente'],['30 días antes de vencer','Pendiente']]},
+  {p:'NC', res:'Numeración interna', d:'—', from:1, to:0, used:41, v:'Sin vencimiento', st:['Activa','ok'], alerts:[]},
+  {p:'FEV', res:'18764000998812', d:'05/02/2023', from:1, to:3000, used:3000, v:'05/02/2025', st:['Agotada','ne'], alerts:[]}
+];
+const USERS = [
+  ['Juliana Murcia','jmurcia@andina.co','admin','14/10/2026 15:10',true,'Activo'],
+  ['Carlos Ortiz','cortiz@andina.co','cont','14/10/2026 14:52',true,'Activo'],
+  ['Laura Rincón','lrincon@andina.co','vend','14/10/2026 12:30',false,'Activo'],
+  ['Andrés Pinto','apinto@andina.co','bod','13/10/2026 17:45',false,'Activo'],
+  ['Diana Salazar','dsalazar@andina.co','aux','—',false,'Invitación enviada'],
+  ['Mateo Ruiz','mruiz@andina.co','vend','02/09/2026 09:15',false,'Desactivado']
+];
+const US_T = {'Activo':'ok','Invitación enviada':'in','Desactivado':'ne'};
+const ROLES = [['admin','Administrador','Todos los permisos, incluida la configuración de la empresa'],['cont','Contador','Contabiliza, cierra períodos y revisa impuestos'],['aux','Auxiliar contable','Registra borradores, recibos y facturas de proveedor'],['vend','Vendedor','Cotiza, factura y consulta cartera de sus clientes'],['bod','Bodega','Recibe compras, cuenta y traslada inventario']];
+const MODS = ['Ventas','Cartera','Compras','Inventario','Contabilidad','Impuestos','Configuración'];
+const PACT = ['Ver','Crear','Aprobar','Anular'];
+const PERM0 = () => ({admin:MODS.map(() => '1111'), cont:['1111','1111','1111','1111','1111','1110','1000'], aux:['1000','1100','1100','1000','1100','1000','0000'], vend:['1100','1000','0000','1000','0000','0000','0000'], bod:['0000','0000','1000','1110','0000','0000','0000']});
+const TPLS = [['Factura electrónica de venta','Carta','02/09/2026'],['Cotización','Carta','02/09/2026'],['Recibo de caja','Media carta','15/08/2026'],['Orden de compra','Carta','15/08/2026'],['Comprobante contable','Carta','01/07/2026']];
+const ACCENTS = [['#0B5CAD','Azul SIFCA'],['#17663E','Verde'],['#7A4B00','Ocre'],['#1B2430','Grafito']];
+const UVT26 = 52374;
+const RETS = [
+  ['RF-01','Compras generales · declarantes',27,'2,5 %','236540','Retención en la fuente · compras','Facturas de proveedor'],
+  ['RF-02','Compras generales · no declarantes',27,'3,5 %','236540','Retención en la fuente · compras','Facturas de proveedor'],
+  ['RF-03','Servicios generales · declarantes',4,'4 %','236525','Retención en la fuente · servicios','Facturas de proveedor y egresos'],
+  ['RF-04','Honorarios · personas jurídicas',0,'11 %','236515','Retención en la fuente · honorarios','Facturas de proveedor'],
+  ['RF-05','Arrendamiento de bienes inmuebles',27,'3,5 %','236530','Retención en la fuente · arrendamientos','Facturas de proveedor'],
+  ['RF-06','Transporte nacional de carga',4,'1 %','236525','Retención en la fuente · servicios','Facturas de proveedor'],
+  ['RIVA','ReteIVA · sobre el IVA facturado',0,'15 %','236705','Retención de IVA','Compras gravadas, si la empresa es agente'],
+  ['RICA','ReteICA Bogotá · actividad 4690',0,'4,14 ‰','236801','Retención de ICA','Compras en Bogotá']
+];
+const UVTS = [[2024,47065,'01/01/2024','Histórica','ne'],[2025,49799,'01/01/2025','Histórica','ne'],[2026,52374,'01/01/2026','Vigente','ok']];
+const RH0 = () => [['02/01/2026 08:10','UVT 2026','$ 49.799,00 → $ 52.374,00','01/01/2026','C. Ortiz','Valor UVT publicado por la DIAN para 2026'],['15/07/2025 10:42','RF-05 · Arrendamiento de bienes inmuebles','3 % → 3,5 %','01/08/2025','C. Ortiz','Ajuste a la tarifa vigente']];
+const MIG_STEPS = ['Origen y fecha de corte','Estrategia','Qué traer','Mapeos','Revisión de datos','Ensayo','Ejecución','Conciliación','Cierre'];
+const MIG_ROWS = [
+  ['Terceros','412','412','0',['Cuadra','ok']],
+  ['Ítems','1.236','1.236','0',['Cuadra','ok']],
+  ['Ítems sin cuenta de inventario','3','3 → 1435','—',['Aceptado con advertencia','wa']],
+  ['Cartera abierta (86 facturas)','$ 48.920.300,00','$ 48.920.300,00','$ 0,00',['Cuadra','ok']],
+  ['Cuentas por pagar (31 facturas)','$ 21.415.000,00','$ 21.415.000,00','$ 0,00',['Cuadra','ok']],
+  ['Inventario valorizado','$ 96.330.150,00','$ 96.330.150,00','$ 0,00',['Cuadra','ok']],
+  ['Balance de prueba al 30/09/2026','Débitos = Créditos','Débitos = Créditos','$ 0,00',['Cuadra','ok']]
+];
+
+class Component extends DCLogic {
+  state = {
+    cotTab:'cot', cotSel:0, pedSel:1, quotes:Q0(), peds:P0(), nextPed:64, nextFv:42,
+    ocTab:'oc', ocSel:1, devSel:1, ocs:OC0(), devs:DV0(),
+    itTab:'all', itSel:3, ajTab:'aj', ajSel:1, trSel:1, ajs:AJ0(), trs:TR0(),
+    counts:{0:'336',1:'690',2:'27',3:'4',4:'46',6:'992'}, cntDone:false,
+    rep:{3:true,5:true,7:true,2:true}, repDone:false,
+    rgSel:0, queue:CQ0(), sending:false,
+    usTab:'us', usSel:2, rlSel:3, perms:PERM0(), permDirty:false,
+    tplSel:0, tplOpt:{logo:true, sign:false, cart:true, dian:true}, tplAccent:'#0B5CAD',
+    retTab:'ret', retSel:0, retForm:{tar:'', from:'01/11/2026', mot:''}, retSched:{}, retHist:RH0(), uvtForm:{v:'', mot:''}, uvtNew:null,
+    migChk:false, migClosed:false, toast:null
+  };
+  componentWillUnmount() { clearTimeout(this.tt); (this.tx || []).forEach(clearTimeout); }
+  toast(k, t) { clearTimeout(this.tt); this.setState({toast:{k, t}}); this.tt = setTimeout(() => this.setState({toast:null}), 5000); }
+  transmit() {
+    if (this.state.sending) return;
+    this.setState({sending:true}); this.tx = [];
+    const ids = this.state.queue.map((q, i) => q.st === 'q' ? i : -1).filter(i => i >= 0);
+    ids.forEach((qi, k) => {
+      this.tx.push(setTimeout(() => this.setState(s => ({queue: s.queue.map((q, i) => i === qi ? {...q, st:'tx'} : q)})), 500 + k*900));
+      this.tx.push(setTimeout(() => this.setState(s => ({queue: s.queue.map((q, i) => i === qi ? {...q, st:'ok', tries:q.tries + 1, err:'—'} : q)})), 1100 + k*900));
+    });
+    this.tx.push(setTimeout(() => { this.setState({sending:false}); this.toast('cq', ids.length + ' documentos transmitidos y aceptados por la DIAN. FEV-4611 sigue rechazada: corrige el tercero.'); }, 1300 + ids.length*900));
+  }
+  renderVals() {
+    const st = this.state, P = this.props;
+    const showDark = P.mostrarSlate ?? true;
+    const dens = DEN[P.densidad] ? P.densidad : 'Normal';
+    const btn = (label, on, pri, en = true, tip = '', k = '') => ({label, on: en ? on : undefined, tip, k, bd: pri ? '0' : '1px solid var(--bds)', bg: pri ? (en ? 'var(--pr)' : 'var(--sf2)') : 'var(--card)', fg: pri ? (en ? 'var(--onpr)' : 'var(--mu)') : 'var(--tx)', cur: en ? 'pointer' : 'not-allowed', sh: pri && en ? 'var(--e1)' : 'none'});
+    const badge = (t, tone, ref = '') => ({t, ref, bg:TONE[tone][0], fg:TONE[tone][1]});
+    const H = (t, r) => ({t, jc: r === 'r' ? 'flex-end' : r === 'c' ? 'center' : 'flex-start'});
+    const tx = (t, o = {}) => ({isText:true, t:String(t), jc: o.r ? 'flex-end' : 'flex-start', fg: o.fg || 'var(--tx)', mono:o.mono, fw:o.fw});
+    const nm = t => tx(t, {mono:1, fg:'var(--pr)'});
+    const bd = (t, tone, ref = '') => ({isBadge:true, t, ref, bg:TONE[tone][0], bfg:TONE[tone][1], jc:'flex-start', fg:'var(--tx)'});
+    const br = (p, t, tone) => ({isBar:true, w: Math.min(100, Math.max(0, p)) + '%', t, c: tone ? TONE[tone][1] : 'var(--pr)', jc:'flex-start', fg:'var(--tx)'});
+    const ip = (v, on, miss) => ({isInput:true, v, on, stop: e => e.stopPropagation(), jc:'flex-end', fg:'var(--tx)', ibd: miss ? 'var(--wa)' : 'var(--bds)'});
+    const ck = (on, toggle) => ({isCheck:true, on, aria: on ? 'true' : 'false', toggle: e => { e && e.stopPropagation(); toggle(); }, cbd: on ? 'var(--pr)' : 'var(--bds)', cbg: on ? 'var(--pr)' : 'var(--bg)', jc:'center', fg:'var(--tx)'});
+    const fin = (c, d) => ({isText:false, isBadge:false, isBar:false, isInput:false, isCheck:false, ...c, font: c.mono ? `600 ${d.fs - 1}px 'JetBrains Mono',monospace` : `${c.fw || 400} ${d.fs}px Inter,system-ui,sans-serif`, ih: (d.h - 8) + 'px'});
+    const R = (cols, d) => (cells, pick, sel) => ({cols, h: d.h + 'px', bg: sel ? 'var(--prs)' : 'transparent', pick: pick || undefined, cur: pick ? 'pointer' : 'default', cells: cells.map(c => fin(c, d))});
+    const sec = o => ({t:'', isKv:false, isList:false, isBars:false, isMatrix:false, isNote:false, isOpts:false, isSwatch:false, isPreview:false, isForm:false, items:[], heads:[], ...o});
+    const kv = (t, items) => sec({t, isKv:true, items: items.map(([l, v, m]) => ({l, v, font: m ? "500 12px 'JetBrains Mono',monospace" : '400 13px Inter,system-ui,sans-serif'}))});
+    const ls = (t, items) => sec({t, isList:true, items: items.map(i => ({sub:'', r:'', fw:400, fg:'var(--tx)', ...i}))});
+    const note = (n, tone, icon) => sec({isNote:true, note:n, bg:TONE[tone][0], fg:TONE[tone][1], icon: icon || (tone === 'ok' ? 'check' : tone === 'in' || tone === 'ne' ? 'info' : 'warn')});
+    const opts = (t, items) => sec({t, isOpts:true, items: items.map(([l, on, toggle]) => ({l, aria: on ? 'true' : 'false', toggle, bg: on ? 'var(--pr)' : 'var(--bds)', jc: on ? 'flex-end' : 'flex-start'}))});
+    const totLs = o => ls('', [{l:'Subtotal', r:fm(o.s)}, {l:'IVA 19 %', r:fm(o.iva)}, {l:'Total', r:fm(o.t), fw:700}]);
+    const tabs = (list, cur, set) => list.map(([k, name, n]) => ({name, n, sel: k === cur ? 'true' : 'false', pick: () => set(k), bd: k === cur ? 'var(--pr)' : 'transparent', fg: k === cur ? 'var(--pr)' : 'var(--mu)', fw: k === cur ? 600 : 500}));
+    const kpi = (l, v, sub = '', fg = 'var(--tx)') => ({l, v, sub, fg});
+    const S = o => this.setState(o);
+    const fld = (l, v, on, ph, err = '') => ({l, v, on, ph, err, bd: err ? 'var(--wa)' : 'var(--bds)'});
+
+    const K = {
+      cot: d => {
+        const nar = d.narrow;
+        if (st.cotTab === 'cot') {
+          const cols = nar ? '84px 88px minmax(0,1fr) 128px 150px' : '88px 96px minmax(0,1fr) 96px 130px 170px';
+          const r = R(cols, d), q = st.quotes[st.cotSel], t = totS(q.lines);
+          const setQ = (patch) => S({quotes: st.quotes.map((x, i) => i === st.cotSel ? {...x, ...patch} : x)});
+          const acts = q.st === 'Borrador' ? [btn('Editar', () => {}, false), btn('Enviar al cliente', () => { setQ({st:'Enviada'}); this.toast('cot', q.n + ' enviada a ' + q.cli + '.'); }, true)]
+            : q.st === 'Enviada' ? [btn('Reenviar', () => this.toast('cot', 'Reenviamos ' + q.n + '.'), false), btn('Marcar aceptada', () => setQ({st:'Aceptada'}), true)]
+            : q.st === 'Aceptada' ? [btn('Imprimir', () => {}, false), btn('Convertir en pedido', () => { const pn = 'PED-0' + st.nextPed; S({quotes: st.quotes.map((x, i) => i === st.cotSel ? {...x, st:'Convertida', ref:pn} : x), peds:[...st.peds, {n:pn, f:'14/10/2026', cli:q.cli, from:q.n, lines:q.lines, st:'Por facturar'}], nextPed: st.nextPed + 1}); this.toast('cot', 'Se creó ' + pn + ' desde ' + q.n + '. Las existencias quedan comprometidas.'); }, true)]
+            : q.st === 'Vencida' ? [btn('Duplicar con precios actuales', () => this.toast('cot', 'Se creó COT-122 en borrador desde ' + q.n + '.'), true)]
+            : [btn('Ver ' + q.ref, () => S({cotTab:'ped', pedSel: Math.max(0, st.peds.findIndex(p => p.n === q.ref))}), false)];
+          const sections = [kv('', [['NIT', CLI[q.cli], 1], ['Fecha', q.f], ['Válida hasta', q.v], ['Vendedor', 'Laura Rincón'], ['Lista de precios', 'General 2026']]),
+            ls('Líneas', q.lines.map(([i, n]) => ({l:ITEMS[i][1], sub: fi(n) + ' × ' + fm(ITEMS[i][6]), r: fm(n*ITEMS[i][6])}))), totLs(t)];
+          if (q.st === 'Vencida') sections.push(note('Venció el ' + q.v + '. Duplícala para actualizar precios y validez.', 'wa'));
+          if (q.st === 'Convertida') sections.push(note('Convertida en ' + q.ref + '. Una cotización convertida ya no se edita.', 'ne'));
+          return {hasTabs:true, tabs: tabs([['cot','Cotizaciones',st.quotes.length],['ped','Pedidos',st.peds.length]], st.cotTab, k => S({cotTab:k})),
+            cols, heads: nar ? [H('Número'),H('Fecha'),H('Cliente'),H('Total','r'),H('Estado')] : [H('Número'),H('Fecha'),H('Cliente'),H('Vence'),H('Total','r'),H('Estado')],
+            rows: st.quotes.map((x, i) => { const tt = totS(x.lines).t; const c = [nm(x.n), tx(x.f), tx(x.cli)]; if (!nar) c.push(tx(x.v, {fg: x.st === 'Vencida' ? 'var(--wa)' : 'var(--tx)'})); c.push(tx(fm(tt), {r:1}), bd(x.st === 'Convertida' ? 'Convertida en' : x.st, QT[x.st], x.ref || '')); return r(c, () => S({cotSel:i}), i === st.cotSel); }),
+            hasFoot:true, foot: st.quotes.length + ' cotizaciones · Total abierto ' + fm(st.quotes.filter(x => ['Borrador','Enviada','Aceptada'].includes(x.st)).reduce((a, x) => a + totS(x.lines).t, 0)),
+            bodyCols: nar ? 'minmax(0,1fr) 300px' : 'minmax(0,1fr) 400px', hasPanel:true,
+            panel:{title:q.n, sub:q.cli, badges:[badge(q.st === 'Convertida' ? 'Convertida' : q.st, QT[q.st])], sections, acts}};
+        }
+        const cols = nar ? '84px 88px minmax(0,1fr) 128px 150px' : '88px 96px minmax(0,1fr) 100px 130px 170px';
+        const r = R(cols, d), p = st.peds[st.pedSel] || st.peds[0], t = totS(p.lines);
+        const vp = p.cli === 'Droguería Vida Plena';
+        const acts = p.st === 'Facturado' ? [btn('Ver ' + p.ref, () => {}, false)] : [btn('Imprimir remisión', () => {}, false), btn('Facturar pedido', () => { const fv = 'FV-' + st.nextFv; S({peds: st.peds.map(x => x === p ? {...x, st:'Facturado', ref:fv} : x), nextFv: st.nextFv + 1}); this.toast('cot', fv + ' emitida y enviada a la DIAN desde ' + p.n + '.'); }, true, true, '', 'F')];
+        return {hasTabs:true, tabs: tabs([['cot','Cotizaciones',st.quotes.length],['ped','Pedidos',st.peds.length]], st.cotTab, k => S({cotTab:k})),
+          cols, heads: nar ? [H('Número'),H('Fecha'),H('Cliente'),H('Total','r'),H('Estado')] : [H('Número'),H('Fecha'),H('Cliente'),H('Origen'),H('Total','r'),H('Estado')],
+          rows: st.peds.map((x, i) => { const c = [nm(x.n), tx(x.f), tx(x.cli)]; if (!nar) c.push(tx(x.from, {fg:'var(--mu)'})); c.push(tx(fm(totS(x.lines).t), {r:1}), bd(x.st === 'Facturado' ? 'Facturado ·' : x.st === 'Parcial' ? 'Parcial ·' : x.st, QT[x.st], x.ref || '')); return r(c, () => S({pedSel:i}), x === p); }),
+          hasFoot:false, bodyCols: nar ? 'minmax(0,1fr) 300px' : 'minmax(0,1fr) 400px', hasPanel:true,
+          panel:{title:p.n, sub:p.cli, badges:[badge(p.st, QT[p.st])], acts,
+            sections:[kv('', [['Origen', p.from], ['Bodega', 'Principal'], ['Entrega', 'Domicilio · 16/10/2026']]), ls('Líneas', p.lines.map(([i, n]) => ({l:ITEMS[i][1], sub: fi(n) + ' × ' + fm(ITEMS[i][6]), r: fm(n*ITEMS[i][6])}))), totLs(t),
+              vp ? note('Cupo disponible ' + fm(1605000000) + ' de ' + fm(2000000000) + '. Tiene una factura vencida hace 9 días (FV-22).', 'wa') : note('Cupo disponible suficiente para este pedido.', 'ok')]}};
+      },
+      ec: d => {
+        const cols = '92px 84px minmax(0,1fr) 92px 120px 120px 130px', r = R(cols, d);
+        const M = [['01/08/2026','FV-12','Factura de venta','31/08/2026',357000000,0],['05/09/2026','RC-30','Recibo de caja · aplica a FV-12','',0,357000000],['05/09/2026','FV-22','Factura de venta','05/10/2026',523600000,0],['20/09/2026','NC-3','Nota crédito · devolución parcial de FV-22','',0,47600000],['05/10/2026','FV-1','Factura de venta a crédito','04/11/2026',119000000,0],['10/10/2026','RC-41','Recibo de caja · abono a FV-22','',0,200000000]];
+        let bal = 0;
+        return {hasKpis:true, kpis:[kpi('Saldo total', fm(395000000)), kpi('Vencido', fm(276000000), 'FV-22 · 9 días', 'var(--wa)'), kpi('Por vencer', fm(119000000), 'FV-1 · vence 04/11/2026'), kpi('Cupo disponible', fm(1605000000), 'de ' + fm(2000000000))],
+          cols, heads:[H('Fecha'),H('Documento'),H('Concepto'),H('Vence'),H('Cargo','r'),H('Abono','r'),H('Saldo','r')],
+          rows: M.map(([f, n, c, v, db, cr]) => { bal += db - cr; return r([tx(f), nm(n), tx(c), tx(v || '—', {fg: n === 'FV-22' ? 'var(--wa)' : 'var(--mu)'}), tx(db ? fm(db) : '', {r:1}), tx(cr ? fm(cr) : '', {r:1}), tx(fm(bal), {r:1, fw:600})]); }),
+          hasFoot:true, foot:'Del 01/08/2026 al 14/10/2026 · 6 movimientos · Saldo final ' + fm(395000000),
+          bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+          panel:{title:'Droguería Vida Plena', sub:'NIT 800.245.117-3', badges:[badge('1 vencida','wa')],
+            sections:[sec({t:'Edades', isBars:true, items:[['Corriente',30,fm(119000000),'ok'],['1–30',70,fm(276000000),'wa'],['31–60',0,fm(0)],['61–90',0,fm(0)],['Más de 90',0,fm(0)]].map(([l, p, rr, tone]) => ({l, w:p + '%', r:rr, c: tone ? TONE[tone][1] : 'var(--pr)'}))}),
+              kv('Cliente', [['Plazo', '30 días'], ['Cobrador', 'M. Gómez'], ['Último pago', '10/10/2026 · RC-41'], ['Correo de cartera', 'cartera@vidaplena.co']])],
+            acts:[btn('Registrar recibo', () => {}, false), btn('Enviar por correo', () => this.toast('ec', 'Estado de cuenta enviado a cartera@vidaplena.co.'), true)]}};
+      },
+      oc: d => {
+        if (st.ocTab === 'oc') {
+          const cols = '72px 92px minmax(0,1fr) 92px 120px 124px 132px', r = R(cols, d), o = st.ocs[st.ocSel], t = totC(o.lines);
+          const setO = patch => S({ocs: st.ocs.map((x, i) => i === st.ocSel ? {...x, ...patch} : x)});
+          const pend = o.lines.filter(([i, q, rc]) => rc < q);
+          const acts = o.st === 'Borrador' ? [btn('Editar', () => {}, false), btn('Aprobar orden', () => setO({st:'Aprobada'}), true)]
+            : o.st === 'Recibida' ? [btn(o.ref ? 'Ver ' + o.ref : 'Crear factura de proveedor', () => { if (!o.ref) { setO({ref:'FC-19'}); this.toast('oc', 'FC-19 creada en borrador desde ' + o.n + '.'); } }, !o.ref)]
+            : [btn('Enviar al proveedor', () => this.toast('oc', o.n + ' enviada a ' + PROV[o.g][0] + '.'), false), btn('Registrar recepción', () => { setO({st:'Recibida', lines:o.lines.map(([i, q]) => [i, q, q])}); this.toast('oc', 'Recepción registrada en Bodega Principal. ' + o.n + ' quedó completa.'); }, true)];
+          const sections = [kv('', [['NIT', PROV[o.g][1], 1], ['Fecha', o.f], ['Entrega', o.ent], ['Bodega', 'Principal'], ['Condición', '30 días']]),
+            ls('Líneas', o.lines.map(([i, q, rc]) => ({l:ITEMS[i][1], sub: fi(rc) + ' de ' + fi(q) + ' recibidas · ' + fm(ITEMS[i][5]), r: fm(q*ITEMS[i][5])}))), totLs(t)];
+          if (o.st === 'Parcial') sections.push(note('Faltan ' + pend.map(([i, q, rc]) => fi(q - rc) + ' ' + ITEMS[i][1]).join(' y ') + '. La entrega venció el ' + o.ent + '.', 'wa'));
+          return {hasTabs:true, tabs: tabs([['oc','Órdenes',st.ocs.length],['dev','Devoluciones',st.devs.length]], st.ocTab, k => S({ocTab:k})),
+            cols, heads:[H('Número'),H('Fecha'),H('Proveedor'),H('Entrega'),H('Recibido'),H('Total','r'),H('Estado')],
+            rows: st.ocs.map((x, i) => { const q = x.lines.reduce((a, l) => a + l[1], 0), rc = x.lines.reduce((a, l) => a + l[2], 0), p = Math.round(rc*100/q); return r([nm(x.n), tx(x.f), tx(PROV[x.g][0]), tx(x.ent, {fg: x.st === 'Parcial' ? 'var(--wa)' : 'var(--tx)'}), br(p, p + ' %', p === 100 ? 'ok' : p ? 'wa' : null), tx(fm(totC(x.lines).t), {r:1}), bd(x.st, OT[x.st], x.st === 'Recibida' && x.ref ? '· ' + x.ref : '')], () => S({ocSel:i}), i === st.ocSel); }),
+            hasFoot:false, bodyCols:'minmax(0,1fr) 360px', hasPanel:true, panel:{title:o.n, sub:PROV[o.g][0], badges:[badge(o.st, OT[o.st])], sections, acts}};
+        }
+        const cols = '72px 92px minmax(0,1fr) 72px minmax(0,1fr) 120px 180px', r = R(cols, d), v = st.devs[st.devSel], t = totC(v.lines);
+        const done = v.st === 'Aplicada';
+        return {hasTabs:true, tabs: tabs([['oc','Órdenes',st.ocs.length],['dev','Devoluciones',st.devs.length]], st.ocTab, k => S({ocTab:k})),
+          cols, heads:[H('Número'),H('Fecha'),H('Proveedor'),H('Orden'),H('Motivo'),H('Valor','r'),H('Estado')],
+          rows: st.devs.map((x, i) => r([nm(x.n), tx(x.f), tx(PROV[x.g][0]), nm(x.oc), tx(x.mot, {fg:'var(--mu)'}), tx(fm(totC(x.lines).t), {r:1}), bd(x.st === 'Aplicada' ? 'Aplicada ·' : x.st, x.st === 'Aplicada' ? 'ok' : 'wa', x.ref || '')], () => S({devSel:i}), i === st.devSel)),
+          hasFoot:false, bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+          panel:{title:v.n, sub:PROV[v.g][0] + ' · ' + v.oc, badges:[badge(done ? 'Aplicada' : 'Esperando nota crédito', done ? 'ok' : 'wa')],
+            sections:[kv('', [['Motivo', v.mot], ['Fecha', v.f], ['Bodega', 'Principal']]), ls('Líneas', v.lines.map(([i, q]) => ({l:ITEMS[i][1], sub: fi(q) + ' × ' + fm(ITEMS[i][5]), r: fm(q*ITEMS[i][5])}))), totLs(t),
+              note('Al aplicar: Débito 2205 Proveedores nacionales · Crédito 1435 Mercancías y 2408 IVA descontable.', 'in')],
+            acts: done ? [btn('Ver ' + v.ref, () => {}, false)] : [btn('Registrar nota crédito del proveedor', () => { S({devs: st.devs.map(x => x === v ? {...x, st:'Aplicada', ref:'NC-P-8'} : x)}); this.toast('oc', 'NC-P-8 aplicada a ' + v.n + '. Se descontó de la cuenta por pagar.'); }, true)]}};
+      },
+      it: d => {
+        const cols = '76px minmax(0,1fr) 84px 64px 88px 112px 112px 112px', r = R(cols, d);
+        const low = i => ITEMS[i][4] < ITEMS[i][8];
+        const idx = ITEMS.map((x, i) => i).filter(i => st.itTab === 'all' || low(i));
+        const sel = idx.includes(st.itSel) ? st.itSel : idx[0], it = ITEMS[sel];
+        return {hasTabs:true, tabs: tabs([['all','Todos',ITEMS.length],['low','Bajo mínimo',ITEMS.filter((x, i) => low(i)).length]], st.itTab, k => S({itTab:k})),
+          cols, heads:[H('Código'),H('Nombre'),H('Grupo'),H('Unidad'),H('Existencia','r'),H('Costo prom.','r'),H('Precio','r'),H('Estado')],
+          rows: idx.map(i => { const x = ITEMS[i]; return r([tx(x[0], {mono:1}), tx(x[1]), tx(x[2], {fg:'var(--mu)'}), tx(x[3], {fg:'var(--mu)'}), tx(fi(x[4]), {r:1, fg: low(i) ? 'var(--wa)' : 'var(--tx)', fw: low(i) ? 600 : 400}), tx(fm(x[5]), {r:1}), tx(fm(x[6]), {r:1}), low(i) ? bd('Bajo mínimo', 'wa') : bd('Activo', 'ok')], () => S({itSel:i}), i === sel); }),
+          hasFoot:true, foot:'Mostrando 8 de 1.236 ítems · 25 por página', bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+          panel:{title:it[1], sub:it[0] + ' · ' + it[2], badges:[low(sel) ? badge('Bajo mínimo','wa') : badge('Activo','ok')],
+            sections:[kv('', [['Código de barras', '77012340' + String(sel + 10), 1], ['IVA', '19 %'], ['Costeo', 'Promedio ponderado'], ['Inventario', '1435 Mercancías no fabricadas'], ['Costo', '6135 Comercio al por mayor'], ['Ingreso', '4135 Comercio al por mayor']]),
+              ls('Existencias por bodega', [{l:'Principal', r: fi(it[7]) + ' ' + it[3].toLowerCase()}, {l:'Punto de venta Norte', r: fi(it[4] - it[7]) + ' ' + it[3].toLowerCase()}, {l:'Total', r: fi(it[4]), fw:700}]),
+              ls('Reposición', [{l:'Mínimo', r: fi(it[8])}, {l:'Máximo', r: fi(it[9])}])],
+            acts:[btn('Ver kardex', () => {}, false), btn('Editar ítem', () => {}, true)]}};
+      },
+      aj: d => {
+        if (st.ajTab === 'aj') {
+          const cols = '72px 92px minmax(0,1fr) 100px 56px 124px 180px', r = R(cols, d), a = st.ajs[st.ajSel];
+          const val = x => x.lines.reduce((s, [i, q]) => s + q*ITEMS[i][5], 0), v = val(a), posted = a.st === 'Contabilizado';
+          return {hasTabs:true, tabs: tabs([['aj','Ajustes',st.ajs.length],['tr','Traslados',st.trs.length]], st.ajTab, k => S({ajTab:k})),
+            cols, heads:[H('Número'),H('Fecha'),H('Motivo'),H('Bodega'),H('Ítems','r'),H('Valor','r'),H('Estado')],
+            rows: st.ajs.map((x, i) => r([nm(x.n), tx(x.f), tx(x.mot), tx(x.bod), tx(x.lines.length, {r:1}), tx(fm(val(x)), {r:1, fg: val(x) < 0 ? 'var(--er)' : 'var(--tx)'}), x.st === 'Contabilizado' ? bd('Contabilizado ·', 'ne', x.ref) : bd('Borrador', 'in')], () => S({ajSel:i}), i === st.ajSel)),
+            hasFoot:false, bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+            panel:{title:a.n, sub:a.mot + ' · Bodega ' + a.bod, badges:[posted ? badge('Contabilizado ·', 'ne', a.ref) : badge('Borrador', 'in')],
+              sections:[ls('Líneas', a.lines.map(([i, q]) => ({l:ITEMS[i][1], sub: (q > 0 ? '+' : '−') + fi(Math.abs(q)) + ' ' + ITEMS[i][3].toLowerCase() + ' × ' + fm(ITEMS[i][5]), r: fm(q*ITEMS[i][5]), fg: q < 0 ? 'var(--er)' : 'var(--tx)'}))), ls('', [{l:'Valor del ajuste', r: fm(v), fw:700}]),
+                note(v < 0 ? 'Asiento: Débito 5195 Diversos · Crédito 1435 Mercancías por ' + fm(-v) + '.' : 'Asiento: Débito 1435 Mercancías · Crédito 4250 Recuperaciones por ' + fm(v) + '.', 'in'),
+                posted ? note('Contabilizado. Para corregirlo, reversa ' + a.ref + '.', 'ne', 'lock') : sec({})],
+              acts: posted ? [btn('Ver ' + a.ref, () => {}, false), btn('Reversar', () => {}, false)] : [btn('Eliminar borrador', () => {}, false), btn('Contabilizar', () => { S({ajs: st.ajs.map(x => x === a ? {...x, st:'Contabilizado', ref:'AJ-6'} : x)}); this.toast('aj', a.n + ' contabilizado como AJ-6. El costo promedio se recalculó.'); }, true, true, '', 'Ctrl ↵')]}};
+        }
+        const cols = '88px 104px minmax(0,1fr) 110px 200px', r = R(cols, d), t = st.trs[st.trSel], u = x => x.lines.reduce((s, l) => s + l[1], 0), done = t.st === 'Recibido';
+        return {hasTabs:true, tabs: tabs([['aj','Ajustes',st.ajs.length],['tr','Traslados',st.trs.length]], st.ajTab, k => S({ajTab:k})),
+          cols, heads:[H('Número'),H('Fecha'),H('Origen → destino'),H('Unidades','r'),H('Estado')],
+          rows: st.trs.map((x, i) => r([nm(x.n), tx(x.f), tx(x.o + ' → ' + x.d), tx(fi(u(x)), {r:1}), bd(x.st, x.st === 'Recibido' ? 'ok' : 'in')], () => S({trSel:i}), i === st.trSel)),
+          hasFoot:false, bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+          panel:{title:t.n, sub:t.o + ' → ' + t.d, badges:[badge(t.st, done ? 'ok' : 'in')],
+            sections:[ls('Líneas', t.lines.map(([i, q]) => ({l:ITEMS[i][1], sub: ITEMS[i][0], r: fi(q) + ' ' + ITEMS[i][3].toLowerCase()}))), note('Un traslado no genera asiento: cambia la bodega y conserva el costo promedio.', 'in')],
+            acts: done ? [btn('Imprimir', () => {}, false)] : [btn('Imprimir guía', () => {}, false), btn('Confirmar recepción', () => { S({trs: st.trs.map(x => x === t ? {...x, st:'Recibido'} : x)}); this.toast('aj', t.n + ' recibido en ' + t.d + '.'); }, true)]}};
+      },
+      cnt: d => {
+        const cols = d.narrow ? '80px minmax(0,1fr) 90px 120px 96px 130px' : '88px minmax(0,1fr) 120px 140px 120px 150px', r = R(cols, d);
+        const vals = ITEMS.map((x, i) => { const s = st.counts[i]; return s === undefined || s === '' ? null : parseInt(String(s).replace(/\D/g, ''), 10); });
+        const n = vals.filter(v => v !== null && !isNaN(v)).length, diffs = ITEMS.map((x, i) => vals[i] === null || isNaN(vals[i]) ? null : vals[i] - x[7]);
+        const withD = diffs.filter(v => v).length, net = diffs.reduce((a, v, i) => a + (v || 0)*ITEMS[i][5], 0), all = n === ITEMS.length;
+        return {hasKpis:true, kpis:[kpi('Ítems contados', n + ' de ' + ITEMS.length, all ? 'Completo' : 'Faltan ' + (ITEMS.length - n)), kpi('Con diferencia', String(withD)), kpi('Valor neto', fm(net), '', net < 0 ? 'var(--er)' : 'var(--tx)'), kpi('Existencias congeladas', '07:00', '14/10/2026')],
+          cols, heads:[H('Código'),H('Ítem'),H('Sistema','r'),H('Contado','r'),H('Diferencia','r'),H('Valor','r')],
+          rows: ITEMS.map((x, i) => { const df = diffs[i]; return r([tx(x[0], {mono:1}), tx(x[1]), tx(fi(x[7]), {r:1}), ip(st.counts[i] ?? '', e => S({counts:{...st.counts, [i]: e.target.value.replace(/[^\d]/g, '')}, cntDone:false}), df === null), tx(df === null ? '—' : df > 0 ? '+' + fi(df) : df < 0 ? '−' + fi(-df) : '0', {r:1, fw: df ? 600 : 400, fg: df > 0 ? 'var(--ok)' : df < 0 ? 'var(--er)' : 'var(--mu)'}), tx(df ? fm(df*x[5]) : '', {r:1})]); }),
+          hasFoot:true, foot:'Las existencias se congelaron al iniciar el conteo. Lo que entre o salga después no cambia la diferencia.', bodyCols:'minmax(0,1fr)', hasPanel:false,
+          badges:[badge('CNT-3 · Bodega Principal', 'in')],
+          actions:[btn('Guardar conteo', () => this.toast('cnt', 'Conteo guardado. Puedes seguir desde otro equipo.'), false), btn(st.cntDone ? 'AI-11 creado' : 'Generar ajuste', () => { S({cntDone:true}); this.toast('cnt', 'Se creó AI-11 en borrador con ' + withD + ' ítems con diferencia por ' + fm(net) + '.'); }, true, all && !st.cntDone, all ? '' : 'Digita todas las cantidades primero')]};
+      },
+      rep: d => {
+        const cols = '52px minmax(0,1fr) 100px 90px 90px 110px 110px minmax(0,1fr) 140px', r = R(cols, d);
+        const transit = {3:20};
+        const rows = [3,5,7,2].map(i => { const x = ITEMS[i], tr = transit[i] || 0, sug = Math.max(0, x[9] - x[4] - tr); return {i, x, tr, sug, cost: sug*x[5]}; });
+        const sel = rows.filter(o => st.rep[o.i]), provs = [...new Set(sel.map(o => o.x[2]))];
+        return {hasKpis:true, kpis:[kpi('Bajo mínimo', String(rows.length)), kpi('Seleccionados', String(sel.length)), kpi('Costo estimado', fm(sel.reduce((a, o) => a + o.cost, 0)), 'Antes de IVA'), kpi('Órdenes a crear', String(provs.length), provs.map(g => PROV[g][0].split(' ')[0]).join(', '))],
+          cols, heads:[H(''),H('Ítem'),H('Existencia','r'),H('Mínimo','r'),H('Máximo','r'),H('En tránsito','r'),H('Sugerido','r'),H('Proveedor'),H('Costo est.','r')],
+          rows: rows.map(o => r([ck(!!st.rep[o.i], () => S({rep:{...st.rep, [o.i]: !st.rep[o.i]}, repDone:false})), tx(o.x[1]), tx(fi(o.x[4]), {r:1, fg:'var(--wa)', fw:600}), tx(fi(o.x[8]), {r:1}), tx(fi(o.x[9]), {r:1}), tx(o.tr ? fi(o.tr) + ' · OC-32' : '—', {r:1, fg:'var(--mu)'}), tx(fi(o.sug), {r:1, fw:600}), tx(PROV[o.x[2]][0]), tx(fm(o.cost), {r:1})], () => S({rep:{...st.rep, [o.i]: !st.rep[o.i]}, repDone:false}), !!st.rep[o.i])),
+          hasFoot:true, foot:'Sugerido = máximo − existencia − en tránsito. Se crea una orden de compra por proveedor, en borrador.', bodyCols:'minmax(0,1fr)', hasPanel:false,
+          actions:[btn('Ajustar mínimos', () => {}, false), btn(st.repDone ? 'Órdenes creadas' : 'Crear órdenes de compra (' + provs.length + ')', () => { S({repDone:true}); this.toast('rep', 'Se crearon ' + provs.map((g, k) => 'OC-' + (34 + k)).join(', ') + ' en borrador.'); }, true, sel.length > 0 && !st.repDone, sel.length ? '' : 'Selecciona al menos un ítem')]};
+      },
+      ret: d => {
+        const tab = st.retTab, TB = tabs([['ret','Retenciones',RETS.length],['uvt','UVT',UVTS.length + (st.uvtNew ? 1 : 0)],['hist','Historial',st.retHist.length]], tab, k => S({retTab:k}));
+        const F0 = {tar:'', from:'01/11/2026', mot:''};
+        if (tab === 'ret') {
+          const cols = '58px minmax(0,1fr) 60px 140px 76px 140px', r = R(cols, d), x = RETS[st.retSel], sc = st.retSched[st.retSel], f = st.retForm;
+          const motOk = f.mot.trim().length >= 5, tarOk = /^\d+([,.]\d+)?$/.test(f.tar.trim()), ok = motOk && tarOk, unit = x[3].includes('‰') ? ' ‰' : ' %';
+          const setF = k => e => { const v = e.target.value; this.setState(s => ({retForm:{...s.retForm, [k]: v}})); };
+          return {hasTabs:true, tabs:TB, hasBanner:true, banner:{role:'status', bg:'var(--prs)', fg:'var(--pr)', icon:'info', t:'UVT 2026: ' + fm(UVT26*100), b:'Las bases en pesos se recalculan solas cuando cambia la UVT. Tarifas de ejemplo: el contador valida el texto fiscal definitivo.'},
+            cols, heads:[H('Código'),H('Concepto'),H('Base UVT','r'),H('Base en pesos','r'),H('Tarifa','r'),H('Estado')],
+            rows: RETS.map((y, i) => r([tx(y[0], {mono:1}), tx(y[1]), tx(y[2] ? y[2] : '—', {r:1, fg: y[2] ? 'var(--tx)' : 'var(--mu)'}), tx(y[2] ? fm(y[2]*UVT26*100) : '—', {r:1, fg: y[2] ? 'var(--tx)' : 'var(--mu)'}), tx(y[3], {r:1, fw:600}), st.retSched[i] ? bd('Cambio programado', 'in') : bd('Vigente', 'ok')], () => S({retSel:i, retForm:F0}), i === st.retSel)),
+            hasFoot:true, foot:'Se aplican en facturas de proveedor y comprobantes de egreso cuando la base supera el mínimo.', bodyCols:'minmax(0,1fr) 320px', hasPanel:true,
+            panel:{title:x[1], sub:x[0], badges:[sc ? badge('Cambio programado','in') : badge('Vigente','ok')],
+              sections:[kv('', [['Base mínima', x[2] ? x[2] + ' UVT · ' + fm(x[2]*UVT26*100) : 'Sin base mínima'], ['Tarifa', x[3]], ['Cuenta', x[4] + ' ' + x[5]], ['Aplica a', x[6]], ['Vigente desde', '01/01/2026']]),
+                sc ? note('Cambio programado: ' + sc.tar + ' desde ' + sc.from + '.', 'in', 'history') : sec({}),
+                sec({t:'Programar cambio', isForm:true, items:[fld('Nueva tarifa (' + unit.trim() + ')', f.tar, setF('tar'), x[3].replace(unit, ''), f.tar && !tarOk ? 'Usa solo números, por ejemplo 3,5' : ''), fld('Vigencia desde', f.from, setF('from'), 'dd/mm/aaaa'), fld('Motivo', f.mot, setF('mot'), 'Mínimo 5 caracteres', f.mot && !motOk ? 'Escribe al menos 5 caracteres' : '')]}),
+                note('Este cambio no afecta documentos ya contabilizados. Queda en Historial y en Configuración › Bitácora.', 'ne', 'info')],
+              acts:[btn('Cancelar', () => S({retForm:F0}), false), btn('Programar cambio', () => { const nt = f.tar.trim().replace('.', ',') + unit; S({retSched:{...st.retSched, [st.retSel]:{tar:nt, from:f.from}}, retHist:[['14/10/2026 16:05', x[0] + ' · ' + x[1], x[3] + ' → ' + nt, f.from, 'C. Ortiz', f.mot.trim()], ...st.retHist], retForm:F0}); this.toast('ret', x[0] + ' cambia a ' + nt + ' desde ' + f.from + '. No afecta documentos ya contabilizados.'); }, true, ok, ok ? '' : 'Escribe la tarifa y un motivo de al menos 5 caracteres')]}};
+        }
+        if (tab === 'uvt') {
+          const list = st.uvtNew ? [...UVTS, st.uvtNew] : UVTS, cols = '80px 160px minmax(0,1fr) 170px', r = R(cols, d), f = st.uvtForm;
+          const n = parseInt(f.v.replace(/\D/g, ''), 10), vOk = n > UVT26 && n < UVT26*2, motOk = f.mot.trim().length >= 5, ok = vOk && motOk;
+          const setF = k => e => { const v = e.target.value; this.setState(s => ({uvtForm:{...s.uvtForm, [k]: v}})); };
+          const nv = st.uvtNew ? st.uvtNew[1] : vOk ? n : 0;
+          const bases = RETS.filter((y, i) => y[2] && RETS.findIndex(z => z[2] === y[2] && z[1].split(' ·')[0] === y[1].split(' ·')[0]) === i).map(y => ({l: y[1].split(' ·')[0] + ' · ' + y[2] + ' UVT', sub: nv ? fm(y[2]*UVT26*100) + ' → ' + fm(y[2]*nv*100) : '', r: fm(y[2]*UVT26*100)}));
+          return {hasTabs:true, tabs:TB, cols, heads:[H('Año'),H('Valor','r'),H('Vigente desde'),H('Estado')],
+            rows: list.map(y => r([tx(y[0], {mono:1, fw:600}), tx(fm(y[1]*100), {r:1, fw:600}), tx(y[2]), bd(y[3], y[4])])),
+            hasFoot:true, foot:'Una UVT por año gravable. Se registra cuando la DIAN publica el valor y rige desde el 1 de enero.', bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+            panel:{title: st.uvtNew ? 'UVT 2027 programada' : 'Registrar UVT 2027', sub:'Rige desde 01/01/2027', badges: st.uvtNew ? [badge('Programada','in')] : [],
+              sections:[st.uvtNew ? note('UVT 2027 de ' + fm(st.uvtNew[1]*100) + ' registrada. Las bases cambian el 01/01/2027.', 'ok') : sec({t:'Nuevo valor', isForm:true, items:[fld('Valor en pesos', f.v, setF('v'), 'Por ejemplo 55.000', f.v && !vOk ? 'Debe ser mayor que la UVT 2026 (' + fm(UVT26*100) + ')' : ''), fld('Motivo', f.mot, setF('mot'), 'Mínimo 5 caracteres', f.mot && !motOk ? 'Escribe al menos 5 caracteres' : '')]}),
+                ls('Bases que cambian', bases), note('Este cambio no afecta documentos ya contabilizados. Queda en Historial y en Configuración › Bitácora.', 'ne', 'info')],
+              acts: st.uvtNew ? [btn('Ver historial', () => S({retTab:'hist'}), false)] : [btn('Registrar UVT 2027', () => { S({uvtNew:[2027, n, '01/01/2027', 'Programada', 'in'], retHist:[['14/10/2026 16:08', 'UVT 2027', fm(UVT26*100) + ' → ' + fm(n*100), '01/01/2027', 'C. Ortiz', f.mot.trim()], ...st.retHist], uvtForm:{v:'', mot:''}}); this.toast('ret', 'UVT 2027 registrada. Las bases mínimas se recalculan el 01/01/2027.'); }, true, ok, ok ? '' : 'Escribe el valor y un motivo de al menos 5 caracteres')]}};
+        }
+        const cols = '150px minmax(0,1.3fr) 210px 110px 90px minmax(0,1fr)', r = R(cols, d);
+        return {hasTabs:true, tabs:TB, cols, heads:[H('Fecha'),H('Parámetro'),H('Cambio'),H('Vigencia'),H('Usuario'),H('Motivo')],
+          rows: st.retHist.map(h => r([tx(h[0], {fg:'var(--mu)'}), tx(h[1], {fw:600}), tx(h[2]), tx(h[3]), tx(h[4], {fg:'var(--mu)'}), tx(h[5], {fg:'var(--mu)'})])),
+          hasFoot:true, foot:'El historial no se edita. También aparece en Configuración › Bitácora.', bodyCols:'minmax(0,1fr)', hasPanel:false};
+      },
+      rng: d => {
+        const cols = '64px 150px 110px minmax(0,1fr) 110px 150px', r = R(cols, d), g = RANGES[st.rgSel], p = g.to ? Math.round(g.used*100/g.to) : 0;
+        return {hasBanner:true, banner:{role:'status', bg:'var(--wab)', fg:'var(--wa)', icon:'warn', t:'Dos rangos necesitan atención', b:'FEV llegó al 92 % del rango y POS vence en 19 días. Solicita la nueva resolución en el portal de la DIAN y cárgala aquí antes de que se agoten.'},
+          cols, heads:[H('Prefijo'),H('Resolución'),H('Rango'),H('Consumo'),H('Vence'),H('Estado')],
+          rows: RANGES.map((x, i) => { const pp = x.to ? Math.round(x.used*100/x.to) : 0; return r([tx(x.p, {mono:1, fw:600}), tx(x.res, {mono: x.to ? 1 : 0}), tx(x.to ? fi(x.from) + ' – ' + fi(x.to) : 'Desde 1', {fg:'var(--mu)'}), x.to ? br(pp, pp + ' %', pp >= 100 ? 'ne' : pp >= 90 ? 'wa' : null) : tx(fi(x.used) + ' usados', {fg:'var(--mu)'}), tx(x.v), bd(x.st[0], x.st[1])], () => S({rgSel:i}), i === st.rgSel); }),
+          hasFoot:false, bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+          panel:{title:g.p + (g.to ? ' · ' + fi(g.from) + ' a ' + fi(g.to) : ''), sub:g.to ? 'Resolución ' + g.res + ' del ' + g.d : 'Notas crédito: no requieren resolución', badges:[badge(g.st[0], g.st[1])],
+            sections:[kv('', g.to ? [['Siguiente número', g.used < g.to ? g.p + '-' + (g.used + 1) : '—', 1], ['Disponibles', fi(g.to - g.used)], ['Consumo', p + ' %'], ['Vigencia', g.d + ' – ' + g.v], ['Clave técnica', 'fc8e…a71d', 1], ['Ambiente', 'Producción']] : [['Siguiente número', 'NC-42', 1], ['Ambiente', 'Producción']]),
+              g.alerts.length ? ls('Avisos al administrador', g.alerts.map(([l, rr]) => ({l, r: rr, fg: rr === 'Pendiente' ? 'var(--mu)' : 'var(--ok)'}))) : sec({}),
+              g.used >= g.to && g.to ? note('Rango agotado. Se conserva para consulta y no se puede reactivar.', 'ne') : sec({})],
+            acts:[btn('Sincronizar con DIAN', () => this.toast('rng', 'Resoluciones al día: la DIAN devolvió 4 rangos vigentes.'), false), btn('Cargar nueva resolución', () => {}, true)]}};
+      },
+      cq: d => {
+        const cols = '120px 80px minmax(0,1fr) 140px 84px minmax(0,1.2fr) 150px', r = R(cols, d);
+        const q = d.empty ? [] : st.queue, pend = q.filter(x => x.st === 'q' || x.st === 'tx').length, rej = q.filter(x => x.st === 'rej').length;
+        const down = pend > 0;
+        const o = {cols, heads:[H('Documento'),H('Hora'),H('Cliente'),H('Total','r'),H('Intentos','r'),H('Último error'),H('Estado')],
+          rows: q.map(x => r([nm(x.n), tx(x.h), tx(x.cli), tx(fm(x.t), {r:1}), tx(x.tries, {r:1}), tx(x.err, {fg: x.st === 'rej' ? 'var(--er)' : 'var(--mu)'}), bd(CQT[x.st][0], CQT[x.st][1])])),
+          isEmpty: !q.length, empty:{t:'No hay documentos en contingencia', b:'Si la DIAN no responde, las facturas que emitas quedan aquí y se transmiten solas cuando vuelva el servicio.', a:'Ver documentos y estado DIAN'},
+          hasFoot: !!q.length, foot:'Las rechazadas no se reintentan solas: corrige el tercero en Terceros y vuelve a transmitir. El plazo legal para transmitir es de 48 horas.',
+          bodyCols:'minmax(0,1fr)', hasPanel:false};
+        if (!q.length) return {...o, hasBanner:true, banner:{role:'status', bg:'var(--okb)', fg:'var(--ok)', icon:'check', t:'Servicio de la DIAN disponible', b:'Último envío aceptado a las 15:06. Tiempo de respuesta promedio: 1,8 s.'}, actions:[]};
+        return {...o, hasBanner:true, banner: down ? {role:'alert', bg:'var(--erb)', fg:'var(--er)', icon:'wifioff', t:'La DIAN no responde desde las 13:42', b:'Las facturas se siguen emitiendo con numeración normal y quedan en esta cola. SIFCA reintenta cada 5 minutos.'} : {role:'status', bg:'var(--okb)', fg:'var(--ok)', icon:'check', t:'Servicio restablecido', b:'Los documentos en cola se transmitieron. Revisa la rechazada.'},
+          hasKpis:true, kpis:[kpi('En cola', String(pend), '', pend ? 'var(--wa)' : 'var(--tx)'), kpi('Rechazados', String(rej), 'Requieren corrección', rej ? 'var(--er)' : 'var(--tx)'), kpi('Plazo restante', down ? '46 h 12 min' : '—', 'Para transmitir a la DIAN'), kpi('Próximo reintento', down ? '15:10' : '—', 'Automático cada 5 min')],
+          actions:[btn('Pausar reintentos', () => {}, false), btn(st.sending ? 'Transmitiendo…' : 'Transmitir ahora', () => this.transmit(), true, down && !st.sending)]};
+      },
+      us: d => {
+        if (st.usTab === 'us') {
+          const cols = '170px minmax(0,1fr) 130px 140px 56px 150px', r = R(cols, d), u = USERS[st.usSel], role = ROLES.find(x => x[0] === u[2]);
+          return {hasTabs:true, tabs: tabs([['us','Usuarios',USERS.length],['rl','Roles',ROLES.length]], st.usTab, k => S({usTab:k})),
+            cols, heads:[H('Nombre'),H('Correo'),H('Rol'),H('Último acceso'),H('2FA','c'),H('Estado')],
+            rows: USERS.map((x, i) => r([tx(x[0], {fw:600}), tx(x[1], {fg:'var(--mu)'}), tx(ROLES.find(y => y[0] === x[2])[1]), tx(x[3], {fg:'var(--mu)'}), tx(x[4] ? 'Sí' : 'No', {fg: x[4] ? 'var(--ok)' : 'var(--mu)'}), bd(x[5], US_T[x[5]])], () => S({usSel:i}), i === st.usSel)),
+            hasFoot:true, foot:'6 de 10 usuarios del plan · Los cambios de rol aplican desde el próximo inicio de sesión.', bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+            panel:{title:u[0], sub:u[1], badges:[badge(u[5], US_T[u[5]])],
+              sections:[kv('', [['Rol', role[1]], ['Empresas', 'Comercializadora Andina S.A.S.'], ['Último acceso', u[3]], ['Verificación en dos pasos', u[4] ? 'Activa' : 'No configurada']]), note(role[2] + '.', 'in'), !u[4] && u[5] === 'Activo' ? note('Recomendado: pide a ' + u[0].split(' ')[0] + ' activar la verificación en dos pasos.', 'wa') : sec({})],
+              acts: u[5] === 'Invitación enviada' ? [btn('Cancelar invitación', () => {}, false), btn('Reenviar invitación', () => this.toast('us', 'Invitación reenviada a ' + u[1] + '.'), true)] : u[5] === 'Desactivado' ? [btn('Reactivar', () => {}, true)] : [btn('Desactivar', () => {}, false), btn('Cambiar rol', () => S({usTab:'rl', rlSel: ROLES.indexOf(role)}), true)]},
+            actions:[btn('Invitar usuario', () => {}, true)]};
+        }
+        const cols = '190px minmax(0,1fr) 100px', r = R(cols, d), role = ROLES[st.rlSel], key = role[0], lock = key === 'admin', pm = st.perms[key];
+        return {hasTabs:true, tabs: tabs([['us','Usuarios',USERS.length],['rl','Roles',ROLES.length]], st.usTab, k => S({usTab:k})),
+          cols, heads:[H('Rol'),H('Descripción'),H('Usuarios','r')],
+          rows: ROLES.map((x, i) => r([tx(x[1], {fw:600}), tx(x[2], {fg:'var(--mu)'}), tx(USERS.filter(u => u[2] === x[0]).length, {r:1})], () => S({rlSel:i}), i === st.rlSel)),
+          hasFoot:false, bodyCols:'minmax(0,1fr) 440px', hasPanel:true,
+          panel:{title:role[1], sub:USERS.filter(u => u[2] === key).length + ' usuarios con este rol', badges: st.permDirty && !lock ? [badge('Cambios sin guardar','wa')] : [],
+            sections:[sec({t:'Permisos', isMatrix:true, heads:PACT, items: MODS.map((m, mi) => ({l:m, cells: PACT.map((a, ai) => { const on = pm[mi][ai] === '1'; return {on, aria: on ? 'true' : 'false', lab: m + ' · ' + a, cbd: on ? 'var(--pr)' : 'var(--bds)', cbg: on ? 'var(--pr)' : 'var(--bg)', cur: lock ? 'not-allowed' : 'pointer', op: lock ? .55 : 1,
+                toggle: () => { if (lock) return; const row = pm[mi].split(''); row[ai] = on ? '0' : '1'; if (ai === 0 && on) row.fill('0'); if (ai > 0 && !on) row[0] = '1'; S({perms:{...st.perms, [key]: pm.map((v, k) => k === mi ? row.join('') : v)}, permDirty:true}); }}; })}))}),
+              lock ? note('El rol Administrador tiene todos los permisos y no se edita.', 'ne', 'lock') : note('Quitar «Ver» quita los demás permisos del módulo. «Aprobar» incluye contabilizar y cerrar.', 'in')],
+            hasActs: !lock, acts: lock ? [] : [btn('Duplicar rol', () => {}, false), btn('Guardar cambios', () => { S({permDirty:false}); this.toast('us', 'Permisos de ' + role[1] + ' guardados. Aplican desde el próximo inicio de sesión.'); }, true, st.permDirty)]},
+          actions:[btn('Nuevo rol', () => {}, true)]};
+      },
+      tpl: d => {
+        const cols = 'minmax(0,1fr) 110px 110px', r = R(cols, d), o = st.tplOpt, T = TPLS[st.tplSel];
+        const tog = k => () => S({tplOpt:{...o, [k]: !o[k]}});
+        const items = [['Mostrar logo de la empresa', o.logo, tog('logo')], ['Firma y sello de recibido', o.sign, tog('sign')]];
+        if (st.tplSel === 0 || st.tplSel === 2) items.push(['Saldo de cartera del cliente', o.cart, tog('cart')]);
+        if (st.tplSel === 0) items.push(['Leyenda DIAN, CUFE y QR', o.dian, tog('dian')]);
+        return {cols, heads:[H('Documento'),H('Hoja'),H('Modificada')],
+          rows: TPLS.map((x, i) => r([tx(x[0], {fw: i === st.tplSel ? 600 : 400}), tx(x[1], {fg:'var(--mu)'}), tx(x[2], {fg:'var(--mu)'})], () => S({tplSel:i}), i === st.tplSel)),
+          hasFoot:true, foot:'Una plantilla por documento. El logo se carga en Configuración › Empresa.', bodyCols:'360px minmax(0,1fr)', hasPanel:true,
+          panel:{title:T[0], sub:'Vista previa con datos de ejemplo · ' + T[1], badges:[],
+            sections:[opts('Contenido', items), sec({t:'Color de acento', isSwatch:true, items: ACCENTS.map(([c, l]) => ({c, l, pick: () => S({tplAccent:c}), ring: c === st.tplAccent ? '0 0 0 2px var(--ring)' : '0 0 0 1px var(--bd)'}))}), sec({t:'Vista previa', isPreview:true})],
+            acts:[btn('Restablecer', () => S({tplOpt:{logo:true, sign:false, cart:true, dian:true}, tplAccent:'#0B5CAD'}), false), btn('Guardar plantilla', () => this.toast('tpl', 'Plantilla «' + T[0] + '» guardada. Aplica a los documentos nuevos.'), true)]},
+          actions:[btn('Enviar prueba por correo', () => this.toast('tpl', 'PDF de prueba enviado a jmurcia@andina.co.'), false)]};
+      },
+      mig: d => {
+        const cols = 'minmax(0,1fr) 150px 150px 96px 190px', r = R(cols, d), cl = st.migClosed;
+        return {hasSteps:true, steps: MIG_STEPS.map((l, i) => { const cur = i === 8 && !cl, done = i < 8 || cl; return {n:i + 1, l, done, notDone:!done, bg: done ? 'var(--ok)' : 'var(--pr)', fg: done ? 'var(--okb)' : 'var(--onpr)', fw: cur ? 600 : 400, tc: cur ? 'var(--tx)' : 'var(--mu)'}; }),
+          cols, heads:[H('Verificación'),H('Alegra','r'),H('SIFCA','r'),H('Diferencia','r'),H('Estado')],
+          rows: MIG_ROWS.map(x => r([tx(x[0]), tx(x[1], {r:1}), tx(x[2], {r:1}), tx(x[3], {r:1, fg:'var(--mu)'}), bd(x[4][0], x[4][1])])),
+          hasFoot:true, foot:'Corrida R-008 · fecha de corte 30/09/2026 · conciliado el 14/10/2026 11:20 por C. Ortiz.', bodyCols:'minmax(0,1fr) 360px', hasPanel:true,
+          badges:[cl ? badge('Cerrada', 'ok') : badge('Paso 9 de 9', 'in')],
+          panel:{title: cl ? 'Migración cerrada' : 'Cerrar la migración', sub: cl ? '14/10/2026 16:20 · J. Murcia' : 'Revisa antes de confirmar', badges:[],
+            sections: cl ? [note('Los saldos iniciales quedaron en firme al 30/09/2026. Puedes deshacer la migración completa durante 7 días desde Ejecuciones y errores.', 'ok'), ls('Siguiente', [{l:'Desconectar el token de Alegra'}, {l:'Revisar los 3 ítems con cuenta 1435 por defecto'}, {l:'Abrir el período Oct 2026 para el equipo'}])]
+              : [ls('Al cerrar', [{l:'El comprobante de saldos iniciales SI-1 queda contabilizado al 30/09/2026.'}, {l:'No se pueden registrar documentos con fecha anterior al corte.'}, {l:'Alegra queda como fuente de solo lectura; se detienen las corridas.'}]),
+                opts('', [['Revisé el informe de conciliación y acepto la advertencia', st.migChk, () => S({migChk: !st.migChk})]])],
+            acts: cl ? [btn('Descargar informe', () => {}, false), btn('Ir a Ejecuciones', () => {}, true)] : [btn('Descargar informe', () => {}, false), btn('Cerrar migración', () => { S({migClosed:true}); this.toast('mig', 'Migración M-002 cerrada. SI-1 contabilizado al 30/09/2026.'); }, true, st.migChk, st.migChk ? '' : 'Marca la confirmación primero')]}};
+      }
+    };
+
+    const META = {
+      cot:{nav:['VE', st.cotTab === 'cot' ? 'Cotizaciones' : 'Pedidos'], crumb:'Ventas › ' + (st.cotTab === 'cot' ? 'Cotizaciones' : 'Pedidos'), title: st.cotTab === 'cot' ? 'Cotizaciones' : 'Pedidos', co:ANDINA, acts:() => [btn('Exportar', () => {}, false), btn(st.cotTab === 'cot' ? 'Nueva cotización' : 'Nuevo pedido', () => {}, true, true, '', 'N')]},
+      ec:{nav:['CA','Estado de cuenta'], crumb:'Cartera › Estado de cuenta', title:'Estado de cuenta', co:ANDINA, acts:() => [btn('Imprimir', () => {}, false), btn('Descargar PDF', () => {}, false)]},
+      oc:{nav:['CO', st.ocTab === 'oc' ? 'Órdenes' : 'Devoluciones'], crumb:'Compras › ' + (st.ocTab === 'oc' ? 'Órdenes de compra' : 'Devoluciones a proveedor'), title: st.ocTab === 'oc' ? 'Órdenes de compra' : 'Devoluciones a proveedor', co:ANDINA, acts:() => [btn(st.ocTab === 'oc' ? 'Nueva orden' : 'Nueva devolución', () => {}, true)]},
+      it:{nav:['IV','Ítems'], crumb:'Inventario › Ítems', title:'Ítems', co:ANDINA, acts:() => [btn('Importar', () => {}, false), btn('Nuevo ítem', () => {}, true, true, '', 'N')]},
+      aj:{nav:['IV','Ajustes y traslados'], crumb:'Inventario › Ajustes y traslados', title:'Ajustes y traslados', co:ANDINA, acts:() => [btn(st.ajTab === 'aj' ? 'Nuevo ajuste' : 'Nuevo traslado', () => {}, true)]},
+      cnt:{nav:['IV','ABC y conteos'], crumb:'Inventario › ABC y conteos › CNT-3', title:'Conteo físico', co:ANDINA, acts:() => []},
+      rep:{nav:['IV','Reposición'], crumb:'Inventario › Reposición', title:'Reposición', co:ANDINA, acts:() => []},
+      ret:{nav:['IM','Retenciones y UVT'], crumb:'Impuestos › Retenciones y UVT' + (st.retTab === 'uvt' ? ' › UVT' : st.retTab === 'hist' ? ' › Historial' : ''), title:'Retenciones y UVT', co:ANDINA, acts:() => [btn('Exportar', () => {}, false)]},
+      rng:{nav:['FE','Rangos de numeración'], crumb:'Factura electrónica › Rangos de numeración', title:'Rangos de numeración', co:ANDINA, acts:() => []},
+      cq:{nav:['FE','Cola de contingencia'], crumb:'Factura electrónica › Cola de contingencia', title:'Cola de contingencia', co:ANDINA, acts:() => []},
+      us:{nav:['CF','Usuarios y roles'], crumb:'Configuración › Usuarios y roles', title:'Usuarios y roles', co:ANDINA, acts:() => []},
+      tpl:{nav:['CF','Plantillas'], crumb:'Configuración › Plantillas', title:'Plantillas de documentos', co:ANDINA, acts:() => []},
+      mig:{nav:['IG','Migración de datos'], crumb:'Integraciones › Migración de datos › M-002 › Cierre', title:'Migración desde Alegra', co:PAPEL, acts:() => []}
+    };
+    const toastOf = k => st.toast && st.toast.k === k ? st.toast.t : '';
+    let seq = 0;
+    const idOf = () => { const n = seq++; return '7' + (n < 26 ? String.fromCharCode(97 + n) : 'a' + String.fromCharCode(97 + n - 26)); };
+    const jump = [];
+    const frame = (kind, th, label, o = {}) => {
+      const m = META[kind], dd = DEN[o.dens || dens], narrow = !!o.narrow, d = {...dd, narrow, empty: !!o.empty};
+      const id = idOf(); jump.push(id);
+      const allowed = o.denied ? ['IN','VE','CA','IV','TE','VI'] : null;
+      const w = { id, label, crumb: m.crumb, title: m.title, co: m.co[0], nit: m.co[1], alerts: m.co === PAPEL ? '2' : '4', avatar: o.denied ? 'LR' : 'JM',
+        vars: {...TH[th], width: narrow ? '1024px' : '1440px', height: narrow ? '768px' : '900px', position:'relative', display:'flex', flexDirection:'column', background:'var(--app)', color:'var(--tx)', fontFamily:'Inter,system-ui,sans-serif'},
+        navW: narrow ? '64px' : '232px', wide: !narrow, brandW: narrow ? '200px' : '214px', rowH: dd.h + 'px',
+        groups: GROUPS.filter(([c]) => !allowed || allowed.includes(c)).map(([code, name]) => { const act = !o.denied && code === m.nav[0], kids = !narrow && act && CHILD[code]; return {code, name, weight: act ? 600 : 400, tileBg: act ? 'var(--pr)' : 'var(--sf2)', tileFg: act ? 'var(--onpr)' : 'var(--mu)', showChildren: !!kids,
+          children: kids ? CHILD[code].map(c => ({name:c, bg: c === m.nav[1] ? 'var(--prs)' : 'transparent', fg: c === m.nav[1] ? 'var(--pr)' : 'var(--tx)', weight: c === m.nav[1] ? 600 : 400})) : []}; }),
+        badges: [], actions: o.denied || o.skel ? [] : m.acts(), isStd: !o.denied && !o.skel, isDenied: !!o.denied, isSkel: !!o.skel,
+        hasTabs:false, tabs:[], hasKpis:false, kpis:[], hasBanner:false, banner:{role:'status', bg:'', fg:'', icon:'info', t:'', b:''}, hasSteps:false, steps:[],
+        cols:'1fr', heads:[], rows:[], isEmpty:false, empty:{t:'', b:'', a:''}, hasFoot:false, foot:'', bodyCols:'minmax(0,1fr)', hasPanel:false, panel:{title:'', sub:'', badges:[], sections:[], acts:[]},
+        toast: toastOf(o.denied ? 'deny' : kind) };
+      if (!o.denied && !o.skel) { const k = K[kind](d); if (k.actions) { k.actions = k.actions; } Object.assign(w, {...k, actions: k.actions || w.actions, badges: k.badges || []}); }
+      if (o.skel) w.title = 'Ítems';
+      if (o.denied) { w.crumb = 'Configuración › Usuarios y roles'; w.title = 'Usuarios y roles'; }
+      w.panel = {hasActs: true, ...w.panel}; if (w.panel.hasActs) w.panel.hasActs = (w.panel.acts || []).length > 0;
+      w.hasToast = !!w.toast;
+      return w;
+    };
+    const pair = (kind) => [['light','1440 · Claro'],['dark','1440 · Slate']].filter((x, i) => i === 0 || showDark).map(([th, l]) => frame(kind, th, l + ' · ' + dens));
+    const MAIN = [
+      ['cot','Ventas · Cotizaciones y pedidos con conversión y cupo'],
+      ['ec','Cartera · Estado de cuenta web con saldo corrido y edades'],
+      ['oc','Compras · Órdenes con recepción parcial y devolución a proveedor'],
+      ['it','Inventario · Maestro de ítems'],
+      ['aj','Inventario · Ajustes y traslados'],
+      ['cnt','Inventario · Conteo físico contra existencias congeladas'],
+      ['rep','Inventario · Reposición por mínimos y máximos'],
+      ['ret','Impuestos · Retenciones y UVT con vigencia, motivo e historial'],
+      ['rng','Factura electrónica · Rangos de numeración'],
+      ['cq','Factura electrónica · Cola de contingencia'],
+      ['us','Configuración · Usuarios y roles con matriz de permisos'],
+      ['tpl','Configuración · Plantillas PDF con logo y vista previa'],
+      ['mig','IN.3 paso 9 · Cierre de la migración']
+    ];
+    const screens = MAIN.map(([k, title]) => ({title, items: pair(k)}));
+    screens.push({title:'Densidad (§6) · Compacta 28 px, Normal 36 px, Cómoda 44 px', items: ['Compacta','Normal','Cómoda'].map(dn => frame('it', 'light', '1440 · Claro · ' + dn + ' (' + DEN[dn].h + ' px / ' + DEN[dn].fs + ' px)', {dens:dn}))});
+    screens.push({title:'1024 px · menú colapsado a íconos', items:[frame('cot', 'light', '1024 · Claro · Cotizaciones', {narrow:true}), frame('cnt', showDark ? 'dark' : 'light', '1024 · ' + (showDark ? 'Slate' : 'Claro') + ' · Conteo en tableta de bodega · Cómoda', {narrow:true, dens:'Cómoda'})]});
+    screens.push({title:'Estados (§4.5) · Sin permiso, cargando con esqueleto y vacío', items:[
+      frame('us', 'light', 'Sin permiso · Claro', {denied:true}), ...(showDark ? [frame('us', 'dark', 'Sin permiso · Slate', {denied:true})] : []),
+      frame('it', 'light', 'Cargando · Claro', {skel:true}), ...(showDark ? [frame('it', 'dark', 'Cargando · Slate', {skel:true})] : []),
+      frame('cq', 'light', 'Vacío · Claro', {empty:true})]});
+
+    const T = st.tplSel, o = st.tplOpt, Q = st.quotes;
+    const lineRows = (lines, price) => lines.map(([i, q]) => ({d:ITEMS[i][1], q:fi(q), p:fm(ITEMS[i][price]), t:fm(q*ITEMS[i][price])}));
+    const tt = (x, lbl = 'Total') => [{l:'Subtotal', v:fm(x.s), fw:400, fg:'#1B2430'}, {l:'IVA 19 %', v:fm(x.iva), fw:400, fg:'#1B2430'}, {l:lbl, v:fm(x.t), fw:700, fg:st.tplAccent}];
+    const HD = [{t:'Descripción', al:'left'}, {t:'Cant.', al:'right'}, {t:'Precio', al:'right'}, {t:'Total', al:'right'}];
+    const DOCS = [
+      {docTitle:'Factura electrónica de venta', num:'FEV-4612', date:'14/10/2026', partyL:'Cliente', party:'Droguería Vida Plena', partyNit:'800.245.117-3', metaL:'Forma de pago', meta:'Crédito 30 días · vence 13/11/2026', heads:HD, lines:lineRows(Q0()[0].lines, 6), totals:tt(totS(Q0()[0].lines))},
+      {docTitle:'Cotización', num:'COT-121', date:'10/10/2026', partyL:'Cliente', party:'Colegio San Marcos', partyNit:'811.042.990-8', metaL:'Válida hasta', meta:'25/10/2026', heads:HD, lines:lineRows(Q0()[3].lines, 6), totals:tt(totS(Q0()[3].lines))},
+      {docTitle:'Recibo de caja', num:'RC-41', date:'10/10/2026', partyL:'Recibimos de', party:'Droguería Vida Plena', partyNit:'800.245.117-3', metaL:'Medio de pago', meta:'Transferencia · Bancolombia', heads:[{t:'Concepto', al:'left'}, {t:'', al:'right'}, {t:'Saldo previo', al:'right'}, {t:'Abono', al:'right'}], lines:[{d:'Abono a FV-22', q:'', p:fm(476000000), t:fm(200000000)}], totals:[{l:'Total recibido', v:fm(200000000), fw:700, fg:st.tplAccent}]},
+      {docTitle:'Orden de compra', num:'OC-32', date:'08/10/2026', partyL:'Proveedor', party:'Tintas y Tóner de Colombia', partyNit:'900.877.340-6', metaL:'Entrega', meta:'20/10/2026 · Bodega Principal', heads:HD, lines:lineRows([[3,20]], 5), totals:tt(totC([[3,20]]))},
+      {docTitle:'Comprobante contable', num:'AJ-2', date:'08/10/2026', partyL:'Concepto', party:'Reclasificación de papelería a gasto', partyNit:'900.123.456-7', metaL:'Elaboró', meta:'C. Ortiz', heads:[{t:'Cuenta', al:'left'}, {t:'', al:'right'}, {t:'Débito', al:'right'}, {t:'Crédito', al:'right'}], lines:[{d:'519530 Útiles, papelería y fotocopias', q:'', p:fm(5000000), t:''}, {d:'1435 Mercancías no fabricadas', q:'', p:'', t:fm(5000000)}], totals:[{l:'Sumas iguales', v:fm(5000000), fw:700, fg:st.tplAccent}]}
+    ];
+    const tpl = {...DOCS[T], accent: st.tplAccent, showLogo: o.logo, showSign: o.sign, showDian: T === 0 && o.dian, showCart: (T === 0 || T === 2) && o.cart, cart:'Saldo en cartera a la fecha: ' + fm(395000000)};
+
+    return { screens, jump, tpl, skel: ['62%','48%','70%','55%','66%','44%','58%','72%','50%','64%'].map((a, i) => ({a, b: ['60%','72%','50%','66%'][i % 4]})),
+      goHome: () => {}, askAccess: () => this.toast('deny', 'Solicitud enviada a Juliana Murcia. Te avisaremos por correo.') };
+  }
+}
+</script>
+</body>
+</html>

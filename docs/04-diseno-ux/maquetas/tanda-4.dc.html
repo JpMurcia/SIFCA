@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<script src="./sifca-icons.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E3E7EC;font-family:Inter,system-ui,sans-serif;color:#1B2430;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}a{color:#0B5CAD}a:hover{color:#084A8C}button,input,textarea{font-family:inherit}input::placeholder,textarea::placeholder{color:inherit;opacity:.55}.dv-turn{padding:40px 44px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Inter,system-ui,sans-serif;color:#1a1a1a}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 Inter,system-ui,sans-serif;color:rgba(0,0,0,.6)}.dv-card{border:1px solid rgba(0,0,0,.1);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden}.dv-opt:target .dv-oid{background:#0B5CAD;color:#fff}.dv-h{font:600 15px/1.2 Inter,system-ui,sans-serif;color:#1B2430;margin:44px 0 16px}</style>
+</helmet>
+<section class="dv-turn" id="t4">
+<div class="dv-thd"><a class="dv-tid" href="#t4">4</a><span class="dv-tname">Tanda 4 · Circuito operativo · Dashboard, compras y CxP, terceros y notas crédito/débito</span></div>
+
+<div style="max-width:1240px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:24px 28px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr);gap:32px;font-size:13px;line-height:1.55;color:#1B2430">
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Ciclo conectado</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;text-wrap:pretty">
+<li>Al contabilizar la factura de proveedor, el kardex y el stock crítico del tablero se actualizan, y FC-0118 aparece como factura por pagar en el egreso.</li>
+<li>Al registrar el egreso, baja el saldo en bancos del tablero (incluye 4×1000) y las facturas pagadas salen de las alertas.</li>
+<li>La nota crédito parte de FV-1 del libro de la Tanda 1 (ya devolvió 8 guantes con NC-1) y aparece en el historial de la ficha de Droguería Vida Plena.</li>
+<li><b>Supuestos:</b> UVT 2026 = $ 52.374 y ReteICA Bogotá 4,14 ‰ se parametrizan en Impuestos › Retenciones y UVT (Tanda 7, 7o). Saldos de kardex, ventas diarias y proveedor son datos de ejemplo.</li>
+</ul>
+</div>
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Componentes nuevos</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;text-wrap:pretty">
+<li><b>Tarjeta KPI</b> con variación tonal (ok / alerta / error) y subtítulo de contexto.</li>
+<li><b>Panel de alertas</b> agrupado: vencimientos, barra de stock vs. punto de reorden, estado del período.</li>
+<li><b>Atajo</b>: ficha de código + tecla rápida.</li>
+<li><b>Fila de retención</b> con interruptor, base, tarifa, valor y cuenta PUC.</li>
+<li><b>Liquidación</b>, <b>asiento previo</b> y <b>vista previa de kardex</b> en panel lateral.</li>
+<li><b>Cruce de facturas</b> con abono parcial y validación de saldo.</li>
+<li><b>Campo NIT + DV</b> calculado en vivo (módulo 11) y detección de duplicados.</li>
+<li><b>Barra de cupo</b> con umbral de alerta al 80 %.</li>
+</ul>
+</div>
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Pruébalo</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+<li>Tablero: cambia el rol (Gerencia, Contador, Vendedor).</li>
+<li>Factura de proveedor: baja la cantidad de guantes a 10 (la base cae bajo 27 UVT y la retefuente se apaga) y contabiliza.</li>
+<li>Egreso: marca FC-0118, cambia a efectivo y paga.</li>
+<li>Tercero: escribe 901234567 en el NIT.</li>
+<li>Nota: cambia cantidades o motivo, o pasa a nota débito.</li>
+</ul>
+<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:baseline"><a class="dv-oid" href="#4a">4a</a><a class="dv-oid" href="#4d">4d</a><a class="dv-oid" href="#4g">4g</a><a class="dv-oid" href="#4j">4j</a><a class="dv-oid" href="#4m">4m</a></div>
+</div>
+</div>
+
+<sc-for list="{{ screens }}" as="sc" hint-placeholder-count="5">
+<div>
+<h3 class="dv-h">{{ sc.title }}</h3>
+<div style="display:flex;gap:36px;align-items:flex-start">
+<sc-for list="{{ sc.items }}" as="w" hint-placeholder-count="3">
+<div class="dv-opt" id="{{ w.id }}">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ w.id }}">{{ w.id }}</a>{{ w.label }}</div>
+<div class="dv-card" style="{{ w.vars }}">
+
+<div style="height:56px;flex:none;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid var(--bd);background:var(--glass);backdrop-filter:blur(16px) saturate(1.4);position:relative;z-index:2">
+<div style="display:flex;align-items:center;gap:10px;flex:none;width:{{ w.brandW }}"><div role="img" aria-label="SIFCA" title="SIFCA" style="width:34px;height:34px;flex:none;background:var(--logo) center/contain no-repeat"></div><sc-if value="{{ w.wide }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;line-height:1.25;min-width:0"><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Comercializadora Andina S.A.S.</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">NIT 900.123.456-7</span></div></sc-if></div>
+<div style="flex:1;max-width:520px;margin:0 auto;height:36px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--mu);display:flex;align-items:center;gap:10px;padding:0 8px 0 12px;font-size:13px;box-shadow:var(--e1)"><span style="width:12px;height:12px;border:1.6px solid currentColor;border-radius:50%"></span><span style="flex:1">Buscar o ejecutar…</span><span style="font:500 11px 'JetBrains Mono',monospace;padding:2px 6px;border:1px solid var(--bd);border-radius:5px;background:var(--sf)">Ctrl K</span></div>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:14px;background:var(--okb);color:var(--ok);font-size:12px;font-weight:600;white-space:nowrap"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--okb)"></span>Oct 2026 · abierto</span>
+<span style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);display:flex;align-items:center;gap:6px;font-size:13px">Alertas<span style="min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--pr);color:var(--onpr);font-size:11px;font-weight:700;display:grid;place-items:center">{{ alertCount }}</span></span>
+<span style="width:32px;height:32px;border-radius:50%;background:var(--sf2);display:grid;place-items:center;font-size:12px;font-weight:600">JM</span>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex">
+<nav style="width:{{ w.navW }};flex:none;background:var(--side);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:12px 10px;gap:2px">
+<sc-for list="{{ w.groups }}" as="g" hint-placeholder-count="12">
+<div style="display:flex;flex-direction:column">
+<div title="{{ g.name }}" style="height:32px;display:flex;align-items:center;gap:10px;padding:0 6px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:{{ g.weight }};background:{{ g.rowBg }}" style-hover="background:var(--hov)"><span style="width:24px;height:22px;flex:none;border-radius:6px;background:{{ g.tileBg }};color:{{ g.tileFg }};display:grid;place-items:center;font:600 10px 'JetBrains Mono',monospace"><sf-icon name="{{ g.code }}" style="width:15px;height:15px"></sf-icon></span><sc-if value="{{ w.wide }}" hint-placeholder-val="{{ true }}"><span style="flex:1;white-space:nowrap">{{ g.name }}</span></sc-if></div>
+<sc-if value="{{ g.showChildren }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 40px"><sc-for list="{{ g.children }}" as="c" hint-placeholder-count="4"><div style="height:28px;display:flex;align-items:center;padding:0 8px;border-radius:6px;font-size:13px;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};font-weight:{{ c.weight }};white-space:nowrap" style-hover="background:var(--hov)">{{ c.name }}</div></sc-for></div></sc-if>
+</div>
+</sc-for>
+</nav>
+
+<main style="flex:1;min-width:0;position:relative;background:var(--app);display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex:none;flex-wrap:wrap">
+<div style="min-width:0"><div style="font-size:12px;color:var(--mu)">{{ w.crumb }}</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:6px"><h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-.01em;white-space:nowrap">{{ w.title }}</h1>
+<sc-for list="{{ w.badges }}" as="b" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:6px;font-size:12px;font-weight:600;background:{{ b.bg }};color:{{ b.fg }};white-space:nowrap">{{ b.t }}</span></sc-for>
+</div></div>
+<div style="display:flex;gap:8px;align-items:center;flex:none">
+<sc-if value="{{ w.hasSeg }}" hint-placeholder-val="{{ false }}"><div style="height:36px;background:var(--sf2);border-radius:9px;padding:3px;display:flex;gap:3px"><sc-for list="{{ w.seg }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.pick }}" style="border:0;border-radius:7px;padding:0 12px;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.sh }};font-size:13px;font-weight:600;cursor:pointer">{{ t.name }}</button></sc-for></div></sc-if>
+<sc-for list="{{ w.actions }}" as="a" hint-placeholder-count="2"><button onClick="{{ a.on }}" title="{{ a.tip }}" style="height:36px;padding:0 14px;border-radius:8px;border:{{ a.bd }};background:{{ a.bg }};color:{{ a.fg }};font-size:13px;font-weight:{{ a.fw }};display:flex;align-items:center;gap:8px;cursor:{{ a.cur }};box-shadow:{{ a.sh }};white-space:nowrap">{{ a.label }}<sc-if value="{{ a.k }}" hint-placeholder-val="{{ false }}"><span style="font:500 11px 'JetBrains Mono',monospace;opacity:.75">{{ a.k }}</span></sc-if></button></sc-for>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;overflow:auto">
+
+<sc-if value="{{ w.isDash }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 28px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:grid;grid-template-columns:{{ w.kpiCols }};gap:12px">
+<sc-for list="{{ w.kpis }}" as="k" hint-placeholder-count="4"><div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0">
+<div style="font-size:12px;font-weight:500;color:var(--mu)">{{ k.l }}</div>
+<div style="font-size:24px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap">{{ k.v }}</div>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><sc-if value="{{ k.d }}" hint-placeholder-val="{{ false }}"><span style="height:22px;padding:0 8px;border-radius:5px;background:{{ k.dBg }};color:{{ k.dFg }};font-size:12px;font-weight:600;display:inline-flex;align-items:center;white-space:nowrap">{{ k.d }}</span></sc-if><span style="font-size:12px;color:var(--mu)">{{ k.s }}</span></div>
+</div></sc-for>
+</div>
+<div style="display:grid;grid-template-columns:{{ w.cols2 }};gap:16px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:600">{{ dash.chartT }}</span><span style="font-size:12px;color:var(--mu)">Facturado neto de notas · sin IVA</span></div>
+<div style="display:flex;align-items:flex-end;gap:8px;height:170px;padding-top:8px;border-bottom:1px solid var(--bd)">
+<sc-for list="{{ dash.bars }}" as="b" hint-placeholder-count="14"><div title="{{ b.tip }}" style="flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px"><span style="font-size:10px;color:var(--mu);font-variant-numeric:tabular-nums">{{ b.v }}</span><div style="width:100%;max-width:34px;height:{{ b.h }};background:{{ b.bg }};border-radius:4px 4px 0 0"></div></div></sc-for>
+</div>
+<div style="display:flex;gap:8px;margin-top:-8px"><sc-for list="{{ dash.bars }}" as="b" hint-placeholder-count="14"><span style="flex:1;text-align:center;font-size:11px;color:{{ b.dFg }};font-variant-numeric:tabular-nums">{{ b.d }}</span></sc-for></div>
+<div style="display:flex;gap:16px;font-size:12px;color:var(--mu)"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:var(--pr)"></span>Día hábil</span><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:var(--sf2)"></span>Domingo o festivo (12/10)</span></div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:600">Accesos directos</span><span style="font-size:12px;color:var(--mu)">Según tu rol</span></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+<sc-for list="{{ w.short }}" as="s" hint-placeholder-count="6"><a href="{{ s.href }}" style="text-decoration:none;color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;background:var(--bg)" style-hover="border-color:var(--pr);background:var(--prs)"><span style="width:34px;height:30px;border-radius:7px;background:var(--prs);color:var(--pr);display:grid;place-items:center;font:600 11px 'JetBrains Mono',monospace;flex:none">{{ s.c }}</span><span style="flex:1;font-size:13px;font-weight:500;line-height:1.3;min-width:0">{{ s.n }}</span><span style="font:500 11px 'JetBrains Mono',monospace;color:var(--mu);padding:2px 5px;border:1px solid var(--bd);border-radius:4px;white-space:nowrap">{{ s.k }}</span></a></sc-for>
+</div>
+</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);display:flex;flex-direction:column;min-width:0">
+<div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd)"><span style="font-size:14px;font-weight:600">Alertas</span><span style="font-size:12px;color:var(--mu)">{{ alertCount }} activas</span></div>
+<div style="padding:12px 18px 6px;font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">Facturas por vencer</div>
+<sc-for list="{{ dash.due }}" as="d" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 18px"><span style="width:8px;height:8px;border-radius:50%;background:{{ d.dot }}"></span><div style="min-width:0"><div style="font-size:13px;display:flex;gap:8px;align-items:baseline"><b style="font:600 12px 'JetBrains Mono',monospace;color:var(--pr)">{{ d.n }}</b><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.who }}</span></div><div style="font-size:12px;color:{{ d.wFg }};font-weight:500">{{ d.kind }} · {{ d.when }}</div></div><span style="font-size:13px;font-weight:600;font-variant-numeric:tabular-nums">{{ d.amt }}</span></div></sc-for>
+<sc-if value="{{ dash.noDue }}" hint-placeholder-val="{{ false }}"><div style="padding:6px 18px 10px;font-size:13px;color:var(--mu)">Sin vencimientos en los próximos 15 días.</div></sc-if>
+<div style="padding:14px 18px 6px;font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;border-top:1px solid var(--bd);margin-top:6px">Stock en punto de reorden</div>
+<sc-for list="{{ dash.stock }}" as="s" hint-placeholder-count="3"><div style="padding:8px 18px;display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;gap:10px;font-size:13px"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu)">{{ s.sku }}</b> {{ s.name }}</span><span style="font-weight:600;font-variant-numeric:tabular-nums;color:{{ s.fg }};white-space:nowrap">{{ s.q }} / {{ s.r }} und</span></div><div style="height:6px;border-radius:3px;background:var(--sf2);position:relative;overflow:hidden"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ s.w }};background:{{ s.bar }};border-radius:3px"></div></div></div></sc-for>
+<div style="padding:14px 18px 6px;font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;border-top:1px solid var(--bd);margin-top:6px">Período contable</div>
+<div style="padding:6px 18px 16px;display:flex;flex-direction:column;gap:8px;font-size:13px">
+<div style="display:flex;justify-content:space-between"><span>Oct 2026</span><span style="font-weight:600;color:var(--ok)">● Abierto</span></div>
+<div style="display:flex;justify-content:space-between"><span style="color:var(--mu)">Borradores pendientes</span><span style="font-weight:600;color:var(--wa)">1</span></div>
+<div style="display:flex;justify-content:space-between"><span style="color:var(--mu)">Cierre sugerido</span><span style="font-variant-numeric:tabular-nums">05/11/2026</span></div>
+<div style="display:flex;justify-content:space-between"><span style="color:var(--mu)">IVA bimestre sep–oct vence</span><span style="font-variant-numeric:tabular-nums">10/11/2026</span></div>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isFc }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 28px 24px;display:grid;grid-template-columns:{{ w.cols2 }};gap:16px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 18px;display:grid;grid-template-columns:{{ w.hdrCols }};gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px;grid-column:span 2"><span style="font-size:12px;font-weight:500;color:var(--mu)">Proveedor</span><span style="min-height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--bg)"><span style="width:28px;height:28px;border-radius:7px;background:var(--sf2);display:grid;place-items:center;font-size:11px;font-weight:700;flex:none">LM</span><span style="display:flex;flex-direction:column;line-height:1.3;min-width:0"><span style="font-size:14px;font-weight:500">Laboratorios Medipharma S.A.S.</span><span style="font-size:12px;color:var(--mu)">NIT {{ provNit }} · Responsable de IVA · Bogotá</span></span></span></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Nº factura del proveedor</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font:500 13px 'JetBrains Mono',monospace">MP-45871</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Fecha · Vence</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap">14/10/2026 · 13/11/2026</span></label>
+<div style="grid-column:1 / -1;display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--mu);padding-top:10px;border-top:1px solid var(--bd)"><span>CUFE <b style="font:500 12px 'JetBrains Mono',monospace;color:var(--tx)">a3f9…e71c</b> · recibida desde el buzón DIAN</span><span>Bodega <b style="color:var(--tx);font-weight:500">Principal</b></span><span>Plazo <b style="color:var(--tx);font-weight:500">30 días</b></span><span>Costeo <b style="color:var(--tx);font-weight:500">Promedio ponderado</b></span></div>
+</div>
+
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd)"><span style="font-size:14px;font-weight:600">Ítems recibidos</span><span style="font-size:12px;color:var(--mu)">Entran al kardex al contabilizar</span></div>
+<div style="display:grid;grid-template-columns:{{ fcCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">SKU</span><span style="padding:0 8px">Producto</span><span style="padding:0 8px;text-align:right">Cant.</span><span style="padding:0 8px;text-align:right">Costo unit.</span><span style="padding:0 8px;text-align:right">IVA</span><span style="padding:0 12px;text-align:right">Subtotal</span></div>
+<sc-for list="{{ fc.lines }}" as="l" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:{{ fcCols }};height:34px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);background:{{ l.rowBg }}">
+<span style="padding:0 12px;font:500 12px 'JetBrains Mono',monospace">{{ l.sku }}</span>
+<span style="padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span>
+<input value="{{ l.q }}" onChange="{{ l.onQ }}" readOnly="{{ fc.posted }}" inputmode="numeric" style="height:33px;border:0;border-left:1px solid var(--bd);outline:0;background:transparent;color:var(--tx);padding:0 8px;font-size:13px;text-align:right;font-variant-numeric:tabular-nums;min-width:0" style-focus="box-shadow:inset 0 0 0 2px var(--ring);background:var(--bg)"></input>
+<input value="{{ l.c }}" onChange="{{ l.onC }}" onBlur="{{ l.fmt }}" readOnly="{{ fc.posted }}" inputmode="decimal" style="height:33px;border:0;border-left:1px solid var(--bd);border-right:1px solid var(--bd);outline:0;background:transparent;color:var(--tx);padding:0 8px;font-size:13px;text-align:right;font-variant-numeric:tabular-nums;min-width:0" style-focus="box-shadow:inset 0 0 0 2px var(--ring);background:var(--bg)"></input>
+<span style="padding:0 8px;text-align:right;color:var(--mu)">19 %</span>
+<span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;font-weight:500">{{ l.sub }}</span>
+</div></sc-for>
+<sc-if value="{{ fc.hasErr }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 14px;font-size:12px;color:var(--er);display:flex;gap:8px;align-items:center"><span style="width:16px;height:16px;border-radius:50%;background:var(--er);color:var(--erb);font-size:10px;font-weight:700;display:grid;place-items:center">!</span>Cantidad y costo unitario deben ser mayores que cero en todas las líneas.</div></sc-if>
+</div>
+
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd)"><span style="font-size:14px;font-weight:600">Impuestos y retenciones</span><span style="font-size:12px;color:var(--mu)">Sugeridas por el perfil fiscal del proveedor</span></div>
+<sc-for list="{{ fc.rets }}" as="r" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:{{ retCols }};gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--bd);font-size:13px">
+<button onClick="{{ r.toggle }}" disabled="{{ r.fixed }}" title="{{ r.tip }}" style="width:34px;height:20px;border-radius:10px;border:0;padding:2px;background:{{ r.trk }};display:flex;justify-content:{{ r.jc }};cursor:{{ r.cur }}"><span style="width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)"></span></button>
+<div style="min-width:0"><div style="font-weight:500;color:{{ r.fg }}">{{ r.name }}</div><div style="font-size:12px;color:{{ r.noteFg }}">{{ r.note }}</div></div>
+<span style="text-align:right;color:var(--mu);font-variant-numeric:tabular-nums">{{ r.base }}</span>
+<span style="text-align:right;font-variant-numeric:tabular-nums">{{ r.rate }}</span>
+<span style="text-align:right;font-weight:600;font-variant-numeric:tabular-nums;color:{{ r.fg }}">{{ r.val }}</span>
+<span style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu);text-align:right">{{ r.acct }}</span>
+</div></sc-for>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+<span style="font-size:14px;font-weight:600;margin-bottom:4px">Liquidación</span>
+<sc-for list="{{ fc.sum }}" as="s" hint-placeholder-count="5"><div style="display:flex;justify-content:space-between;font-size:13px;color:{{ s.fg }}"><span>{{ s.l }}</span><span style="font-variant-numeric:tabular-nums">{{ s.v }}</span></div></sc-for>
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:4px;border-top:1px solid var(--bd)"><span style="font-size:13px;font-weight:600">Total a pagar</span><span style="font-size:22px;font-weight:700;font-variant-numeric:tabular-nums">{{ fc.total }}</span></div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">Kardex · entrada</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:{{ fc.kxBg }};color:{{ fc.kxFg }}">{{ fc.kxSt }}</span></div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 64px 64px 96px;height:26px;align-items:center;background:var(--sf);font-size:11px;font-weight:600;color:var(--mu);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)"><span style="padding:0 16px">Producto</span><span style="text-align:right;padding:0 6px">Antes</span><span style="text-align:right;padding:0 6px">Después</span><span style="text-align:right;padding:0 16px 0 6px">Costo prom.</span></div>
+<sc-for list="{{ fc.kx }}" as="k" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(0,1fr) 64px 64px 96px;min-height:40px;align-items:center;font-size:12px;border-bottom:1px solid var(--bd)"><span style="padding:4px 16px;display:flex;flex-direction:column;line-height:1.3;min-width:0"><b style="font:500 11px 'JetBrains Mono',monospace">{{ k.sku }}</b><span style="color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">+{{ k.q }} und</span></span><span style="text-align:right;padding:0 6px;font-variant-numeric:tabular-nums;color:var(--mu)">{{ k.a }}</span><span style="text-align:right;padding:0 6px;font-variant-numeric:tabular-nums;font-weight:600">{{ k.b }}</span><span style="text-align:right;padding:0 16px 0 6px;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;line-height:1.3"><span>{{ k.c1 }}</span><span style="color:{{ k.dFg }};font-size:11px">{{ k.dl }}</span></span></div></sc-for>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">Asiento contable</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--okb);color:var(--ok)">✓ Cuadrado</span></div>
+<sc-for list="{{ fc.je }}" as="j" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:62px minmax(0,1fr) 100px 100px;min-height:30px;align-items:center;font-size:12px;border-top:1px solid var(--bd)"><span style="padding:0 0 0 16px;font:500 11px 'JetBrains Mono',monospace">{{ j.a }}</span><span style="padding:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:{{ j.ind }}">{{ j.n }}</span><span style="text-align:right;padding:0 6px;font-variant-numeric:tabular-nums">{{ j.d }}</span><span style="text-align:right;padding:0 16px 0 6px;font-variant-numeric:tabular-nums">{{ j.c }}</span></div></sc-for>
+<div style="display:grid;grid-template-columns:62px minmax(0,1fr) 100px 100px;height:32px;align-items:center;font-size:12px;font-weight:700;border-top:1px solid var(--bd);background:var(--sf)"><span style="grid-column:span 2;padding:0 16px">Σ</span><span style="text-align:right;padding:0 6px;font-variant-numeric:tabular-nums">{{ fc.jd }}</span><span style="text-align:right;padding:0 16px 0 6px;font-variant-numeric:tabular-nums">{{ fc.jc }}</span></div>
+</div>
+</div>
+<sc-if value="{{ fc.posted }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;right:28px;bottom:24px;z-index:6;border-radius:12px;border:1px solid var(--glassb);background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);box-shadow:var(--e3);padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:13px;max-width:560px"><span style="width:22px;height:22px;border-radius:50%;background:var(--ok);color:var(--okb);font-weight:700;display:grid;place-items:center;flex:none">✓</span><span>Contabilizada como <b style="font-family:'JetBrains Mono',monospace">FC-0118</b>. Kardex actualizado y factura disponible para pago en <a href="#4g">4g</a>.</span></div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isCe }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 28px 24px;display:grid;grid-template-columns:{{ w.cols2 }};gap:16px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 18px;display:grid;grid-template-columns:{{ w.hdrCols }};gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px;grid-column:span 2"><span style="font-size:12px;font-weight:500;color:var(--mu)">Beneficiario</span><span style="min-height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--bg)"><span style="width:28px;height:28px;border-radius:7px;background:var(--sf2);display:grid;place-items:center;font-size:11px;font-weight:700;flex:none">LM</span><span style="display:flex;flex-direction:column;line-height:1.3;min-width:0"><span style="font-size:14px;font-weight:500">Laboratorios Medipharma S.A.S.</span><span style="font-size:12px;color:var(--mu)">NIT {{ provNit }} · Bancolombia ahorros ···2210</span></span></span></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Fecha</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:14px;font-variant-numeric:tabular-nums">14/10/2026</span></label>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Saldo por pagar</span><span style="height:40px;border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--sf);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums">{{ ce.owed }}</span></div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd)"><span style="font-size:14px;font-weight:600">Facturas por pagar</span><span style="font-size:12px;color:var(--mu)">Marca las facturas y ajusta el abono</span></div>
+<div style="display:grid;grid-template-columns:{{ ceCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span></span><span style="padding:0 8px">Documento</span><span style="padding:0 8px">Vencimiento</span><span style="padding:0 8px;text-align:right">Saldo</span><span style="padding:0 12px;text-align:right">Valor a pagar</span></div>
+<sc-for list="{{ ce.inv }}" as="i" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:{{ ceCols }};min-height:48px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);background:{{ i.rowBg }}">
+<span style="display:grid;place-items:center"><button onClick="{{ i.toggle }}" disabled="{{ ce.posted }}" style="width:18px;height:18px;border-radius:5px;border:{{ i.cbBd }};background:{{ i.cbBg }};color:var(--onpr);font-size:12px;font-weight:700;display:grid;place-items:center;padding:0;cursor:pointer">{{ i.mark }}</button></span>
+<span style="padding:6px 8px;display:flex;flex-direction:column;line-height:1.3"><b style="font:600 12px 'JetBrains Mono',monospace;color:var(--pr)">{{ i.n }}</b><span style="font-size:12px;color:var(--mu)">Fact. {{ i.ref }} · {{ i.f }}</span></span>
+<span style="padding:0 8px;display:flex;flex-direction:column;line-height:1.3"><span style="font-variant-numeric:tabular-nums">{{ i.v }}</span><span style="font-size:12px;font-weight:600;color:{{ i.eFg }}">{{ i.est }}</span></span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums">{{ i.s }}</span>
+<span style="padding:0 12px 0 0;display:flex;flex-direction:column;align-items:flex-end;gap:2px"><input value="{{ i.ap }}" onChange="{{ i.onAp }}" onBlur="{{ i.fmt }}" readOnly="{{ i.ro }}" inputmode="decimal" style="width:140px;height:32px;border:{{ i.apBd }};border-radius:7px;outline:0;background:{{ i.apBg }};color:{{ i.apFg }};padding:0 10px;font-size:13px;text-align:right;font-variant-numeric:tabular-nums" style-focus="box-shadow:0 0 0 3px var(--prs)"></input><sc-if value="{{ i.over }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:var(--er);font-weight:600">Supera el saldo</span></sc-if></span>
+</div></sc-for>
+<sc-if value="{{ ce.empty }}" hint-placeholder-val="{{ false }}"><div style="padding:24px 14px;font-size:13px;color:var(--mu);text-align:center">El proveedor no tiene facturas pendientes.</div></sc-if>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 18px;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:14px;font-weight:600">Medio de pago</span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+<sc-for list="{{ ce.methods }}" as="m" hint-placeholder-count="2"><button onClick="{{ m.pick }}" style="text-align:left;border:{{ m.bd }};box-shadow:{{ m.sh }};border-radius:10px;background:var(--bg);color:var(--tx);padding:12px 14px;display:flex;gap:12px;align-items:center;cursor:pointer"><span style="width:18px;height:18px;border-radius:50%;border:{{ m.rBd }};display:grid;place-items:center;flex:none"><span style="width:8px;height:8px;border-radius:50%;background:{{ m.dot }}"></span></span><span style="display:flex;flex-direction:column;line-height:1.35"><span style="font-size:14px;font-weight:600">{{ m.n }}</span><span style="font-size:12px;color:var(--mu)">{{ m.s }}</span></span></button></sc-for>
+</div>
+<sc-if value="{{ ce.isTr }}" hint-placeholder-val="{{ true }}"><label style="display:flex;flex-direction:column;gap:6px;max-width:360px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Referencia de la transferencia <span style="color:var(--er)">*</span></span><span style="height:40px;border:{{ ce.refBd }};border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg)"><input value="{{ ce.ref }}" onChange="{{ ce.onRef }}" readOnly="{{ ce.posted }}" placeholder="Ej. 00984512" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font:500 14px 'JetBrains Mono',monospace"></input></span><span style="font-size:12px;color:var(--mu)">Mínimo 4 caracteres. Queda en el soporte del egreso.</span></label></sc-if>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+<span style="font-size:14px;font-weight:600;margin-bottom:4px">Resumen del pago</span>
+<sc-for list="{{ ce.sum }}" as="s" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;font-size:13px;color:{{ s.fg }}"><span>{{ s.l }}</span><span style="font-variant-numeric:tabular-nums">{{ s.v }}</span></div></sc-for>
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:4px;border-top:1px solid var(--bd)"><span style="font-size:13px;font-weight:600">Sale de {{ ce.from }}</span><span style="font-size:22px;font-weight:700;font-variant-numeric:tabular-nums">{{ ce.out }}</span></div>
+<sc-if value="{{ ce.hasMsg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:4px;font-size:12px;color:var(--er);font-weight:500">{{ ce.msg }}</div></sc-if>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">Asiento contable</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--okb);color:var(--ok)">✓ Cuadrado</span></div>
+<sc-for list="{{ ce.je }}" as="j" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:62px minmax(0,1fr) 100px 100px;min-height:30px;align-items:center;font-size:12px;border-top:1px solid var(--bd)"><span style="padding:0 0 0 16px;font:500 11px 'JetBrains Mono',monospace">{{ j.a }}</span><span style="padding:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:{{ j.ind }}">{{ j.n }}</span><span style="text-align:right;padding:0 6px;font-variant-numeric:tabular-nums">{{ j.d }}</span><span style="text-align:right;padding:0 16px 0 6px;font-variant-numeric:tabular-nums">{{ j.c }}</span></div></sc-for>
+</div>
+</div>
+<sc-if value="{{ ce.posted }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;right:28px;bottom:24px;z-index:6;border-radius:12px;border:1px solid var(--glassb);background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);box-shadow:var(--e3);padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:13px;max-width:560px"><span style="width:22px;height:22px;border-radius:50%;background:var(--ok);color:var(--okb);font-weight:700;display:grid;place-items:center;flex:none">✓</span><span>Egreso <b style="font-family:'JetBrains Mono',monospace">{{ ce.num }}</b> registrado por {{ ce.paidAmt }}. Bancos y alertas del tablero actualizados.</span><button onClick="{{ ce.newOne }}" style="height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;font-weight:600;cursor:pointer">Nuevo</button></div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isTe }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 28px 24px;display:grid;grid-template-columns:{{ w.teCols }};gap:16px;align-items:start">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;min-width:0">
+<div style="display:flex;gap:4px;padding:0 14px;border-bottom:1px solid var(--bd)"><sc-for list="{{ w.teTabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.pick }}" style="height:44px;border:0;border-bottom:2px solid {{ t.bd }};background:transparent;color:{{ t.fg }};font-size:13px;font-weight:{{ t.fw }};padding:0 12px;cursor:pointer;display:flex;align-items:center;gap:6px">{{ t.name }}<sc-if value="{{ t.n }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:600;padding:0 6px;height:18px;border-radius:9px;background:var(--sf2);color:var(--mu);display:grid;place-items:center">{{ t.n }}</span></sc-if></button></sc-for></div>
+
+<sc-if value="{{ w.tabFiscal }}" hint-placeholder-val="{{ true }}">
+<div style="padding:18px;display:flex;flex-direction:column;gap:18px">
+<div style="display:grid;grid-template-columns:{{ w.f3 }};gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Tipo de persona</span><div style="height:40px;background:var(--sf2);border-radius:9px;padding:3px;display:flex;gap:3px"><sc-for list="{{ te.persona }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.pick }}" style="flex:1;border:0;border-radius:7px;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.sh }};font-size:13px;font-weight:600;cursor:pointer">{{ t.name }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Tipo de documento</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:14px">{{ te.docType }}<span style="margin-left:auto;font-size:9px;color:var(--mu)">▼</span></span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Número · DV</span><div style="display:flex;gap:8px"><span style="flex:1;height:40px;border:{{ te.nitBd }};border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg)"><input value="{{ te.nitIn }}" onChange="{{ te.onNit }}" inputmode="numeric" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font:500 14px 'JetBrains Mono',monospace"></input></span><span title="Dígito de verificación calculado (módulo 11 DIAN)" style="width:52px;height:40px;border-radius:8px;background:var(--prs);color:var(--pr);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1"><b style="font:700 16px 'JetBrains Mono',monospace">{{ te.dv }}</b><span style="font-size:9px;font-weight:600;letter-spacing:.04em">DV</span></span></div><span style="font-size:12px;color:{{ te.nitFg }};font-weight:500">{{ te.nitMsg }}</span></div>
+</div>
+<div style="display:grid;grid-template-columns:{{ w.f2 }};gap:14px">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">{{ te.nameL }}</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg)"><input value="{{ te.name }}" onChange="{{ te.onName }}" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:14px"></input></span></label>
+<sc-for list="{{ te.f1 }}" as="f" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">{{ f.l }}</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:14px;white-space:nowrap;overflow:hidden">{{ f.v }}</span></div></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid var(--bd)">
+<span style="font-size:12px;font-weight:500;color:var(--mu)">Régimen de IVA</span>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><sc-for list="{{ te.reg }}" as="r" hint-placeholder-count="2"><button onClick="{{ r.pick }}" style="text-align:left;border:{{ r.bd }};box-shadow:{{ r.sh }};border-radius:10px;background:var(--bg);color:var(--tx);padding:10px 14px;display:flex;gap:10px;align-items:center;cursor:pointer;min-width:240px"><span style="width:16px;height:16px;border-radius:50%;border:{{ r.rBd }};display:grid;place-items:center;flex:none"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.dot }}"></span></span><span style="display:flex;flex-direction:column;line-height:1.35"><span style="font-size:13px;font-weight:600">{{ r.n }}</span><span style="font-size:12px;color:var(--mu)">{{ r.s }}</span></span></button></sc-for></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:12px;font-weight:500;color:var(--mu)">Responsabilidades fiscales (RUT casilla 53)</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ te.resp }}" as="r" hint-placeholder-count="5"><button onClick="{{ r.toggle }}" style="height:32px;padding:0 12px;border-radius:16px;border:1px solid {{ r.bd }};background:{{ r.bg }};color:{{ r.fg }};font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px"><b style="font:600 11px 'JetBrains Mono',monospace">{{ r.c }}</b>{{ r.n }}</button></sc-for></div>
+<span style="font-size:12px;color:var(--mu)">{{ te.respHint }}</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.tabCom }}" hint-placeholder-val="{{ false }}">
+<div style="padding:18px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Rol del tercero</span><div style="display:flex;gap:8px"><sc-for list="{{ te.roles }}" as="r" hint-placeholder-count="2"><button onClick="{{ r.toggle }}" style="height:34px;padding:0 14px;border-radius:17px;border:1px solid {{ r.bd }};background:{{ r.bg }};color:{{ r.fg }};font-size:13px;font-weight:600;cursor:pointer">{{ r.mark }} {{ r.n }}</button></sc-for></div></div>
+<div style="display:grid;grid-template-columns:{{ w.f2 }};gap:14px">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Cupo de crédito asignado</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;gap:6px;padding:0 12px;background:var(--bg)"><span style="color:var(--mu)">$</span><input value="{{ te.cupoIn }}" onChange="{{ te.onCupo }}" onBlur="{{ te.fmtCupo }}" inputmode="decimal" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:14px;font-variant-numeric:tabular-nums"></input></span><span style="font-size:12px;color:var(--mu)">Alerta al 80 %. Bloqueo automático por mora mayor a 30 días.</span></label>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Días de plazo</span><div style="height:40px;background:var(--sf2);border-radius:9px;padding:3px;display:flex;gap:3px"><sc-for list="{{ te.plazo }}" as="t" hint-placeholder-count="5"><button onClick="{{ t.pick }}" style="flex:1;border:0;border-radius:7px;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.sh }};font-size:13px;font-weight:600;cursor:pointer">{{ t.name }}</button></sc-for></div></div>
+<sc-for list="{{ te.f2 }}" as="f" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">{{ f.l }}</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:14px">{{ f.v }}</span></div></sc-for>
+</div>
+<sc-if value="{{ te.isProv }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:{{ w.f2 }};gap:14px;padding-top:16px;border-top:1px solid var(--bd)"><div style="grid-column:1 / -1;font-size:13px;font-weight:600">Como proveedor</div><sc-for list="{{ te.f3 }}" as="f" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">{{ f.l }}</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:14px">{{ f.v }}</span></div></sc-for></div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.tabHist }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="display:grid;grid-template-columns:{{ hiCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 16px">Fecha</span><span style="padding:0 8px">Documento</span><span style="padding:0 8px">Tipo</span><span style="padding:0 8px">Estado</span><span style="padding:0 8px;text-align:right">Valor</span><span style="padding:0 16px;text-align:right">Saldo</span></div>
+<sc-for list="{{ te.hist }}" as="h" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:{{ hiCols }};height:40px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);background:{{ h.bg }}" style-hover="background:var(--hov)"><span style="padding:0 16px;font-variant-numeric:tabular-nums">{{ h.f }}</span><span style="padding:0 8px;font:600 12px 'JetBrains Mono',monospace;color:var(--pr)">{{ h.n }}</span><span style="padding:0 8px">{{ h.t }}</span><span style="padding:0 8px"><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:{{ h.sBg }};color:{{ h.sFg }};white-space:nowrap">{{ h.s }}</span></span><span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums">{{ h.v }}</span><span style="padding:0 16px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600">{{ h.b }}</span></div></sc-for>
+<div style="padding:12px 16px;font-size:12px;color:var(--mu)">Documentos contabilizados de Oct 2026. Clic en el número para abrir el comprobante.</div>
+</div>
+</sc-if>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:18px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;gap:12px;align-items:center"><span style="width:44px;height:44px;border-radius:10px;background:var(--prs);color:var(--pr);display:grid;place-items:center;font-size:15px;font-weight:700;flex:none">{{ te.ini }}</span><div style="min-width:0"><div style="font-size:15px;font-weight:600;line-height:1.3">{{ te.name }}</div><div style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu)">NIT {{ te.nitFull }}</div></div></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ te.tags }}" as="t" hint-placeholder-count="2"><span style="height:22px;padding:0 8px;border-radius:5px;background:var(--neb);color:var(--ne);font-size:12px;font-weight:600;display:inline-flex;align-items:center">{{ t }}</span></sc-for></div>
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--bd)">
+<div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--mu)">Cupo usado</span><span style="font-weight:600;font-variant-numeric:tabular-nums">{{ te.usePct }}</span></div>
+<div style="height:8px;border-radius:4px;background:var(--sf2);position:relative;overflow:hidden"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ te.useW }};background:var(--pr)"></div><div style="position:absolute;left:80%;top:0;bottom:0;width:2px;background:var(--wa)"></div></div>
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-top:4px"><span style="color:var(--mu)">Saldo de cartera</span><span style="font-variant-numeric:tabular-nums;font-weight:600;color:{{ te.balFg }}">{{ te.bal }}</span></div>
+<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--mu)">Cupo disponible</span><span style="font-variant-numeric:tabular-nums">{{ te.free }}</span></div>
+<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--mu)">Plazo</span><span>{{ te.plazoT }}</span></div>
+</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 18px;font-size:12px;color:var(--mu);line-height:1.5">Creado 02/03/2026 por C. Ortiz · última modificación del cupo registrada en la bitácora de auditoría.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isNc }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 28px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 18px;display:grid;grid-template-columns:{{ w.ncHdr }};gap:14px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Tipo de nota</span><div style="height:40px;background:var(--sf2);border-radius:9px;padding:3px;display:flex;gap:3px"><sc-for list="{{ nc.tipos }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.pick }}" style="flex:1;border:0;border-radius:7px;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.sh }};font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;padding:0 10px">{{ t.name }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Factura de venta origen</span><span style="min-height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;gap:12px;padding:6px 12px;background:var(--bg);flex-wrap:wrap"><b style="font:600 13px 'JetBrains Mono',monospace;color:var(--pr)">FV-1</b><span style="font-size:14px">Droguería Vida Plena S.A.S.</span><span style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">05/10/2026 · $ 1.190.000,00</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--okb);color:var(--ok)">Pagada · RC-1</span><span style="margin-left:auto;font-size:9px;color:var(--mu)">▼</span></span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Fecha · Número</span><span style="height:40px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:var(--sf);font-size:14px;font-variant-numeric:tabular-nums">14/10/2026<b style="font:500 13px 'JetBrains Mono',monospace;color:{{ nc.numFg }}">{{ nc.num }}</b></span></div>
+</div>
+<div style="display:grid;grid-template-columns:{{ w.cols2 }};gap:16px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+<sc-if value="{{ nc.isNC }}" hint-placeholder-val="{{ true }}">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd)"><span style="font-size:14px;font-weight:600">Ítems de FV-1</span><span style="font-size:12px;color:var(--mu)">Indica las unidades devueltas</span></div>
+<div style="display:grid;grid-template-columns:{{ ncCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">Producto</span><span style="padding:0 8px;text-align:right">Facturado</span><span style="padding:0 8px;text-align:right">Devuelto</span><span style="padding:0 8px;text-align:center">A devolver</span><span style="padding:0 8px;text-align:right">Precio</span><span style="padding:0 12px;text-align:right">Valor</span></div>
+<sc-for list="{{ nc.lines }}" as="l" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:{{ ncCols }};min-height:48px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);background:{{ l.rowBg }}">
+<span style="padding:4px 12px;display:flex;flex-direction:column;line-height:1.3;min-width:0"><b style="font:500 11px 'JetBrains Mono',monospace;color:var(--mu)">{{ l.sku }}</b><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span></span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums">{{ l.q }}</span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mu)">{{ l.prev }}</span>
+<span style="padding:0 8px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="display:flex;align-items:center;border:{{ l.bd }};border-radius:8px;height:32px;background:var(--bg);overflow:hidden"><button onClick="{{ l.dec }}" style="width:28px;height:100%;border:0;background:transparent;color:var(--mu);font-size:15px;cursor:pointer">−</button><input value="{{ l.dq }}" onChange="{{ l.onQ }}" readOnly="{{ nc.posted }}" inputmode="numeric" style="width:40px;height:100%;border:0;outline:0;background:transparent;color:var(--tx);text-align:center;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums"></input><button onClick="{{ l.inc }}" style="width:28px;height:100%;border:0;background:transparent;color:var(--mu);font-size:15px;cursor:pointer">+</button></span><span style="font-size:11px;color:{{ l.hFg }};font-weight:500">{{ l.hint }}</span></span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums">{{ l.p }}</span>
+<span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600">{{ l.v }}</span>
+</div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ nc.isND }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Concepto</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:14px">{{ nc.ndConcept }}</span></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Valor antes de IVA</span><span style="height:40px;border:2px solid var(--ring);border-radius:8px;display:flex;align-items:center;gap:6px;padding:0 12px;background:var(--bg)"><span style="color:var(--mu)">$</span><input value="{{ nc.ndIn }}" onChange="{{ nc.onNd }}" onBlur="{{ nc.fmtNd }}" readOnly="{{ nc.posted }}" inputmode="decimal" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:14px;text-align:right;font-variant-numeric:tabular-nums"></input></span></label>
+<div style="grid-column:1 / -1;font-size:12px;color:var(--mu)">La nota débito aumenta el saldo de FV-1 y no mueve inventario.</div>
+</div>
+</sc-if>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 18px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:14px;font-weight:600">Motivo · código DIAN</span>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><sc-for list="{{ nc.motivos }}" as="m" hint-placeholder-count="4"><button onClick="{{ m.pick }}" style="text-align:left;border:{{ m.bd }};box-shadow:{{ m.sh }};border-radius:10px;background:var(--bg);color:var(--tx);padding:10px 12px;display:flex;gap:10px;align-items:center;cursor:pointer"><span style="width:24px;height:22px;border-radius:6px;background:{{ m.tile }};color:{{ m.tileFg }};display:grid;place-items:center;font:600 11px 'JetBrains Mono',monospace;flex:none">{{ m.c }}</span><span style="display:flex;flex-direction:column;line-height:1.3;min-width:0"><span style="font-size:13px;font-weight:500">{{ m.n }}</span><span style="font-size:11px;color:var(--mu)">{{ m.s }}</span></span></button></sc-for></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+<span style="font-size:14px;font-weight:600;margin-bottom:4px">Totales de la nota</span>
+<sc-for list="{{ nc.sum }}" as="s" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ s.l }}</span><span style="font-variant-numeric:tabular-nums">{{ s.v }}</span></div></sc-for>
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:4px;border-top:1px solid var(--bd)"><span style="font-size:13px;font-weight:600">Total</span><span style="font-size:22px;font-weight:700;font-variant-numeric:tabular-nums">{{ nc.total }}</span></div>
+<div style="font-size:12px;color:var(--mu);line-height:1.45">{{ nc.effect }}</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">{{ nc.jeT }}</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--okb);color:var(--ok)">✓ Cuadrado</span></div>
+<sc-for list="{{ nc.je }}" as="j" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:62px minmax(0,1fr) 96px 96px;min-height:30px;align-items:center;font-size:12px;border-top:1px solid var(--bd);background:{{ j.bg }}"><span style="padding:0 0 0 16px;font:500 11px 'JetBrains Mono',monospace">{{ j.a }}</span><span style="padding:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:{{ j.ind }};color:{{ j.fg }}">{{ j.n }}</span><span style="text-align:right;padding:0 6px;font-variant-numeric:tabular-nums">{{ j.d }}</span><span style="text-align:right;padding:0 16px 0 6px;font-variant-numeric:tabular-nums">{{ j.c }}</span></div></sc-for>
+</div>
+<sc-if value="{{ nc.hasKx }}" hint-placeholder-val="{{ true }}"><div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">Reingreso al kardex</span><span style="font-size:12px;color:var(--mu)">Al costo de salida</span></div>
+<sc-for list="{{ nc.kx }}" as="k" hint-placeholder-count="1"><div style="display:flex;justify-content:space-between;font-size:13px"><span><b style="font:500 11px 'JetBrains Mono',monospace">{{ k.sku }}</b> +{{ k.q }} und</span><span style="font-variant-numeric:tabular-nums">{{ k.v }}</span></div></sc-for>
+<sc-if value="{{ nc.kxNone }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--mu)">{{ nc.kxNoneT }}</span></sc-if>
+</div></sc-if>
+</div>
+</div>
+<sc-if value="{{ nc.posted }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;right:28px;bottom:24px;z-index:6;border-radius:12px;border:1px solid var(--glassb);background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);box-shadow:var(--e3);padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:13px;max-width:600px"><span style="width:22px;height:22px;border-radius:50%;background:var(--ok);color:var(--okb);font-weight:700;display:grid;place-items:center;flex:none">✓</span><span><b style="font-family:'JetBrains Mono',monospace">{{ nc.num }}</b> emitida y transmitida a la DIAN. Ver en el historial del cliente <a href="#4l">4l</a>.</span><button onClick="{{ nc.newOne }}" style="height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;font-weight:600;cursor:pointer">Nueva</button></div></sc-if>
+</div>
+</sc-if>
+
+</div>
+</main>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;rolInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gerencia&quot;,&quot;contador&quot;,&quot;vendedor&quot;],&quot;default&quot;:&quot;gerencia&quot;,&quot;tsType&quot;:&quot;'gerencia'|'contador'|'vendedor'&quot;,&quot;section&quot;:&quot;Tablero&quot;},&quot;gmf&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Egreso&quot;},&quot;mostrar1024&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Lienzo&quot;}}">
+const TH = {
+  light: {'--logo':'url(assets/sifca-claro-mark.png)','--logofull':'url(assets/sifca-claro-lockup.png)','--app':'#F4F6F8','--bg':'#FFFFFF','--card':'#FFFFFF','--side':'#FAFBFC','--sf':'#F4F6F8','--sf2':'#E9EDF2','--hov':'#F3F6F9','--bd':'#E1E5EA','--bds':'#7B8794','--tx':'#1B2430','--mu':'#4B5767','--pr':'#0B5CAD','--prh':'#094C8F','--onpr':'#FFFFFF','--prs':'#E8F1FB','--ok':'#17663E','--okb':'#E6F4EA','--wa':'#7A4B00','--wab':'#FFF1D6','--er':'#A8201A','--erb':'#FDECEA','--ne':'#3F4A59','--neb':'#E9EDF2','--ring':'#0B5CAD','--glass':'rgba(255,255,255,.8)','--glassb':'rgba(255,255,255,.7)','--scrim':'rgba(27,36,48,.28)','--e1':'0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06)','--e2':'0 6px 16px -4px rgba(16,24,40,.12),0 2px 4px rgba(16,24,40,.05)','--e3':'0 28px 56px -16px rgba(16,24,40,.32),0 4px 10px rgba(16,24,40,.08)'},
+  dark: {'--logo':'url(assets/sifca-oscuro-mark.png)','--logofull':'url(assets/sifca-oscuro-lockup.png)','--app':'#1E293B','--bg':'#1E293B','--card':'#273548','--side':'#1A2434','--sf':'#2D3D53','--sf2':'#36485F','--hov':'#2F405A','--bd':'#3A4C63','--bds':'#7D8EA5','--tx':'#E8EDF3','--mu':'#AEBACB','--pr':'#7DB7F2','--prh':'#A0CBF6','--onpr':'#0B1B2E','--prs':'#2A4466','--ok':'#86D9A8','--okb':'#1F4034','--wa':'#F2C879','--wab':'#463A23','--er':'#FFA197','--erb':'#4D2C30','--ne':'#CBD4DF','--neb':'#3A4A60','--ring':'#7DB7F2','--glass':'rgba(39,53,72,.82)','--glassb':'rgba(255,255,255,.08)','--scrim':'rgba(12,18,28,.5)','--e1':'0 1px 2px rgba(0,0,0,.22)','--e2':'0 8px 20px -6px rgba(0,0,0,.42)','--e3':'0 32px 64px -16px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04)'}
+};
+const fmn = c => { const neg = c < 0; c = Math.abs(Math.round(c)); return (neg ? '− ' : '') + String(Math.floor(c/100)).replace(/\B(?=(\d{3})+(?!\d))/g,'.') + ',' + String(c%100).padStart(2,'0'); };
+const fm = c => (c < 0 ? '− $ ' + fmn(-c) : '$ ' + fmn(c));
+const parse = s => { s = String(s || '').replace(/[$\s]/g,''); if (!s) return 0; if (!/^[\d.,]+$/.test(s)) return NaN; const v = parseFloat(s.replace(/\./g,'').replace(',','.')); return isNaN(v) ? NaN : Math.round(v*100); };
+const int = s => parseInt(String(s).replace(/\D/g,''), 10) || 0;
+const r100 = v => Math.round(v/100)*100;
+const dvOf = s => { const d = String(s).replace(/\D/g,''); if (!d) return '–'; const W = [3,7,13,17,19,23,29,37,41,43,47,53,59,67,71]; let t = 0; d.split('').reverse().forEach((c,i) => t += (+c) * (W[i] || 0)); const r = t % 11; return String(r > 1 ? 11 - r : r); };
+const dots = d => String(d).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const PROV_NIT = '860512330';
+const UVT = 52374, RF_BASE = 27 * UVT * 100;
+const PROD = {
+  'MED-0412': {name:'Guantes de nitrilo talla M · caja x100', stock:32, cost:1500000, ro:40, price:2500000},
+  'MED-0207': {name:'Tapabocas termosellado · caja x50', stock:40, cost:720000, ro:50, price:1200000},
+  'MED-0533': {name:'Alcohol antiséptico 70 % · 700 ml', stock:18, cost:600000, ro:30, price:1000000}
+};
+const FV1 = [['MED-0412',20,8],['MED-0207',25,0],['MED-0533',20,0]];
+const GROUPS = [['IN','Inicio'],['VE','Ventas'],['CA','Cartera'],['CO','Compras'],['IV','Inventario'],['CT','Contabilidad'],['IM','Impuestos'],['FE','Factura electrónica'],['TE','Terceros'],['VI','Catálogo y vitrina'],['IG','Integraciones'],['CF','Configuración']];
+const CHILD = {VE:['Facturas de venta','Notas crédito y débito','Cotizaciones','Pedidos web'], CO:['Facturas de proveedor','Comprobantes de egreso','Cuentas por pagar','Órdenes de compra'], TE:['Clientes','Proveedores','Todos los terceros']};
+const INV = [['FC-0097','MP-44102','15/08/2026','14/09/2026','Vencida hace 30 días','var(--er)',124000000],['FC-0104','MP-44930','22/09/2026','22/10/2026','Vence en 8 días','var(--wa)',86050000]];
+const DAYS = [1420,1680,960,0,2340,1510,1290,1750,1980,1120,0,0,2860,1730];
+const KNOWN = {'901234567':'Almacenes La Ceiba S.A.S.','900123456':'Comercializadora Andina S.A.S. (tu empresa)','860512330':'Laboratorios Medipharma S.A.S.'};
+const MOT_NC = [['1','Devolución parcial','Reingresa al kardex'],['2','Anulación de la factura','Devuelve todo lo pendiente'],['3','Rebaja o descuento','Sin movimiento de inventario'],['4','Ajuste de precio','Sin movimiento de inventario']];
+const MOT_ND = [['1','Intereses','Sin IVA · cuenta 421005'],['2','Gastos por cobrar','Sin IVA · cuenta 425050'],['3','Cambio del valor','Con IVA 19 % · cuenta 4135'],['4','Otros','Sin IVA · cuenta 425050']];
+
+class Component extends DCLogic {
+  state = {
+    role:{}, fcLines:[{sku:'MED-0412',q:'100',c:'15.600,00'},{sku:'MED-0207',q:'80',c:'7.200,00'},{sku:'MED-0533',q:'60',c:'6.000,00'}], ret:{rf:true,ica:true,riva:false}, fcPosted:null,
+    ceSel:{'FC-0097':true,'FC-0104':true}, ceAp:{}, ceMethod:'transferencia', ceRef:'', cePosted:[], ceToast:null,
+    tNit:'901447218', tName:'Droguería Vida Plena S.A.S.', tPer:'J', tReg:'resp', tResp:{'R-99-PN':true}, tRoles:{cli:true,prov:false}, tCupo:'5.000.000,00', tPlazo:30, teTab:{},
+    ncTipo:'NC', ncMot:{NC:'1',ND:'3'}, ncQ:{'MED-0412':'0','MED-0207':'5','MED-0533':'0'}, ndVal:'50.000,00', notes:[], ncSeq:{NC:3,ND:1}, ncToast:null
+  };
+  setMap(k, id, v) { this.setState(s => ({[k]: {...s[k], [id]: v}})); }
+  renderVals() {
+    const st = this.state, P = this.props;
+    const gmfOn = P.gmf ?? true, show1024 = P.mostrar1024 ?? true, role0 = P.rolInicial ?? 'gerencia';
+    const seg = on => ({bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--tx)' : 'var(--mu)', sh: on ? '0 1px 3px rgba(0,0,0,.14)' : 'none'});
+    const radio = on => ({bd: on ? '2px solid var(--pr)' : '1px solid var(--bd)', sh: on ? '0 0 0 4px var(--prs)' : 'none', rBd: on ? '2px solid var(--pr)' : '1.5px solid var(--bds)', dot: on ? 'var(--pr)' : 'transparent'});
+    const btn = (label, on, primary, k, enabled = true, tip = '') => ({label, on: enabled ? on : () => {}, k: k || '', tip, bd: primary ? '0' : '1px solid var(--bds)', bg: primary ? (enabled ? 'var(--pr)' : 'var(--sf2)') : 'var(--card)', fg: primary ? (enabled ? 'var(--onpr)' : 'var(--mu)') : 'var(--tx)', fw: primary ? 600 : 500, cur: enabled ? 'pointer' : 'not-allowed', sh: primary && enabled ? 'var(--e2)' : 'var(--e1)'});
+    const je = (a, n, d, c) => ({a, n, d: d ? fmn(d) : '', c: c ? fmn(c) : '', ind: c && !d ? '22px' : '6px', bg:'transparent', fg:'var(--tx)'});
+
+    // factura de proveedor
+    const posted = !!st.fcPosted;
+    const lines = st.fcLines.map((l, i) => { const q = int(l.q), c = parse(l.c), bad = !q || isNaN(c) || !c;
+      return {sku:l.sku, name:PROD[l.sku].name, q:l.q, c:l.c, qn:q, cn: bad ? 0 : c, bad, sub: bad ? '—' : fmn(q*c), rowBg: bad ? 'var(--erb)' : 'transparent',
+        onQ: e => this.setState(s => { const L = s.fcLines.slice(); L[i] = {...L[i], q:e.target.value}; return {fcLines:L}; }),
+        onC: e => this.setState(s => { const L = s.fcLines.slice(); L[i] = {...L[i], c:e.target.value}; return {fcLines:L}; }),
+        fmt: () => this.setState(s => { const v = parse(s.fcLines[i].c); if (isNaN(v)) return null; const L = s.fcLines.slice(); L[i] = {...L[i], c:fmn(v)}; return {fcLines:L}; })}; });
+    const S = lines.reduce((a, l) => a + l.qn * l.cn, 0), I = Math.round(S * 0.19);
+    const rfApplies = S >= RF_BASE;
+    const rf = st.ret.rf && rfApplies ? r100(S * 0.025) : 0, ica = st.ret.ica ? r100(S * 0.00414) : 0, riva = st.ret.riva ? r100(I * 0.15) : 0;
+    const fcTotal = S + I - rf - ica - riva, fcErr = lines.some(l => l.bad), canFc = !fcErr && !posted;
+    const tog = k => () => { if (!posted) this.setState(s => ({ret:{...s.ret, [k]: !s.ret[k]}})); };
+    const retRow = (k, name, note, noteBad, base, rate, val, acct, fixed) => { const on = k === 'iva' ? true : (k === 'rf' ? st.ret.rf && rfApplies : st.ret[k]);
+      return {name, note, noteFg: noteBad ? 'var(--wa)' : 'var(--mu)', base, rate, val: k === 'iva' ? fmn(val) : (on ? '− ' + fmn(val) : '0,00'), acct, fixed: !!fixed || (k === 'rf' && !rfApplies), toggle: tog(k), tip: fixed ? 'El IVA de compras gravadas siempre se causa' : '',
+        trk: on ? 'var(--pr)' : 'var(--sf2)', jc: on ? 'flex-end' : 'flex-start', cur: fixed || (k === 'rf' && !rfApplies) ? 'not-allowed' : 'pointer', fg: on ? 'var(--tx)' : 'var(--mu)'}; };
+    const fc = { lines, posted, hasErr: fcErr, total: fm(fcTotal),
+      rets: [
+        retRow('iva','IVA descontable','Compra gravada · tarifa general',false, fmn(S),'19 %', I,'240810', true),
+        retRow('rf','Retención en la fuente · compras', rfApplies ? 'RF-01 · base mínima 27 UVT · $ 1.414.098' : 'No aplica: base menor a 27 UVT ($ 1.414.098) · RF-01', !rfApplies, fmn(S),'2,5 %', rf,'236540'),
+        retRow('ica','ReteICA · Bogotá','RICA · actividad 4690 · Impuestos › Retenciones y UVT',false, fmn(S),'4,14 ‰', ica,'236801'),
+        retRow('riva','ReteIVA','Solo si la empresa es agente de retención de IVA',false, fmn(I),'15 %', riva,'236705')],
+      sum: [{l:'Subtotal', v:fmn(S), fg:'var(--tx)'},{l:'IVA descontable 19 %', v:'+ ' + fmn(I), fg:'var(--tx)'},{l:'Retención en la fuente', v:'− ' + fmn(rf), fg: rf ? 'var(--tx)' : 'var(--mu)'},{l:'ReteICA', v:'− ' + fmn(ica), fg: ica ? 'var(--tx)' : 'var(--mu)'},{l:'ReteIVA', v:'− ' + fmn(riva), fg: riva ? 'var(--tx)' : 'var(--mu)'}],
+      kx: lines.map(l => { const p = PROD[l.sku], nq = p.stock + l.qn, avg = nq ? Math.round((p.stock*p.cost + l.qn*l.cn)/nq) : p.cost, dlt = avg - p.cost;
+        return {sku:l.sku, q:l.qn, a:p.stock, b:nq, c1:fmn(avg), dl: dlt ? (dlt > 0 ? '▲ ' : '▼ ') + fmn(Math.abs(dlt)) : 'sin cambio', dFg: dlt > 0 ? 'var(--wa)' : 'var(--mu)'}; }),
+      kxSt: posted ? '✓ Aplicado' : 'Vista previa', kxBg: posted ? 'var(--okb)' : 'var(--neb)', kxFg: posted ? 'var(--ok)' : 'var(--ne)',
+      je: [je('1435','Mercancías no fabricadas',S,0), je('240810','IVA descontable en compras',I,0)].concat(rf ? [je('236540','Retención en la fuente · compras',0,rf)] : [], ica ? [je('236801','ReteICA por pagar',0,ica)] : [], riva ? [je('236705','ReteIVA por pagar',0,riva)] : [], [je('220505','Proveedores nacionales',0,fcTotal)]),
+      jd: fmn(S + I), jc: fmn(rf + ica + riva + fcTotal) };
+    const postFc = () => { if (!canFc) return; const q = {}; lines.forEach(l => q[l.sku] = l.qn); this.setState({fcPosted:{q, total:fcTotal}}); };
+
+    // egreso
+    const invAll = INV.map(([n,ref,f,v,est,eFg,s]) => ({n,ref,f,v,est,eFg,s})).concat(posted ? [{n:'FC-0118', ref:'MP-45871', f:'14/10/2026', v:'13/11/2026', est:'Vence en 30 días', eFg:'var(--mu)', s:st.fcPosted.total}] : []);
+    const paidMap = {}; st.cePosted.forEach(p => p.items.forEach(([n, a]) => paidMap[n] = (paidMap[n] || 0) + a));
+    const inv = invAll.map(x => ({...x, s: x.s - (paidMap[x.n] || 0)})).filter(x => x.s > 0);
+    const ceLock = !!st.ceToast;
+    const ceRows = inv.map(x => { const sel = !!st.ceSel[x.n], raw = st.ceAp[x.n] ?? fmn(x.s), ap = parse(raw), over = sel && (isNaN(ap) || ap > x.s), bad = sel && (isNaN(ap) || ap <= 0);
+      return {...x, s:fmn(x.s), sel, apv: sel && !bad && !over ? ap : 0, ap: sel ? raw : '—', over, bad, mark: sel ? '✓' : '', cbBd: sel ? '0' : '1.5px solid var(--bds)', cbBg: sel ? 'var(--pr)' : 'var(--bg)', rowBg: sel ? 'var(--prs)' : 'transparent',
+        ro: !sel || ceLock, apBd: over ? '2px solid var(--er)' : '1px solid var(--bds)', apBg: sel ? 'var(--bg)' : 'transparent', apFg: sel ? 'var(--tx)' : 'var(--mu)',
+        toggle: () => { if (!ceLock) this.setMap('ceSel', x.n, !sel); }, onAp: e => this.setMap('ceAp', x.n, e.target.value),
+        fmt: () => { const v = parse(st.ceAp[x.n]); if (!isNaN(v) && st.ceAp[x.n] != null) this.setMap('ceAp', x.n, fmn(v)); }}; });
+    const isTr = st.ceMethod === 'transferencia', cePay = ceRows.reduce((a, r) => a + r.apv, 0), gmf = isTr && gmfOn ? r100(cePay * 0.004) : 0;
+    const ceOver = ceRows.some(r => r.over || r.bad), refOk = !isTr || st.ceRef.trim().length >= 4, canCe = !ceLock && cePay > 0 && !ceOver && refOk;
+    const ceMsg = ceLock ? '' : ceOver ? 'Revisa los valores: ningún abono puede superar el saldo.' : !cePay ? 'Marca al menos una factura.' : !refOk ? 'Falta la referencia de la transferencia.' : '';
+    const from = isTr ? '111005 Bancolombia ···4587' : '110505 Caja general';
+    const ce = { inv: ceRows, empty: !ceRows.length, posted: ceLock, isTr, ref: st.ceRef, onRef: e => this.setState({ceRef:e.target.value}), refBd: isTr && !refOk && cePay ? '2px solid var(--wa)' : '1px solid var(--bds)',
+      owed: fm(inv.reduce((a, x) => a + x.s, 0)), from: isTr ? 'Bancolombia' : 'Caja general', out: fm(cePay + gmf), hasMsg: !!ceMsg, msg: ceMsg,
+      methods: [['transferencia','Transferencia bancaria','Bancolombia corriente ···4587 · GMF 4×1000'],['efectivo','Efectivo','Caja general 110505 · sin GMF']].map(([k,n,s]) => ({n, s, pick: () => { if (!ceLock) this.setState({ceMethod:k}); }, ...radio(st.ceMethod === k)})),
+      sum: [{l: ceRows.filter(r => r.apv).length + ' factura(s) cruzadas', v: fmn(cePay), fg:'var(--tx)'}, {l:'GMF 4×1000', v: isTr ? (gmfOn ? fmn(gmf) : 'Exento') : 'No aplica', fg: gmf ? 'var(--tx)' : 'var(--mu)'}],
+      je: [je('220505','Proveedores nacionales',cePay,0)].concat(gmf ? [je('511595','GMF · gravamen a los mov. financieros',gmf,0)] : [], [je(isTr ? '111005' : '110505', isTr ? 'Bancos · Bancolombia' : 'Caja general',0,cePay + gmf)]),
+      num: st.ceToast ? st.ceToast.num : '', paidAmt: st.ceToast ? fm(st.ceToast.amt) : '', newOne: () => this.setState({ceToast:null, ceSel:{}, ceAp:{}, ceRef:''}) };
+    const postCe = () => { if (!canCe) return; const items = ceRows.filter(r => r.apv).map(r => [r.n, r.apv]); const num = 'CE-' + (st.cePosted.length + 1);
+      this.setState(s => ({cePosted:[...s.cePosted, {num, items, out: cePay + gmf}], ceToast:{num, amt: cePay + gmf}})); };
+    const bankOut = st.cePosted.filter((p, i) => true).reduce((a, p) => a + p.out, 0);
+
+    // notas
+    const isNC = st.ncTipo === 'NC', mot = st.ncMot[st.ncTipo];
+    const ncLock = !!st.ncToast;
+    const ncLines = FV1.map(([sku, q, prev0]) => { const p = PROD[sku], prevMore = st.notes.filter(n => n.tipo === 'NC').reduce((a, n) => a + (n.q[sku] || 0), 0), prev = prev0 + prevMore, max = q - prev, dq = int(st.ncQ[sku]), over = dq > max;
+      const setQ = v => { if (!ncLock) this.setMap('ncQ', sku, String(Math.max(0, Math.min(max, v)))); };
+      return {sku, name:p.name, q, prev, dq: st.ncQ[sku], dqn: over ? 0 : dq, over, p: fmn(p.price), v: fmn((over ? 0 : dq) * p.price), price:p.price, cost:p.cost, max,
+        hint: over ? 'Máximo ' + max : max ? 'Disp. ' + max : 'Sin saldo', hFg: over ? 'var(--er)' : 'var(--mu)', bd: over ? '2px solid var(--er)' : '1px solid var(--bds)', rowBg: dq && !over ? 'var(--prs)' : 'transparent',
+        onQ: e => { if (!ncLock) this.setMap('ncQ', sku, e.target.value); }, dec: () => setQ(dq - 1), inc: () => setQ(dq + 1)}; });
+    const ndBase = parse(st.ndVal), ndIva = mot === '3';
+    const base = isNC ? ncLines.reduce((a, l) => a + l.dqn * l.price, 0) : (isNaN(ndBase) ? 0 : ndBase);
+    const ivaN = isNC || ndIva ? Math.round(base * 0.19) : 0, ncTot = base + ivaN;
+    const moves = isNC && (mot === '1' || mot === '2'), costBack = moves ? ncLines.reduce((a, l) => a + l.dqn * l.cost, 0) : 0;
+    const ncNum = ncLock ? st.ncToast.num : st.ncTipo + '-' + st.ncSeq[st.ncTipo] + ' · al emitir';
+    const ncOk = !ncLock && base > 0 && !ncLines.some(l => l.over && isNC);
+    const ndAcct = {'1':['421005','Intereses'],'2':['425050','Reintegro de otros costos y gastos'],'3':['4135','Comercio al por mayor y al por menor'],'4':['425050','Reintegro de otros costos y gastos']}[mot];
+    const ncJe = isNC ? [je('4175','Devoluciones en ventas',base,0), je('2408','IVA por pagar',ivaN,0), je('130505','Clientes nacionales',0,ncTot)].concat(costBack ? [je('1435','Mercancías · reingreso',costBack,0), je('6135','Costo de ventas',0,costBack)] : [])
+      : [je('130505','Clientes nacionales',ncTot,0), je(ndAcct[0], ndAcct[1],0,base)].concat(ivaN ? [je('2408','IVA por pagar',0,ivaN)] : []);
+    const nc = { isNC, isND: !isNC, lines: ncLines, posted: ncLock, num: ncNum, numFg: ncLock ? 'var(--tx)' : 'var(--mu)',
+      tipos: [['NC','Nota crédito'],['ND','Nota débito']].map(([k,n]) => ({name:n, pick: () => { if (!ncLock) this.setState({ncTipo:k}); }, ...seg(st.ncTipo === k)})),
+      motivos: (isNC ? MOT_NC : MOT_ND).map(([c,n,s]) => { const on = c === mot; return {c, n, s, ...radio(on), tile: on ? 'var(--pr)' : 'var(--sf2)', tileFg: on ? 'var(--onpr)' : 'var(--mu)',
+        pick: () => { if (ncLock) return; this.setState(s2 => { const o = {ncMot:{...s2.ncMot, [s2.ncTipo]: c}}; if (isNC && c === '2') { const q = {}; ncLines.forEach(l => q[l.sku] = String(l.max)); o.ncQ = q; } return o; }); }}; }),
+      ndIn: st.ndVal, onNd: e => this.setState({ndVal:e.target.value}), fmtNd: () => { const v = parse(st.ndVal); if (!isNaN(v)) this.setState({ndVal:fmn(v)}); }, ndConcept: (MOT_ND.find(m => m[0] === mot) || MOT_ND[2])[1] + ' sobre FV-1',
+      sum: [{l: isNC ? 'Valor devuelto / ajustado' : 'Valor de la nota', v: fmn(base)}, {l:'IVA 19 %', v: ivaN ? fmn(ivaN) : 'No aplica'}], total: fm(ncTot),
+      effect: isNC ? 'FV-1 está pagada con RC-1, así que la nota deja un saldo a favor del cliente de ' + fm(ncTot) + '.' : 'El saldo de FV-1 pasa de $ 0,00 a ' + fm(ncTot) + '.',
+      jeT: isNC ? 'Asiento de reversión' : 'Asiento contable', je: ncJe,
+      hasKx: isNC, kx: moves ? ncLines.filter(l => l.dqn).map(l => ({sku:l.sku, q:l.dqn, v:fmn(l.dqn * l.cost)})) : [], kxNone: !moves || !costBack, kxNoneT: moves ? 'Sin unidades seleccionadas.' : 'Este motivo no mueve inventario.',
+      newOne: () => this.setState({ncToast:null, ncQ:{'MED-0412':'0','MED-0207':'0','MED-0533':'0'}}) };
+    const postNc = () => { if (!ncOk) return; const num = st.ncTipo + '-' + st.ncSeq[st.ncTipo]; const q = {}; ncLines.forEach(l => q[l.sku] = l.dqn);
+      this.setState(s => ({notes:[...s.notes, {num, tipo:s.ncTipo, total:ncTot, q: s.ncTipo === 'NC' ? q : {}}], ncSeq:{...s.ncSeq, [s.ncTipo]: s.ncSeq[s.ncTipo] + 1}, ncToast:{num}})); };
+
+    // tercero
+    const nitD = st.tNit.replace(/\D/g,''), jur = st.tPer === 'J', dup = KNOWN[nitD];
+    const nitErr = !nitD ? 'Escribe el número de documento.' : jur && nitD.length !== 9 ? 'El NIT de persona jurídica tiene 9 dígitos.' : dup ? 'Ya existe un tercero con este NIT: ' + dup + '.' : '';
+    const cupo = parse(st.tCupo) || 0;
+    let run = 0; const hist = [['05/10/2026','FV-1','Factura de venta','Pagada',119000000],['10/10/2026','NC-1','Nota crédito','Aplicada',-23800000],['20/10/2026','RC-1','Recibo de caja','Aplicado',-95200000]]
+      .concat(st.notes.map(n => ['14/10/2026', n.num, n.tipo === 'NC' ? 'Nota crédito' : 'Nota débito', 'Transmitida', n.tipo === 'NC' ? -n.total : n.total, true]))
+      .map(([f,n,t,s,v,nw]) => { run += v; return {f,n,t,s, v: fm(v), b: fm(run), sBg: nw ? 'var(--prs)' : 'var(--okb)', sFg: nw ? 'var(--pr)' : 'var(--ok)', bg: nw ? 'var(--prs)' : 'transparent'}; });
+    const used = Math.max(0, run), usePct = cupo ? used / cupo * 100 : 0;
+    const nameTxt = st.tName.trim() || 'Sin nombre';
+    const te = { nitIn: st.tNit, onNit: e => this.setState({tNit:e.target.value}), dv: dvOf(nitD), nitBd: nitErr ? '2px solid var(--er)' : '1px solid var(--bds)', nitFg: nitErr ? 'var(--er)' : 'var(--ok)', nitMsg: nitErr || '✓ DV calculado · ' + dots(nitD) + '-' + dvOf(nitD),
+      nitFull: (nitD ? dots(nitD) : '—') + '-' + dvOf(nitD), name: st.tName, onName: e => this.setState({tName:e.target.value}), nameL: jur ? 'Razón social' : 'Nombres y apellidos', docType: jur ? 'NIT · 31' : 'Cédula de ciudadanía · 13',
+      ini: nameTxt.split(/\s+/).slice(0,2).map(x => x[0]).join('').toUpperCase(),
+      persona: [['J','Jurídica'],['N','Natural']].map(([k,n]) => ({name:n, pick: () => this.setState({tPer:k}), ...seg(st.tPer === k)})),
+      f1: [{l:'Nombre comercial', v:'Vida Plena'},{l:'Dirección', v:'Cl. 10 # 43D-25, El Poblado'},{l:'Municipio · código DANE', v:'Medellín, Antioquia · 05001'},{l:'Correo de factura electrónica', v:'facturacion@vidaplena.co'},{l:'Teléfono', v:'+57 604 311 2040'}],
+      reg: [['resp','Responsable de IVA','Factura con IVA · declara bimestral'],['noresp','No responsable de IVA','No cobra IVA en sus ventas']].map(([k,n,s]) => ({n, s, pick: () => this.setState({tReg:k}), ...radio(st.tReg === k)})),
+      resp: [['O-13','Gran contribuyente'],['O-15','Autorretenedor'],['O-23','Agente de retención IVA'],['O-47','Régimen simple'],['R-99-PN','No aplica · otros']].map(([c,n]) => { const on = !!st.tResp[c]; return {c, n, bg: on ? 'var(--prs)' : 'var(--bg)', fg: on ? 'var(--pr)' : 'var(--tx)', bd: on ? 'var(--pr)' : 'var(--bds)',
+        toggle: () => this.setState(s => { const r = {...s.tResp, [c]: !s.tResp[c]}; if (c === 'R-99-PN' && r[c]) return {tResp:{'R-99-PN':true}}; if (c !== 'R-99-PN' && r[c]) delete r['R-99-PN']; return {tResp:r}; })}; }),
+      respHint: st.tResp['O-15'] ? 'Autorretenedor: no se le practica retención en la fuente en las compras.' : st.tResp['O-13'] ? 'Gran contribuyente: aplica ReteIVA en sus pagos.' : 'Define qué retenciones se le practican o nos practica.',
+      roles: [['cli','Cliente'],['prov','Proveedor']].map(([k,n]) => { const on = !!st.tRoles[k]; return {n, mark: on ? '✓' : '+', bg: on ? 'var(--prs)' : 'var(--bg)', fg: on ? 'var(--pr)' : 'var(--tx)', bd: on ? 'var(--pr)' : 'var(--bds)', toggle: () => this.setState(s => ({tRoles:{...s.tRoles, [k]: !s.tRoles[k]}}))}; }),
+      cupoIn: st.tCupo, onCupo: e => this.setState({tCupo:e.target.value}), fmtCupo: () => { const v = parse(st.tCupo); if (!isNaN(v)) this.setState({tCupo:fmn(v)}); },
+      plazo: [[0,'Contado'],[15,'15'],[30,'30'],[45,'45'],[60,'60']].map(([d,n]) => ({name:n, pick: () => this.setState({tPlazo:d}), ...seg(st.tPlazo === d)})),
+      f2: [{l:'Lista de precios', v:'Mayorista droguerías'},{l:'Vendedor asignado', v:'L. Rincón'},{l:'Retención que nos practica', v:'Retefuente 2,5 % · ReteICA Medellín'},{l:'Canal', v:'Ventas directas · Tienda web'}],
+      isProv: !!st.tRoles.prov, f3: [{l:'Banco · tipo de cuenta', v:'Bancolombia · ahorros'},{l:'Número de cuenta', v:'···7781'},{l:'Retenciones a practicar', v:'Retefuente compras 2,5 %'},{l:'Plazo del proveedor', v:'30 días'}],
+      tags: [st.tRoles.cli ? 'Cliente' : '', st.tRoles.prov ? 'Proveedor' : '', st.tReg === 'resp' ? 'Responsable de IVA' : 'No responsable', jur ? 'Persona jurídica' : 'Persona natural'].filter(Boolean),
+      usePct: usePct.toFixed(1).replace('.',',') + ' %', useW: Math.min(100, usePct) + '%', bal: fm(run), balFg: run < 0 ? 'var(--ok)' : 'var(--tx)', free: fm(cupo - used), plazoT: st.tPlazo ? st.tPlazo + ' días' : 'Contado', hist };
+    const teOk = !nitErr && st.tName.trim().length > 2;
+
+    // dashboard
+    const stockAfter = sku => PROD[sku].stock + (posted ? st.fcPosted.q[sku] : 0) + st.notes.reduce((a, n) => a + (n.q[sku] || 0), 0);
+    const bank = 945230000 - bankOut;
+    const fcRet = posted ? (rf + ica) : 0;
+    const due = [{n:'FE-2291', who:'Almacenes La Ceiba S.A.S.', kind:'Por cobrar', when:'vence en 6 días', amt:fm(145000000), dot:'var(--wa)', wFg:'var(--wa)'}]
+      .concat(inv.filter(x => x.n !== 'FC-0118' || true).map(x => ({n:x.n, who:'Laboratorios Medipharma S.A.S.', kind:'Por pagar', when: x.est.toLowerCase(), amt:fm(x.s), dot: x.eFg === 'var(--mu)' ? 'var(--bds)' : x.eFg, wFg: x.eFg})));
+    const stock = Object.keys(PROD).map(sku => ({sku, name:PROD[sku].name, q:stockAfter(sku), r:PROD[sku].ro})).filter(s => s.q <= s.r).map(s => ({...s, w: Math.min(100, s.q / s.r * 100) + '%', bar: s.q / s.r < .7 ? 'var(--er)' : 'var(--wa)', fg: s.q / s.r < .7 ? 'var(--er)' : 'var(--wa)'}));
+    const mx = Math.max(...DAYS);
+    const KPI = {
+      gerencia: [['Ventas del mes','$ 18.640.000,00','▲ 12,4 %','ok','vs. septiembre · 1–14 oct'],['Cartera vencida',fm(268000000),'20,4 %','wa','de $ 13.130.000,00 · 4 clientes'],['Saldo en bancos',fm(bank),'','','Bancolombia ···4587'],['Margen bruto','40,0 %','▲ 2,0 pts','ok','sobre meta de 38 %']],
+      contador: [['Saldo en bancos',fm(bank),'','','Conciliado al 30/09/2026'],['IVA por pagar · sep–oct',fm(296400000),'Vence 10/11','wa','Declaración bimestral'],['Retenciones por declarar · oct',fm(41200000 + fcRet),'Vence 10/11','wa','Formulario 350'],['Comprobantes en borrador','1','Bloquea cierre','er','Oct 2026']],
+      vendedor: [['Mis ventas del mes','$ 6.820.000,00','68 %','wa','de la meta de $ 10.000.000,00'],['Cartera vencida de mis clientes',fm(200000000),'2 clientes','wa','El Roble · La Cosecha'],['Cotizaciones abiertas','7','3 web','ok','Desde la tienda pública'],['Clientes bloqueados','1','Mora','er','Supermercado La Cosecha']]
+    };
+    const SHORT = {
+      gerencia: [['FV','Factura de venta','Alt V','#t4'],['FC','Factura de proveedor','Alt C','#4d'],['CE','Comprobante de egreso','Alt E','#4g'],['NC','Nota crédito / débito','Alt N','#4m'],['TE','Nuevo tercero','Alt T','#4j'],['BG','Balance de prueba','Alt B','#t4']],
+      contador: [['AJ','Nuevo comprobante','Alt A','#t4'],['FC','Factura de proveedor','Alt C','#4d'],['CE','Comprobante de egreso','Alt E','#4g'],['NC','Nota crédito / débito','Alt N','#4m'],['LM','Libro mayor','Alt M','#t4'],['PE','Períodos','Alt P','#t4']],
+      vendedor: [['FV','Factura de venta','Alt V','#t4'],['CO','Cotización','Alt Q','#t4'],['RC','Recibo de caja','Alt R','#t4'],['NC','Nota crédito','Alt N','#4m'],['TE','Nuevo cliente','Alt T','#4j'],['CA','Cartera de mis clientes','Alt K','#t4']]
+    };
+    const tone = t => t === 'ok' ? ['var(--okb)','var(--ok)'] : t === 'wa' ? ['var(--wab)','var(--wa)'] : t === 'er' ? ['var(--erb)','var(--er)'] : ['var(--neb)','var(--ne)'];
+    const dash = { chartT:'Ventas diarias · Oct 2026', due, noDue: !due.length, stock,
+      bars: DAYS.map((v, i) => ({v: v ? (v/1000).toFixed(1).replace('.',',') : '', h: v ? (v / mx * 82) + '%' : '3px', bg: v ? 'var(--pr)' : 'var(--sf2)', d: String(i+1).padStart(2,'0'), dFg: v ? 'var(--mu)' : 'var(--bds)', tip: v ? (i+1) + '/10 · $ ' + dots(v*1000) : (i+1) + '/10 · sin ventas'})) };
+    const alertCount = due.length + stock.length + 1;
+
+    const SCREENS = [
+      ['dash','Tablero de inicio por rol', ['IN',''], 'Inicio', 'Buenos días, Julián'],
+      ['fc','Factura de proveedor · kardex, contabilidad y retenciones', ['CO','Facturas de proveedor'], 'Compras › Facturas de proveedor › Nueva', posted ? 'FC-0118' : 'Nueva factura de proveedor'],
+      ['ce','Comprobante de egreso · pago a proveedor', ['CO','Comprobantes de egreso'], 'Compras › Comprobantes de egreso › Nuevo', st.ceToast ? st.ceToast.num : 'Nuevo comprobante de egreso'],
+      ['te','Ficha maestra de tercero · cliente / proveedor', ['TE','Clientes'], 'Terceros › Clientes', nameTxt],
+      ['nc','Editor de notas crédito y débito', ['VE','Notas crédito y débito'], 'Ventas › Notas crédito y débito › Nueva', ncLock ? st.ncToast.num : (isNC ? 'Nueva nota crédito' : 'Nueva nota débito')]
+    ];
+    const screens = SCREENS.map(([kind, stitle, nav, crumb, title], si) => {
+      const variants = [['light',1440,'1440 · Claro'],['dark',1440,'1440 · Slate']].concat(show1024 ? [['light',1024,'1024 · Claro']] : []);
+      return { title: stitle, items: variants.map(([th, W, vlabel], vi) => {
+        const id = '4' + String.fromCharCode(97 + si*3 + vi), wide = W === 1440;
+        const w = { id, label: vlabel, wide, crumb, title,
+          vars: {...TH[th], width: W + 'px', height: (wide ? 900 : 768) + 'px', position:'relative', display:'flex', flexDirection:'column', background:'var(--app)', color:'var(--tx)', fontFamily:'Inter,system-ui,sans-serif'},
+          brandW: wide ? '214px' : '30px', navW: wide ? '232px' : '64px',
+          kpiCols: wide ? 'repeat(4,minmax(0,1fr))' : 'repeat(2,minmax(0,1fr))', cols2: wide ? 'minmax(0,1fr) 400px' : 'minmax(0,1fr)', hdrCols: wide ? 'minmax(0,1fr) minmax(0,1fr) 200px 220px' : 'repeat(2,minmax(0,1fr))',
+          teCols: wide ? 'minmax(0,1fr) 340px' : 'minmax(0,1fr)', f3: wide ? '220px 220px minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))', f2:'repeat(2,minmax(0,1fr))', ncHdr: wide ? '280px minmax(0,1fr) 260px' : 'minmax(0,1fr) 240px',
+          groups: GROUPS.map(([code, name]) => { const act = code === nav[0], kids = CHILD[code] && act && wide; return {code, name, weight: act ? 600 : 400, tileBg: act ? 'var(--pr)' : 'var(--sf2)', tileFg: act ? 'var(--onpr)' : 'var(--mu)', rowBg: act && !wide ? 'var(--prs)' : 'transparent', showChildren: !!kids,
+            children: kids ? CHILD[code].map(c => ({name:c, bg: c === nav[1] ? 'var(--prs)' : 'transparent', fg: c === nav[1] ? 'var(--pr)' : 'var(--tx)', weight: c === nav[1] ? 600 : 400})) : []}; }),
+          isDash: kind === 'dash', isFc: kind === 'fc', isCe: kind === 'ce', isTe: kind === 'te', isNc: kind === 'nc', badges: [], actions: [], hasSeg: false, seg: [] };
+        if (kind === 'dash') { const role = st.role[id] || role0; w.hasSeg = true;
+          w.seg = [['gerencia','Gerencia'],['contador','Contador'],['vendedor','Vendedor']].map(([k,n]) => ({name:n, pick: () => this.setMap('role', id, k), ...seg(role === k)}));
+          w.kpis = KPI[role].map(([l,v,d,t,s]) => { const [b,f] = tone(t); return {l, v, d, s, dBg:b, dFg:f}; });
+          w.crumb = 'Martes 14/10/2026 · ' + {gerencia:'Vista de gerencia', contador:'Vista contable', vendedor:'Vista comercial'}[role]; w.short = SHORT[role].map(([c,n,k,href]) => ({c,n,k,href})); }
+        if (kind === 'fc') { w.badges = [posted ? {t:'Contabilizada', bg:'var(--neb)', fg:'var(--ne)'} : {t:'◌ Borrador', bg:'var(--wab)', fg:'var(--wa)'}];
+          w.actions = posted ? [btn('Registrar pago', () => {}, false)] : [btn('Guardar borrador', () => {}, false, wide ? 'Ctrl S' : ''), btn('Contabilizar', postFc, true, wide ? 'Ctrl ↵' : '', canFc, fcErr ? 'Corrige las líneas' : '')]; }
+        if (kind === 'ce') { w.badges = ceLock ? [{t:'Contabilizado', bg:'var(--neb)', fg:'var(--ne)'}] : [{t:'◌ Borrador', bg:'var(--wab)', fg:'var(--wa)'}];
+          w.actions = ceLock ? [btn('Imprimir soporte', () => {}, false)] : [btn('Registrar pago', postCe, true, wide ? 'Ctrl ↵' : '', canCe, ceMsg)]; }
+        if (kind === 'te') { const tab = st.teTab[id] || (si === 3 && vi === 2 ? 'hist' : 'fiscal');
+          w.teTabs = [['fiscal','Datos fiscales'],['com','Comercial y crédito'],['hist','Historial de documentos']].map(([k,n]) => ({name:n, n: k === 'hist' ? String(hist.length) : '', pick: () => this.setMap('teTab', id, k), fw: tab === k ? 600 : 500, fg: tab === k ? 'var(--pr)' : 'var(--mu)', bd: tab === k ? 'var(--pr)' : 'transparent'}));
+          w.tabFiscal = tab === 'fiscal'; w.tabCom = tab === 'com'; w.tabHist = tab === 'hist';
+          w.badges = [{t:'● Activo', bg:'var(--okb)', fg:'var(--ok)'}];
+          w.actions = [btn('Nueva factura', () => {}, false), btn('Guardar', () => {}, true, wide ? 'Ctrl S' : '', teOk, nitErr)]; }
+        if (kind === 'nc') { w.badges = ncLock ? [{t:'✓ Transmitida DIAN', bg:'var(--okb)', fg:'var(--ok)'}] : [{t:'◌ Borrador', bg:'var(--wab)', fg:'var(--wa)'}];
+          w.actions = ncLock ? [btn('Ver PDF', () => {}, false)] : [btn('Guardar borrador', () => {}, false), btn('Emitir nota', postNc, true, wide ? 'Ctrl ↵' : '', ncOk, base ? 'Corrige las cantidades' : 'La nota no tiene valor')]; }
+        return w; }) }; });
+    // shortcuts per dashboard artboard (shared list uses first role found)
+
+    return { screens, dash, fc, ce, nc, te, alertCount, provNit: dots(PROV_NIT) + '-' + dvOf(PROV_NIT),
+      fcCols:'100px minmax(0,1fr) 80px 120px 56px 130px', retCols:'34px minmax(0,1fr) 120px 64px 110px 64px', ceCols:'44px minmax(0,1fr) 150px 130px 170px', ncCols:'minmax(0,1fr) 84px 76px 120px 100px 120px', hiCols:'110px 90px minmax(0,1fr) 120px 140px 140px' };
+  }
+}
+</script>
+</body>
+</html>

@@ -19,10 +19,12 @@ export JWT_DEV_SECRET=dev-secret-de-al-menos-16 SIFCA_TENANT_ID=<uuid-del-tenant
 export SIFCA_DEV_COMPANY_NAME="Comercializadora Andina S.A.S." SIFCA_DEV_COMPANY_NIT=900123456-8
 npm run start:dev -w @sifca/api
 
-# Back-office (terminal 2): el proxy de desarrollo inyecta el token; nunca va al navegador
-export SIFCA_DEV_TOKEN=$(npm run -s dev:token -w @sifca/api)
+# Back-office (terminal 2): el proxy lee el token del archivo en cada petición; nunca va al navegador
+npm run -s dev:token -w @sifca/api > apps/admin/.dev-token
 npm run dev -w @sifca/admin          # http://localhost:5173
 ```
+
+Para fijar la fecha de trabajo, arranca la API con `SIFCA_DEV_WORKING_DATE=2026-10-16`.
 
 Resultado esperado: cascarón con «Comercializadora Andina S.A.S. · NIT 900.123.456-8», chip «Oct 2026 · Abierto» y
 la lista de comprobantes en `/contabilidad/comprobantes`.
@@ -36,9 +38,10 @@ la lista de comprobantes en `/contabilidad/comprobantes`.
 | 3 | Lista de comprobantes con un rango sin datos | «Aún no hay comprobantes en este rango» + acciones | [016-09] |
 | 4 | DevTools → *Network* → *Offline* | Banner «Sin conexión a internet» y botones de envío deshabilitados | US4 |
 | 5 | `Ctrl+K`, escribir «periodos» y Enter | Navega a Períodos | [016-12] |
-| 6 | `Ctrl+K`, escribir `#AJ-1` | Ofrece abrir AJ-1 si existe | US5 |
-| 7 | Regenerar el token con solo `accounting.report.read` y recargar | Sin «Nuevo comprobante»; `/contabilidad/comprobantes/nuevo` muestra la página 403 | [016-07] |
+| 6 | `Ctrl+K`, escribir `#AJ-1` | Ofrece abrir la lista filtrada por AJ-1 si existe | US5 |
+| 7 | Regenerar `apps/admin/.dev-token` con solo `accounting.report.read` (sin reiniciar) y recargar | Sin «Nuevo comprobante»; `/contabilidad/comprobantes/nuevo` muestra la página 403 | [016-07] |
 | 8 | `Tab` por todo el cascarón | Foco visible de 2 px y orden lógico | US5 |
+| 9 | Abrir `/__e2e/componentes` (solo en desarrollo) | Grilla, formulario y diálogos de demostración para ver cada error | [016-04], [016-05] |
 
 ## 3. Pruebas automatizadas
 

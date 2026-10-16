@@ -11,9 +11,9 @@ equipo) y un recurso de lectura nuevo en la API (`/me`). Contratos: [`contracts/
 | `user.displayName` | texto ≤ 120 | En desarrollo: `SIFCA_DEV_USER_NAME` o «Usuario de desarrollo» |
 | `tenant.id` | UUID | Del token (`tid`) |
 | `tenant.name` | texto 1–200 | En desarrollo: `SIFCA_DEV_COMPANY_NAME` (spec 013 lo reemplaza) |
-| `tenant.nit` | `{ number: "900123456", dv: "8" }` | DV validado con el algoritmo de la DIAN (R-FE-012) al arrancar la API |
+| `tenant.nit` | `{ number: "900123456", dv: "8" }` | `SIFCA_DEV_COMPANY_NIT`, por defecto `900123456-8`; DV validado con el algoritmo de la DIAN (R-FE-012) al arrancar la API |
 | `permissions` | lista de `modulo.recurso.accion` | Del token (`perms`); orden estable |
-| `workingDate` | fecha `YYYY-MM-DD` | Hoy en `America/Bogota` (R-CON-014) |
+| `workingDate` | fecha `YYYY-MM-DD` | Cabecera `X-Sifca-Working-Date` (solo con `SIFCA_ALLOW_DEV_OVERRIDES=true`) › `SIFCA_DEV_WORKING_DATE` › hoy en `America/Bogota` (R-CON-014, FR-024); nunca en producción |
 | `authMode` | `dev` | Con la spec 012 se agrega `password` |
 
 Se consulta al arrancar y tras renovar la sesión; si cambian los permisos, menú, paleta y acciones se recalculan.

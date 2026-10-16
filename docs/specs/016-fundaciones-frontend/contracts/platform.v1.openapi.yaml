@@ -123,7 +123,12 @@ components:
           type: array
           items: { type: string, pattern: "^[a-z]+(\\.[a-zA-Z]+)+$" }
           uniqueItems: true
-        workingDate: { type: string, format: date, description: Hoy en America/Bogota (R-CON-014). }
+        workingDate:
+          type: string
+          format: date
+          description: |
+            Hoy en America/Bogota (R-CON-014). Fuera de producción puede fijarse con SIFCA_DEV_WORKING_DATE o, si
+            SIFCA_ALLOW_DEV_OVERRIDES=true, con la cabecera X-Sifca-Working-Date (FR-024).
         authMode: { type: string, enum: [dev] }
     Problem:
       type: object

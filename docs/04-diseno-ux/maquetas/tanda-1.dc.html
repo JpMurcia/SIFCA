@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<script src="./sifca-icons.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E6E9ED;font-family:Inter,system-ui,sans-serif;color:#1B2430;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}a{color:#0B5CAD}a:hover{color:#084A8C}button{font-family:inherit}input,textarea{font-family:inherit}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Inter,system-ui,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 Inter,system-ui,sans-serif;color:rgba(0,0,0,.6)}.dv-card{max-width:none;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#0B5CAD;color:#fff}.dv-next{margin:28px 0 0;font:12px/1.5 Inter,system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-h{font:600 15px/1.2 Inter,system-ui,sans-serif;color:#1B2430;margin:40px 0 16px}</style>
+</helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Tanda 1 · Cascarón y tokens</span></div>
+
+<div style="max-width:960px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:24px 28px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;font-size:13px;line-height:1.55;color:#1B2430">
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Supuestos y decisiones</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;text-wrap:pretty">
+<li>Tokens del §6 sin cambios en el tema claro. El oscuro suave usa la escala carbón (#11161D, #161B22, #1E242C) con semánticos propios; el contraste de cada par se calcula en vivo con la fórmula WCAG.</li>
+<li>Inter con cifras tabulares en todo número; JetBrains Mono solo para códigos de cuenta, números de documento, NIT y claves.</li>
+<li>Estados de crédito bloqueado en ámbar con candado: el rojo queda reservado a descuadre, rechazo y error.</li>
+<li>Íconos del menú: monogramas de dos letras como marcador hasta definir la iconografía propia.</li>
+<li>Se añaden AJ-2 y su reversión AJ-3 para mostrar las etiquetas enlazadas; se anulan entre sí, el balance sigue en 2.152.000 / 2.152.000.</li>
+<li>Móvil solo cubre catálogo, pedido/facturación y cobro. Cliente de ejemplo «Almacenes La Ceiba S.A.S.» (inventado).</li>
+</ul>
+</div>
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Qué se puede probar</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+<li><span style="font-family:'JetBrains Mono',monospace;font-size:12px">Ctrl K</span> o clic en la búsqueda abre la paleta; prueba los prefijos &gt; @ # /.</li>
+<li>«Contraer menú» en cualquier cascarón; densidad Compacta / Normal.</li>
+<li>Móvil: agrega ítems, cambia cantidades y tipo de documento, alterna Crédito / Contado y supera el cupo para ver la retención.</li>
+</ul>
+<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px"><a class="dv-oid" href="#1a">1a</a><a class="dv-oid" href="#1b">1b</a><span style="color:#4B5767">tokens</span><a class="dv-oid" href="#1c">1c</a><a class="dv-oid" href="#1d">1d</a><a class="dv-oid" href="#1e">1e</a><a class="dv-oid" href="#1f">1f</a><span style="color:#4B5767">web</span><a class="dv-oid" href="#1g">1g</a><a class="dv-oid" href="#1h">1h</a><span style="color:#4B5767">móvil</span></div>
+</div>
+</div>
+
+<h3 class="dv-h">A · Tokens y componentes base</h3>
+<div class="dv-opts">
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div class="dv-opt" id="{{ t.tokId }}">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ t.tokId }}">{{ t.tokId }}</a>Tokens y componentes · {{ t.name }}</div>
+<div class="dv-card" style="{{ t.tokVars }}">
+<div style="padding:32px 36px;display:flex;flex-direction:column;gap:36px">
+
+<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--bd);padding-bottom:20px;gap:24px">
+<div><div style="font-size:12px;color:var(--mu);letter-spacing:.05em;text-transform:uppercase;font-weight:600">SIFCA · Tokens y componentes base</div><div style="font-size:32px;font-weight:700;letter-spacing:-.015em;margin-top:6px">{{ t.name }}</div><div style="font-size:14px;color:var(--mu);margin-top:4px">{{ t.sub }}</div></div>
+<div style="display:flex;gap:8px;align-items:center"><span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:14px;background:var(--okb);color:var(--ok);font-size:12px;font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok)"></span>Oct 2026 · Abierto</span><span style="font:500 11px 'JetBrains Mono',monospace;padding:3px 6px;border:1px solid var(--bd);border-radius:4px;color:var(--mu)">Ctrl K</span></div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">01 · Color base</div>
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:14px">
+<sc-for list="{{ t.swatches }}" as="s" hint-placeholder-count="7">
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="height:64px;border-radius:8px;border:1px solid var(--bd);background:{{ s.hex }}"></div>
+<div style="font:500 12px 'JetBrains Mono',monospace;margin-top:4px">{{ s.token }}</div>
+<div style="font:400 12px 'JetBrains Mono',monospace;color:var(--mu)">{{ s.hex }}</div>
+<div style="font-size:12px;color:var(--mu);line-height:1.35;min-height:32px">{{ s.use }}</div>
+<div style="font-size:12px;font-weight:500;font-variant-numeric:tabular-nums">{{ s.cr }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">02 · Semánticos (texto sobre fondo)</div>
+<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px">
+<sc-for list="{{ t.sem }}" as="x" hint-placeholder-count="5">
+<div style="border-radius:10px;padding:14px;background:{{ x.bg }};color:{{ x.fg }};display:flex;flex-direction:column;gap:4px">
+<div style="font-size:14px;font-weight:600">{{ x.name }}</div>
+<div style="font-size:12px;line-height:1.4">{{ x.use }}</div>
+<div style="font:500 11px 'JetBrains Mono',monospace;margin-top:8px">{{ x.fg }} / {{ x.bg }}</div>
+<div style="font-size:12px;font-weight:600;font-variant-numeric:tabular-nums">{{ x.cr }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">03 · Tipografía · Inter</div>
+<div style="display:flex;flex-direction:column;border-top:1px solid var(--bd)">
+<div style="display:grid;grid-template-columns:72px minmax(0,1fr);align-items:baseline;padding:10px 0;border-bottom:1px solid var(--bd)"><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">32 · 700</span><span style="font-size:32px;font-weight:700;letter-spacing:-.015em;line-height:1.15">Balance de prueba</span></div>
+<div style="display:grid;grid-template-columns:72px minmax(0,1fr);align-items:baseline;padding:10px 0;border-bottom:1px solid var(--bd)"><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">24 · 600</span><span style="font-size:24px;font-weight:600;letter-spacing:-.01em">Comprobantes</span></div>
+<div style="display:grid;grid-template-columns:72px minmax(0,1fr);align-items:baseline;padding:10px 0;border-bottom:1px solid var(--bd)"><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">20 · 600</span><span style="font-size:20px;font-weight:600">Cabecera de documento AJ-1</span></div>
+<div style="display:grid;grid-template-columns:72px minmax(0,1fr);align-items:baseline;padding:10px 0;border-bottom:1px solid var(--bd)"><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">16 · 400</span><span style="font-size:16px">Formularios y campos de captura</span></div>
+<div style="display:grid;grid-template-columns:72px minmax(0,1fr);align-items:baseline;padding:10px 0;border-bottom:1px solid var(--bd)"><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">14 · 400</span><span style="font-size:14px">Listas generales, densidad Normal (36 px)</span></div>
+<div style="display:grid;grid-template-columns:72px minmax(0,1fr);align-items:baseline;padding:10px 0;border-bottom:1px solid var(--bd)"><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">13 · 400</span><span style="font-size:13px">Grillas y libros, densidad Compacta (28 px)</span></div>
+<div style="display:grid;grid-template-columns:72px minmax(0,1fr);align-items:baseline;padding:10px 0;border-bottom:1px solid var(--bd)"><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">12 · 500</span><span style="font-size:12px;font-weight:500;color:var(--mu)">Etiquetas, ayudas y metadatos</span></div>
+</div>
+<div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 16px;font-size:13px;margin-top:4px">
+<span style="color:var(--mu)">Fecha</span><span style="font-variant-numeric:tabular-nums">14/10/2026 · 14:32 hora de Colombia</span>
+<span style="color:var(--mu)">NIT</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px">900.123.456-7</span>
+<span style="color:var(--mu)">Negativo</span><span style="font-variant-numeric:tabular-nums">− $ 38.000,00 <span style="color:var(--mu)">(signo, no solo color)</span></span>
+<span style="color:var(--mu)">CUFE</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px">a3f9c0…7be21c</span>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">04 · Cifras tabulares · Balance al 31/10/2026</div>
+<div style="border:1px solid var(--bd);border-radius:10px;overflow:hidden;font-size:13px">
+<div style="display:grid;grid-template-columns:76px minmax(0,1fr) 120px 120px;height:32px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">Cuenta</span><span style="padding:0 12px">Nombre</span><span style="padding:0 12px;text-align:right">Débito</span><span style="padding:0 12px;text-align:right">Crédito</span></div>
+<sc-for list="{{ balance }}" as="b" hint-placeholder-count="7">
+<div style="display:grid;grid-template-columns:76px minmax(0,1fr) 120px 120px;height:28px;align-items:center;border-bottom:1px solid var(--bd)"><span style="padding:0 12px;font:500 12px 'JetBrains Mono',monospace">{{ b.code }}</span><span style="padding:0 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.name }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ b.d }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ b.c }}</span></div>
+</sc-for>
+<div style="display:grid;grid-template-columns:76px minmax(0,1fr) 120px 120px;height:36px;align-items:center;background:var(--sf);font-weight:600"><span style="padding:0 12px;grid-column:span 2;display:flex;align-items:center;gap:8px">Totales <span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:4px;font-size:12px;font-weight:600;background:var(--okb);color:var(--ok)">✓ Cuadrado</span></span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">2.152.000,00</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">2.152.000,00</span></div>
+</div>
+<div style="font-size:12px;color:var(--mu);line-height:1.5">Débito y Crédito se separan por columna y encabezado, nunca por color. Cifras a la derecha, punto de miles y coma decimal.</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">05 · Botones</div>
+<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+<button style="height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--pr);background:var(--pr);color:var(--onpr);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px;cursor:pointer" style-hover="background:var(--prh);border-color:var(--prh)">Contabilizar <span style="font:500 11px 'JetBrains Mono',monospace;opacity:.8">Ctrl ↵</span></button>
+<button style="height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--bds);background:var(--bg);color:var(--tx);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:8px;cursor:pointer" style-hover="background:var(--sf)">Guardar borrador <span style="font:500 11px 'JetBrains Mono',monospace;color:var(--mu)">Ctrl S</span></button>
+<button style="height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--bds);background:var(--bg);color:var(--tx);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;cursor:pointer" style-hover="background:var(--sf)">↺ Reversar…</button>
+<button style="height:32px;padding:0 12px;border-radius:6px;border:1px solid transparent;background:transparent;color:var(--pr);font-size:13px;font-weight:500;cursor:pointer" style-hover="background:var(--prs)">Cancelar</button>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+<div style="display:flex;flex-direction:column;gap:6px"><button disabled="disabled" style="height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--bd);background:var(--sf2);color:var(--mu);font-size:13px;font-weight:600;cursor:not-allowed;align-self:flex-start">Contabilizar</button><span style="font-size:12px;color:var(--mu)">Deshabilitado: diferencia $ 0,01</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><button style="height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--bds);background:var(--bg);color:var(--tx);font-size:13px;font-weight:500;outline:2px solid var(--ring);outline-offset:2px;align-self:flex-start">Foco visible</button><span style="font-size:12px;color:var(--mu)">Anillo 2 px, separado 2 px</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><button style="height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--pr);background:var(--pr);color:var(--onpr);font-size:16px;font-weight:600;align-self:flex-start;cursor:pointer">Emitir factura</button><span style="font-size:12px;color:var(--mu)">Táctil · 44 px</span></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">06 · Etiquetas de estado</div>
+<div style="display:grid;grid-template-columns:108px minmax(0,1fr);gap:10px 12px;align-items:center;font-size:12px">
+<span style="color:var(--mu)">Comprobante</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--neb);color:var(--ne)"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Contabilizado</span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--wab);color:var(--wa)">◌ Borrador</span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--neb);color:var(--ne)">Reversado por <span style="text-decoration:underline;font-family:'JetBrains Mono',monospace">AJ-2</span></span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--neb);color:var(--ne)">↺ Reversión de <span style="text-decoration:underline;font-family:'JetBrains Mono',monospace">AJ-1</span></span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--prs);color:var(--pr)">Cierre anual</span>
+</div>
+<span style="color:var(--mu)">Cuadre</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:600;background:var(--okb);color:var(--ok)">✓ Cuadrado</span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:600;background:var(--erb);color:var(--er)">✕ No cuadra</span>
+</div>
+<span style="color:var(--mu)">DIAN</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--wab);color:var(--wa)">Borrador</span>
+<span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--prs);color:var(--pr)">Emitida</span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--prs);color:var(--pr)">⋯ En transmisión</span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--okb);color:var(--ok)">✓ Aceptada</span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--erb);color:var(--er)">✕ Rechazada</span>
+</div>
+<span style="color:var(--mu)">Crédito</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--okb);color:var(--ok)">Al día</span>
+<span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--wab);color:var(--wa)">! En alerta</span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--wab);color:var(--wa)"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Bloqueado por cupo</span>
+<span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-weight:500;background:var(--wab);color:var(--wa)"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Bloqueado por mora</span>
+<span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;font-weight:600;background:var(--ne);color:var(--bg)">Suspendido</span>
+</div>
+<span style="color:var(--mu)">Período</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span style="display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:12px;font-weight:600;background:var(--okb);color:var(--ok)"><span style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>Oct 2026 · Abierto</span>
+<span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 10px;border-radius:12px;font-weight:600;background:var(--neb);color:var(--ne)"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Sep 2026 · Cerrado</span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">07 · Campos</div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 24px">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Fecha contable</span><span style="height:40px;border:1px solid var(--bds);border-radius:6px;background:var(--bg);display:flex;align-items:center;padding:0 12px;font-size:16px;font-variant-numeric:tabular-nums">14/10/2026</span><span style="font-size:12px;color:var(--ok);font-weight:500">● Período Oct 2026 · Abierto</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Fecha contable</span><span style="height:40px;border:2px solid var(--er);border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 11px;font-size:16px;font-variant-numeric:tabular-nums">15/09/2026<span style="width:18px;height:18px;border-radius:50%;background:var(--er);color:var(--bg);font-size:12px;font-weight:700;display:grid;place-items:center">!</span></span><span style="font-size:12px;color:var(--er);line-height:1.4">El período 2026-09 está cerrado. Cambia la fecha contable o pide que lo reabran.</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Cuenta</span><span style="height:40px;border:2px solid var(--ring);border-radius:6px;background:var(--bg);display:flex;align-items:center;gap:10px;padding:0 11px;font-size:16px"><span style="font:500 14px 'JetBrains Mono',monospace">130505</span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Clientes nacionales</span></span><span style="font-size:12px;color:var(--wa);font-weight:500">Exige tercero · solo cuentas de movimiento</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Débito</span><span style="height:40px;border:1px solid var(--bds);border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:flex-end;padding:0 12px;font-size:16px;font-variant-numeric:tabular-nums">$ 1.190.000,00</span><span style="font-size:12px;color:var(--mu)">Una línea tiene un solo lado · hasta 2 decimales</span></label>
+<label style="display:flex;flex-direction:column;gap:6px;grid-column:span 2"><span style="font-size:13px;font-weight:500">Motivo de la reversión</span><span style="min-height:64px;border:1px solid var(--bds);border-radius:6px;background:var(--bg);padding:10px 12px;font-size:16px">Error en el valor del IVA</span><span style="display:flex;justify-content:space-between;font-size:12px;color:var(--mu)"><span>Queda registrado en la bitácora.</span><span style="font-variant-numeric:tabular-nums">24 caracteres · mínimo 5</span></span></label>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">08 · Tarjetas y patrones</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start">
+<div style="border:1px solid var(--bd);border-radius:10px;background:var(--card);padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="font-size:12px;color:var(--mu);font-weight:500">Cabecera de documento inmutable</div>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font:600 20px 'JetBrains Mono',monospace">AJ-1</span><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:4px;font-size:12px;font-weight:500;background:var(--neb);color:var(--ne)"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Contabilizado</span></div>
+<div style="font-size:13px">Apertura de inventario aportado como capital</div>
+<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12px"><span style="color:var(--mu)">Fecha</span><span style="font-variant-numeric:tabular-nums">01/10/2026 · Oct 2026</span><span style="color:var(--mu)">Origen</span><span>Manual</span><span style="color:var(--mu)">Autor</span><span style="font-variant-numeric:tabular-nums">J. Murcia · 09:14 hora Col.</span></div>
+<div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--bd);padding-top:12px"><span style="font-size:12px;color:var(--mu)">Sin Editar ni Eliminar</span><button style="height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--bds);background:var(--bg);color:var(--tx);font-size:13px;font-weight:500;cursor:pointer">↺ Reversar…</button></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="border:1px solid var(--bd);border-radius:10px;background:var(--card);overflow:hidden">
+<div style="font-size:12px;color:var(--mu);font-weight:500;padding:12px 16px 0">Pie de grilla · cuadra</div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px 16px 14px;font-size:12px"><div style="display:flex;flex-direction:column;gap:2px"><span style="color:var(--mu)">Σ Débitos</span><span style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">$ 1.190.000,00</span></div><div style="display:flex;flex-direction:column;gap:2px"><span style="color:var(--mu)">Σ Créditos</span><span style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">$ 1.190.000,00</span></div><div style="display:flex;flex-direction:column;gap:2px"><span style="color:var(--mu)">Diferencia</span><span style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ok)">$ 0,00 ✓</span></div></div>
+</div>
+<div style="border:1px solid var(--er);border-radius:10px;background:var(--erb);color:var(--er);padding:12px 16px;display:flex;gap:10px;font-size:13px;line-height:1.45"><span style="flex:none;width:18px;height:18px;border-radius:50%;background:var(--er);color:var(--erb);font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:1px">!</span><span><b style="font-weight:600">ENTRY_NOT_BALANCED</b> · El comprobante no cuadra: débitos $ 100.000,00 ≠ créditos $ 99.999,99. Diferencia: $ 0,01.</span></div>
+</div>
+<div style="border:1px solid var(--bd);border-radius:10px;background:var(--card);overflow:hidden">
+<div style="font-size:12px;color:var(--mu);font-weight:500;padding:12px 16px 8px">Densidad de fila</div>
+<div style="display:grid;grid-template-columns:52px 64px minmax(0,1fr);height:28px;align-items:center;border-top:1px solid var(--bd);font-size:13px;padding:0 16px"><span style="font:500 11px 'JetBrains Mono',monospace;color:var(--mu)">28</span><span style="font:500 12px 'JetBrains Mono',monospace">1435</span><span style="text-align:right;font-variant-numeric:tabular-nums">$ 520.000,00</span></div>
+<div style="display:grid;grid-template-columns:52px 64px minmax(0,1fr);height:36px;align-items:center;border-top:1px solid var(--bd);font-size:14px;padding:0 16px"><span style="font:500 11px 'JetBrains Mono',monospace;color:var(--mu)">36</span><span style="font:500 13px 'JetBrains Mono',monospace">1435</span><span style="text-align:right;font-variant-numeric:tabular-nums">$ 520.000,00</span></div>
+<div style="display:grid;grid-template-columns:52px 64px minmax(0,1fr);height:44px;align-items:center;border-top:1px solid var(--bd);font-size:16px;padding:0 16px"><span style="font:500 11px 'JetBrains Mono',monospace;color:var(--mu)">44</span><span style="font:500 14px 'JetBrains Mono',monospace">1435</span><span style="text-align:right;font-variant-numeric:tabular-nums">$ 520.000,00</span></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+
+<h3 class="dv-h">B · Cascarón web · Lista de comprobantes</h3>
+<div class="dv-opts">
+<sc-for list="{{ shells }}" as="s" hint-placeholder-count="4">
+<div class="dv-opt" id="{{ s.id }}">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ s.id }}">{{ s.id }}</a>{{ s.label }}</div>
+<div class="dv-card" style="{{ s.vars }}">
+
+<div style="height:52px;flex:none;display:flex;align-items:center;gap:16px;padding:0 16px 0 14px;border-bottom:1px solid var(--bd);background:var(--bg)">
+<div style="display:flex;align-items:center;gap:10px;min-width:0;flex:none">
+<div role="img" aria-label="SIFCA" title="SIFCA" style="width:32px;height:32px;flex:none;background:var(--logo) center/contain no-repeat"></div>
+<div style="display:flex;flex-direction:column;line-height:1.25;min-width:0"><span style="font-size:13px;font-weight:600;white-space:nowrap">Comercializadora Andina S.A.S.</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">NIT 900.123.456-7</span></div>
+<span style="color:var(--mu);font-size:10px">▼</span>
+</div>
+<button onClick="{{ s.openPalette }}" style="flex:1;max-width:480px;margin:0 auto;height:34px;border:1px solid var(--bd);border-radius:6px;background:var(--sf);color:var(--mu);display:flex;align-items:center;gap:10px;padding:0 8px 0 12px;font-size:13px;cursor:pointer;text-align:left" style-hover="border-color:var(--bds)">
+<span style="width:12px;height:12px;border:1.6px solid currentColor;border-radius:50%;flex:none"></span>
+<span style="flex:1">Buscar o ejecutar…</span>
+<span style="font:500 11px 'JetBrains Mono',monospace;padding:2px 6px;border:1px solid var(--bd);border-radius:4px;background:var(--bg)">Ctrl K</span>
+</button>
+<div style="display:flex;align-items:center;gap:10px;flex:none">
+<span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:14px;background:var(--okb);color:var(--ok);font-size:12px;font-weight:600;white-space:nowrap"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok)"></span>Oct 2026 · Abierto</span>
+<button style="height:32px;padding:0 10px;border-radius:6px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">Alertas<span style="min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--pr);color:var(--onpr);font-size:11px;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums">3</span></button>
+<div style="display:flex;align-items:center;gap:8px">
+<span style="width:30px;height:30px;border-radius:50%;background:var(--sf2);display:grid;place-items:center;font-size:12px;font-weight:600">JM</span>
+<sc-if value="{{ s.wide }}" hint-placeholder-val="{{ true }}"><span style="display:flex;flex-direction:column;line-height:1.25"><span style="font-size:13px;font-weight:500">Juan P. Murcia</span><span style="font-size:11px;color:var(--mu)">Contador</span></span></sc-if>
+</div>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex">
+<nav style="width:{{ s.sideW }}px;flex:none;background:var(--side);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:10px 8px">
+<div style="flex:1;display:flex;flex-direction:column;gap:2px;overflow:hidden">
+<sc-for list="{{ s.groups }}" as="g" hint-placeholder-count="12">
+<div style="display:flex;flex-direction:column">
+<div title="{{ g.name }}" style="height:32px;display:flex;align-items:center;gap:10px;padding:0 6px;border-radius:6px;cursor:pointer;color:{{ g.color }};font-size:13px;font-weight:{{ g.weight }}" style-hover="background:var(--sf2)">
+<span style="width:24px;height:22px;flex:none;border-radius:5px;background:{{ g.tileBg }};color:{{ g.tileFg }};display:grid;place-items:center;font:600 10px 'JetBrains Mono',monospace"><sf-icon name="{{ g.code }}" style="width:15px;height:15px"></sf-icon></span>
+<sc-if value="{{ s.expanded }}" hint-placeholder-val="{{ true }}"><span style="flex:1;white-space:nowrap">{{ g.name }}</span><span style="font-size:9px;color:var(--mu)">{{ g.chev }}</span></sc-if>
+</div>
+<sc-if value="{{ g.showChildren }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 40px">
+<sc-for list="{{ g.children }}" as="c" hint-placeholder-count="9">
+<div style="height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-radius:5px;font-size:13px;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};font-weight:{{ c.weight }}" style-hover="background:var(--sf2)"><span>{{ c.name }}</span><sc-if value="{{ c.badge }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:600;padding:0 6px;height:18px;border-radius:9px;background:var(--wab);color:var(--wa);display:grid;place-items:center">{{ c.badge }}</span></sc-if></div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<button onClick="{{ s.toggleSide }}" style="height:32px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--mu);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="color:var(--tx)">{{ s.collapseLabel }}</button>
+</nav>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg)">
+<div style="padding:18px 24px 14px;display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;color:var(--mu);display:flex;gap:6px"><span>Contabilidad</span><span>›</span><span style="color:var(--tx)">Comprobantes</span></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+<div style="display:flex;align-items:center;gap:10px"><h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-.01em">Comprobantes</h1><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:10px;background:var(--sf2);color:var(--mu);font-variant-numeric:tabular-nums">8</span></div>
+<div style="display:flex;gap:8px">
+<button style="height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--bds);background:var(--bg);color:var(--tx);font-size:13px;font-weight:500;cursor:pointer" style-hover="background:var(--sf)">Exportar</button>
+<button style="height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--pr);background:var(--pr);color:var(--onpr);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px;cursor:pointer" style-hover="background:var(--prh)">Nuevo comprobante<span style="font:500 11px 'JetBrains Mono',monospace;padding:0 5px;border-radius:3px;background:rgba(255,255,255,.18)">N</span></button>
+</div>
+</div>
+</div>
+
+<div style="margin:0 24px 12px;border:1px solid var(--bd);background:var(--wab);color:var(--wa);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:10px;font-size:13px">
+<span style="flex:none;width:18px;height:18px;border-radius:50%;border:1.6px solid currentColor;display:grid;place-items:center;font-size:11px;font-weight:700">!</span>
+<span style="flex:1">Hay 1 borrador con fecha en octubre. Bloquea el cierre del período Oct 2026.</span>
+<a href="#" style="color:var(--wa);font-weight:600">Ver borradores</a>
+</div>
+
+<div style="padding:0 24px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<span style="height:32px;border:1px solid var(--bds);border-radius:6px;display:flex;align-items:center;gap:8px;padding:0 10px;font-size:13px"><span style="color:var(--mu)">Fechas</span><span style="font-variant-numeric:tabular-nums">01/10/2026 – 31/10/2026</span></span>
+<div style="height:32px;border:1px solid var(--bds);border-radius:6px;display:flex;overflow:hidden;font:500 12px 'JetBrains Mono',monospace">
+<sc-for list="{{ types }}" as="ty" hint-placeholder-count="7"><span style="padding:0 9px;display:flex;align-items:center;border-right:1px solid var(--bd);background:{{ ty.bg }};color:{{ ty.fg }};cursor:pointer">{{ ty.k }}</span></sc-for>
+</div>
+<span style="height:32px;border:1px solid var(--bds);border-radius:6px;display:flex;align-items:center;gap:8px;padding:0 10px;font-size:13px"><span style="color:var(--mu)">Cuenta</span>Todas ▾</span>
+<span style="height:32px;border:1px solid var(--bds);border-radius:6px;display:flex;align-items:center;gap:8px;padding:0 10px;font-size:13px"><span style="color:var(--mu)">Origen</span>Todos ▾</span>
+<div style="flex:1"></div>
+<div style="height:32px;border:1px solid var(--bd);border-radius:6px;display:flex;padding:2px;gap:2px;font-size:12px;background:var(--sf)">
+<button onClick="{{ setCompact }}" style="border:0;border-radius:4px;padding:0 10px;cursor:pointer;font-size:12px;font-weight:500;background:{{ dens.cBg }};color:{{ dens.cFg }}">Compacta</button>
+<button onClick="{{ setNormal }}" style="border:0;border-radius:4px;padding:0 10px;cursor:pointer;font-size:12px;font-weight:500;background:{{ dens.nBg }};color:{{ dens.nFg }}">Normal</button>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;border-top:1px solid var(--bd)">
+<div style="display:grid;grid-template-columns:{{ s.cols }};height:32px;align-items:center;background:var(--sf);border-bottom:1px solid var(--bd);font-size:12px;font-weight:600;color:var(--mu);padding:0 12px">
+<span style="padding:0 8px">Fecha</span><span style="padding:0 8px">Número</span><span style="padding:0 8px">Descripción</span>
+<sc-if value="{{ s.wide }}" hint-placeholder-val="{{ true }}"><span style="padding:0 8px">Origen</span></sc-if>
+<span style="padding:0 8px;text-align:right">Débito</span><span style="padding:0 8px;text-align:right">Crédito</span><span style="padding:0 8px">Etiquetas</span>
+<sc-if value="{{ s.wide }}" hint-placeholder-val="{{ true }}"><span style="padding:0 8px">Autor</span></sc-if>
+</div>
+<div style="flex:1;overflow:auto">
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+<div style="display:grid;grid-template-columns:{{ s.cols }};height:{{ dens.h }}px;align-items:center;border-bottom:1px solid var(--bd);font-size:{{ dens.fs }}px;padding:0 12px;cursor:pointer" style-hover="background:var(--sf)">
+<span style="padding:0 8px;font-variant-numeric:tabular-nums">{{ r.fecha }}</span>
+<span style="padding:0 8px;font:500 12px 'JetBrains Mono',monospace;color:var(--pr)">{{ r.num }}</span>
+<span style="padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ r.desc }}</span>
+<sc-if value="{{ s.wide }}" hint-placeholder-val="{{ true }}"><span style="padding:0 8px;color:var(--mu)">{{ r.origen }}</span></sc-if>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap"><span style="color:var(--mu)">$ </span>{{ r.db }}</span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap"><span style="color:var(--mu)">$ </span>{{ r.cr }}</span>
+<span style="padding:0 8px;display:flex;gap:4px;min-width:0;overflow:hidden">
+<sc-for list="{{ r.tags }}" as="tg" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:4px;font-size:11.5px;font-weight:500;white-space:nowrap;background:var(--neb);color:var(--ne)"><sc-if value="{{ tg.lock }}" hint-placeholder-val="{{ false }}"><svg width="9" height="9" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg></sc-if>{{ tg.t }}<sc-if value="{{ tg.ref }}" hint-placeholder-val="{{ false }}"><span style="text-decoration:underline;font-family:'JetBrains Mono',monospace;font-size:11px">{{ tg.ref }}</span></sc-if></span></sc-for>
+</span>
+<sc-if value="{{ s.wide }}" hint-placeholder-val="{{ true }}"><span style="padding:0 8px;color:var(--mu);white-space:nowrap">{{ r.autor }}</span></sc-if>
+</div>
+</sc-for>
+</div>
+<div style="flex:none;display:grid;grid-template-columns:{{ s.cols }};height:40px;align-items:center;background:var(--sf);border-top:1px solid var(--bd);font-size:13px;font-weight:600;padding:0 12px">
+<span style="padding:0 8px;grid-column:span {{ s.footSpan }};display:flex;align-items:center;gap:10px">Totales del filtro <span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:4px;font-size:12px;background:var(--okb);color:var(--ok)">✓ Cuadrado</span></span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">$ 4.200.000,00</span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">$ 4.200.000,00</span>
+<span style="padding:0 8px;grid-column:span {{ s.pageSpan }};text-align:right;font-weight:400;color:var(--mu);font-size:12px;font-variant-numeric:tabular-nums">1–8 de 8 · 25 por página</span>
+</div>
+</div>
+</main>
+</div>
+
+<sc-if value="{{ s.palette }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ s.closePalette }}" style="position:absolute;inset:0;background:var(--scrim)"></div>
+<div style="position:absolute;top:72px;left:50%;transform:translateX(-50%);width:620px;background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column">
+<div style="height:52px;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--bd)">
+<span style="width:13px;height:13px;border:1.7px solid var(--mu);border-radius:50%;flex:none"></span>
+<input value="{{ q }}" onChange="{{ onQ }}" placeholder="Buscar o ejecutar…" style="flex:1;border:0;outline:0;background:transparent;color:var(--tx);font-size:16px"></input>
+<span style="font:500 11px 'JetBrains Mono',monospace;padding:2px 6px;border:1px solid var(--bd);border-radius:4px;color:var(--mu)">Esc</span>
+</div>
+<div style="max-height:340px;overflow:auto;padding:6px">
+<sc-for list="{{ palGroups }}" as="pg" hint-placeholder-count="3">
+<div style="font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;padding:10px 10px 4px">{{ pg.name }}</div>
+<sc-for list="{{ pg.items }}" as="it" hint-placeholder-count="3">
+<div style="height:36px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px;background:{{ it.bg }};cursor:pointer;font-size:13px" style-hover="background:var(--prs)">
+<span style="width:20px;font:600 12px 'JetBrains Mono',monospace;color:var(--pr);text-align:center">{{ it.p }}</span>
+<span style="flex:1;display:flex;gap:8px;min-width:0"><span style="font-weight:500;white-space:nowrap">{{ it.label }}</span><span style="color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.sub }}</span></span>
+<sc-if value="{{ it.k }}" hint-placeholder-val="{{ false }}"><span style="font:500 11px 'JetBrains Mono',monospace;padding:2px 6px;border:1px solid var(--bd);border-radius:4px;color:var(--mu)">{{ it.k }}</span></sc-if>
+</div>
+</sc-for>
+</sc-for>
+<sc-if value="{{ palEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:24px 12px;text-align:center;color:var(--mu);font-size:13px">Sin resultados para «{{ q }}». Prueba otro término o un prefijo.</div></sc-if>
+</div>
+<div style="height:36px;display:flex;align-items:center;gap:16px;padding:0 16px;border-top:1px solid var(--bd);background:var(--sf);font-size:12px;color:var(--mu)">
+<span><b style="font-family:'JetBrains Mono',monospace;color:var(--tx)">&gt;</b> acciones</span><span><b style="font-family:'JetBrains Mono',monospace;color:var(--tx)">@</b> terceros</span><span><b style="font-family:'JetBrains Mono',monospace;color:var(--tx)">#</b> documentos</span><span><b style="font-family:'JetBrains Mono',monospace;color:var(--tx)">/</b> ayuda</span><span style="flex:1;text-align:right">↑↓ navegar · Enter abrir</span>
+</div>
+</div>
+</sc-if>
+
+</div>
+</div>
+</sc-for>
+</div>
+
+<h3 class="dv-h">C · Móvil 390 · Catálogo y pedido (POS)</h3>
+<div class="dv-opts">
+<sc-for list="{{ themes }}" as="t" hint-placeholder-count="2">
+<div class="dv-opt" id="{{ t.mobId }}">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ t.mobId }}">{{ t.mobId }}</a>Móvil · {{ t.name }}</div>
+<div class="dv-card" style="{{ t.mobVars }}">
+
+<div style="display:flex;flex-direction:column;gap:14px;align-items:center">
+<div style="width:390px;height:844px;border-radius:46px;background:var(--app);box-shadow:0 0 0 10px #1A2028,0 0 0 11px #2C343E,0 24px 48px rgba(0,0,0,.25);overflow:hidden;display:flex;flex-direction:column;position:relative;color:var(--tx)">
+<div style="height:47px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font-size:15px;font-weight:600;background:var(--card)"><span style="font-variant-numeric:tabular-nums">9:41</span><span style="display:flex;gap:6px;align-items:center"><span style="width:17px;height:10px;border-radius:2px;background:currentColor"></span><span style="width:25px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1.5px;display:flex"><span style="width:72%;background:currentColor;border-radius:1px"></span></span></span></div>
+<div style="background:var(--card);padding:6px 16px 12px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid var(--bd)">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><div style="font-size:24px;font-weight:700;letter-spacing:-.01em">Catálogo</div><div style="font-size:12px;color:var(--mu);white-space:nowrap">Lista general</div></div><button style="height:44px;flex:none;white-space:nowrap;padding:0 12px;border-radius:22px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px">Bodega Principal <span style="font-size:9px;color:var(--mu)">▼</span></button></div>
+<div style="height:44px;border:1px solid var(--bds);border-radius:10px;display:flex;align-items:center;gap:10px;padding:0 14px;color:var(--mu);font-size:16px;background:var(--app)"><span style="width:14px;height:14px;border:1.7px solid currentColor;border-radius:50%"></span>Buscar por nombre o código</div>
+<div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px">
+<sc-for list="{{ cats }}" as="ca" hint-placeholder-count="5"><button onClick="{{ ca.pick }}" style="height:36px;flex:none;padding:0 14px;border-radius:18px;border:1px solid {{ ca.bd }};background:{{ ca.bg }};color:{{ ca.fg }};font-size:14px;font-weight:500;cursor:pointer">{{ ca.name }}</button></sc-for>
+</div>
+</div>
+<div style="flex:1;min-height:0;overflow:auto"><div style="padding:14px 16px 168px;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:max-content;gap:12px">
+<sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden;display:flex;flex-direction:column">
+<div style="height:104px;background:repeating-linear-gradient(135deg,var(--sf) 0 8px,var(--sf2) 8px 16px);display:grid;place-items:center;font:500 10px 'JetBrains Mono',monospace;color:var(--mu)">foto · {{ p.sku }}</div>
+<div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1">
+<div style="font-size:14px;font-weight:600;line-height:1.3;min-height:36px">{{ p.name }}</div>
+<div style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">{{ p.sku }}</div>
+<div style="font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px">{{ p.priceFmt }}</div>
+<div style="display:flex"><span style="font-size:12px;font-weight:500;padding:2px 6px;border-radius:4px;background:{{ p.stBg }};color:{{ p.stFg }};font-variant-numeric:tabular-nums;margin-left:{{ p.stMl }}">{{ p.stock }}</span></div>
+<div style="margin-top:8px">
+<sc-if value="{{ p.showAdd }}" hint-placeholder-val="{{ true }}"><button onClick="{{ p.inc }}" style="width:100%;height:44px;border-radius:8px;border:1px solid var(--pr);background:transparent;color:var(--pr);font-size:15px;font-weight:600;cursor:pointer">+ Agregar</button></sc-if>
+<sc-if value="{{ p.showStep }}" hint-placeholder-val="{{ false }}"><div style="height:44px;border-radius:8px;background:var(--pr);color:var(--onpr);display:grid;grid-template-columns:44px 1fr 44px;align-items:center"><button onClick="{{ p.dec }}" style="height:44px;border:0;background:transparent;color:inherit;font-size:20px;cursor:pointer">−</button><span style="text-align:center;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums">{{ p.qty }}</span><button onClick="{{ p.inc }}" style="height:44px;border:0;background:transparent;color:inherit;font-size:20px;cursor:pointer">+</button></div></sc-if>
+<sc-if value="{{ p.showOut }}" hint-placeholder-val="{{ false }}"><button disabled="disabled" style="width:100%;height:44px;border-radius:8px;border:1px solid var(--bd);background:var(--sf2);color:var(--mu);font-size:14px;font-weight:500">Sin existencias</button></sc-if>
+</div>
+</div>
+</div>
+</sc-for>
+</div></div>
+<sc-if value="{{ hasCart }}" hint-placeholder-val="{{ true }}">
+<button style="position:absolute;left:12px;right:12px;bottom:96px;height:56px;border-radius:14px;border:0;background:var(--pr);color:var(--onpr);display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:var(--sh);cursor:pointer"><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.25"><span style="font-size:12px;opacity:.85">{{ cartLinesLabel }}</span><span style="font-size:17px;font-weight:700;font-variant-numeric:tabular-nums">{{ totalFmt }}</span></span><span style="font-size:15px;font-weight:600">Ver pedido →</span></button>
+</sc-if>
+<div style="position:absolute;left:0;right:0;bottom:0;height:84px;background:var(--card);border-top:1px solid var(--bd);display:grid;grid-template-columns:repeat(4,1fr);padding:4px 8px 0">
+<sc-for list="{{ tabsCat }}" as="tb" hint-placeholder-count="4"><div style="height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:{{ tb.w }};color:{{ tb.fg }};position:relative"><span style="width:22px;height:4px;border-radius:2px;background:{{ tb.bar }}"></span>{{ tb.name }}<sc-if value="{{ tb.badge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:2px;right:18px;min-width:18px;height:18px;border-radius:9px;background:var(--pr);color:var(--onpr);font-size:11px;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ tb.badge }}</span></sc-if></div></sc-for>
+<span style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--tx);opacity:.85"></span>
+</div>
+</div>
+<span style="font-size:12px;color:var(--mu)">Catálogo táctil</span>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;align-items:center">
+<div style="width:390px;height:844px;border-radius:46px;background:var(--app);box-shadow:0 0 0 10px #1A2028,0 0 0 11px #2C343E,0 24px 48px rgba(0,0,0,.25);overflow:hidden;display:flex;flex-direction:column;position:relative;color:var(--tx)">
+<div style="height:47px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font-size:15px;font-weight:600;background:var(--card)"><span style="font-variant-numeric:tabular-nums">9:41</span><span style="display:flex;gap:6px;align-items:center"><span style="width:17px;height:10px;border-radius:2px;background:currentColor"></span><span style="width:25px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1.5px;display:flex"><span style="width:72%;background:currentColor;border-radius:1px"></span></span></span></div>
+<div style="height:52px;flex:none;background:var(--card);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:4px;padding:0 8px">
+<button style="width:44px;height:44px;border:0;background:transparent;color:var(--pr);font-size:26px;cursor:pointer">‹</button>
+<div style="flex:1;font-size:17px;font-weight:600">Nuevo pedido</div>
+<span style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu);padding-right:10px">{{ nextNum }}</span>
+</div>
+<div style="flex:1;min-height:0;overflow:auto"><div style="padding:14px 16px 150px;display:grid;grid-auto-rows:max-content;gap:12px">
+
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div><div style="font-size:12px;color:var(--mu)">Cliente</div><div style="font-size:16px;font-weight:600;margin-top:2px">Almacenes La Ceiba S.A.S.</div><div style="font:400 12px 'JetBrains Mono',monospace;color:var(--mu);margin-top:2px">NIT 901.234.567-8</div></div><button style="height:44px;padding:0 10px;border:0;background:transparent;color:var(--pr);font-size:14px;font-weight:600;cursor:pointer">Cambiar</button></div>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:4px;font-size:12px;font-weight:600;background:var(--wab);color:var(--wa)">! En alerta · 82 % del cupo</span><span style="font-size:12px;color:var(--mu)">Plazo 30 días · Sin mora</span></div>
+<div style="height:10px;border-radius:5px;background:var(--sf2);display:flex;overflow:hidden"><span style="width:82%;background:var(--ne)"></span><span style="width:{{ credit.saleW }}%;background:{{ credit.saleColor }}"></span></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:12px"><div><div style="color:var(--mu)">Cupo</div><div style="font-weight:600;font-variant-numeric:tabular-nums">$ 5.000.000,00</div></div><div><div style="color:var(--mu)">Saldo</div><div style="font-weight:600;font-variant-numeric:tabular-nums">$ 4.100.000,00</div></div><div><div style="color:var(--mu)">Disponible</div><div style="font-weight:600;font-variant-numeric:tabular-nums">$ 900.000,00</div></div></div>
+<div style="font-size:12px;color:{{ credit.noteFg }};font-weight:500">{{ credit.note }}</div>
+</div>
+
+<div style="height:44px;background:var(--sf2);border-radius:10px;padding:3px;display:grid;grid-template-columns:repeat(3,1fr);gap:3px">
+<sc-for list="{{ docOpts }}" as="d" hint-placeholder-count="3"><button onClick="{{ d.pick }}" style="border:0;border-radius:8px;background:{{ d.bg }};color:{{ d.fg }};font-size:14px;font-weight:600;cursor:pointer;box-shadow:{{ d.sh }}">{{ d.name }}</button></sc-for>
+</div>
+
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px 4px"><span style="font-size:14px;font-weight:600">{{ cartLinesLabel }}</span><span style="font-size:14px;color:var(--pr);font-weight:600">+ Del catálogo</span></div>
+<sc-for list="{{ lines }}" as="l" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--bd)">
+<div style="min-width:0"><div style="font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</div><div style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">{{ l.unit }}</div><div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px">{{ l.totalFmt }}</div></div>
+<div style="height:44px;border:1px solid var(--bds);border-radius:8px;display:grid;grid-template-columns:40px 1fr 40px;align-items:center"><button onClick="{{ l.dec }}" style="height:42px;border:0;background:transparent;color:var(--pr);font-size:20px;cursor:pointer">−</button><span style="text-align:center;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums">{{ l.qty }}</span><button onClick="{{ l.inc }}" style="height:42px;border:0;background:transparent;color:var(--pr);font-size:20px;cursor:pointer">+</button></div>
+</div>
+</sc-for>
+<sc-if value="{{ noCart }}" hint-placeholder-val="{{ false }}"><div style="padding:20px 14px;border-top:1px solid var(--bd);font-size:14px;color:var(--mu);text-align:center">El pedido está vacío. Agrega ítems desde el catálogo.</div></sc-if>
+<div style="border-top:1px solid var(--bd);background:var(--sf);padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px">
+<span style="color:var(--mu)">Subtotal</span><span style="text-align:right;font-variant-numeric:tabular-nums">{{ subFmt }}</span>
+<span style="color:var(--mu)">IVA 19 %</span><span style="text-align:right;font-variant-numeric:tabular-nums">{{ ivaFmt }}</span>
+<span style="font-weight:600;font-size:16px;margin-top:4px">Total</span><span style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700;font-size:20px">{{ totalFmt }}</span>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:var(--mu);font-weight:500">Condición de pago</span>
+<div style="height:44px;background:var(--sf2);border-radius:10px;padding:3px;display:grid;grid-template-columns:1fr 1fr;gap:3px">
+<sc-for list="{{ payOpts }}" as="d" hint-placeholder-count="2"><button onClick="{{ d.pick }}" style="border:0;border-radius:8px;background:{{ d.bg }};color:{{ d.fg }};font-size:14px;font-weight:600;cursor:pointer;box-shadow:{{ d.sh }}">{{ d.name }}</button></sc-for>
+</div></div>
+</div></div>
+
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:12px 16px 30px;display:flex;flex-direction:column;gap:8px">
+<sc-if value="{{ credit.over }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;line-height:1.4;color:var(--wa);background:var(--wab);border-radius:8px;padding:8px 10px">Supera el cupo disponible por {{ credit.overFmt }}. Quedará retenido hasta que un usuario autorizado lo libere con motivo.</div></sc-if>
+<button style="height:52px;border-radius:12px;border:0;background:{{ cta.bg }};color:{{ cta.fg }};font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:space-between;padding:0 18px;cursor:pointer"><span>{{ cta.label }}</span><span style="font-variant-numeric:tabular-nums">{{ totalFmt }}</span></button>
+<div style="font-size:12px;color:var(--mu);text-align:center">{{ cta.sub }}</div>
+<span style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--tx);opacity:.85"></span>
+</div>
+</div>
+<span style="font-size:12px;color:var(--mu)">Pedido · facturación ágil</span>
+</div>
+
+</div>
+</div>
+</sc-for>
+</div>
+
+<p class="dv-next">Siguiente: «Tanda 2: editor de comprobante con grilla y pie en vivo» · «detalle de AJ-1 con diálogo Reversar» · «Cobro exprés móvil: recibo de caja con abono».</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const TH = {
+  light: {'--logo':'url(assets/sifca-claro-mark.png)','--logofull':'url(assets/sifca-claro-lockup.png)','--bg':'#FFFFFF','--sf':'#F4F6F8','--sf2':'#E9EDF2','--side':'#F4F6F8','--app':'#F4F6F8','--card':'#FFFFFF','--bd':'#DCE1E7','--bds':'#7B8794','--tx':'#1B2430','--mu':'#4B5767','--pr':'#0B5CAD','--prh':'#094C8F','--onpr':'#FFFFFF','--prs':'#E8F1FB','--ok':'#17663E','--okb':'#E6F4EA','--wa':'#7A4B00','--wab':'#FFF1D6','--er':'#A8201A','--erb':'#FDECEA','--ne':'#3F4A59','--neb':'#E9EDF2','--ring':'#0B5CAD','--scrim':'rgba(27,36,48,.32)','--sh':'0 12px 32px rgba(27,36,48,.18)'},
+  dark: {'--logo':'url(assets/sifca-oscuro-mark.png)','--logofull':'url(assets/sifca-oscuro-lockup.png)','--bg':'#161B22','--sf':'#1E242C','--sf2':'#29313B','--side':'#11161D','--app':'#11161D','--card':'#1E242C','--bd':'#2D343E','--bds':'#68737F','--tx':'#E6EAF0','--mu':'#A9B4C2','--pr':'#7DB7F2','--prh':'#9CC8F5','--onpr':'#0B1B2E','--prs':'#1A2D44','--ok':'#7FD3A1','--okb':'#16301F','--wa':'#F0C46E','--wab':'#33270F','--er':'#FF9A90','--erb':'#3B1C1A','--ne':'#C3CCD7','--neb':'#29313B','--ring':'#7DB7F2','--scrim':'rgba(5,8,12,.62)','--sh':'0 12px 32px rgba(0,0,0,.5)'}
+};
+const lum = h => { const c = [1,3,5].map(i => parseInt(h.slice(i,i+2),16)/255).map(v => v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4)); return .2126*c[0]+.7152*c[1]+.0722*c[2]; };
+const cr = (a,b) => { const x = lum(a), y = lum(b); return ((Math.max(x,y)+.05)/(Math.min(x,y)+.05)).toFixed(2).replace('.',',') + ':1'; };
+const fm = c => { const neg = c < 0; c = Math.abs(Math.round(c)); return (neg ? '− ' : '') + '$ ' + String(Math.floor(c/100)).replace(/\B(?=(\d{3})+(?!\d))/g,'.') + ',' + String(c%100).padStart(2,'0'); };
+const CUPO = 500000000, SALDO = 410000000;
+const PRODUCTS = [
+  {sku:'RES-CA75',name:'Resma papel carta 75 g',price:21500,stock:48,cat:'Papelería'},
+  {sku:'DET-2L',name:'Detergente líquido 2 L',price:18900,stock:120,cat:'Aseo'},
+  {sku:'CIN-48',name:'Cinta de embalar 48 mm',price:4300,stock:6,cat:'Empaque'},
+  {sku:'GUA-N100',name:'Guantes de nitrilo x 100',price:32800,stock:0,cat:'Seguridad'},
+  {sku:'BOL-X10',name:'Bolsas para basura x 10',price:7400,stock:64,cat:'Aseo'},
+  {sku:'MAR-PER',name:'Marcador permanente negro',price:3200,stock:210,cat:'Papelería'}
+];
+const CATS = ['Todos','Papelería','Aseo','Empaque','Seguridad'];
+const GROUPS = [['IN','Inicio'],['VE','Ventas'],['CA','Cartera'],['CO','Compras'],['IV','Inventario'],['CT','Contabilidad'],['IM','Impuestos'],['FE','Factura electrónica'],['TE','Terceros'],['VI','Catálogo y vitrina'],['IG','Integraciones'],['CF','Configuración']];
+const CT_CHILD = [['Comprobantes',1],['Nuevo comprobante'],['Borradores',0,'1'],['Plan de cuentas'],['Libro diario'],['Libro mayor'],['Balance de prueba'],['Períodos'],['Cierre anual']];
+const CONT = {t:'Contabilizado',lock:true};
+const ROWS = [
+  {fecha:'20/10/2026',num:'RC-1',desc:'Recibo de caja',origen:'Cartera',db:'952.000,00',cr:'952.000,00',tags:[CONT],autor:'L. Rincón'},
+  {fecha:'13/10/2026',num:'AJ-3',desc:'Reversión: traslado a caja menor',origen:'Manual',db:'50.000,00',cr:'50.000,00',tags:[{t:'↺ Reversión de',ref:'AJ-2'}],autor:'J. Murcia'},
+  {fecha:'12/10/2026',num:'AJ-2',desc:'Traslado a caja menor',origen:'Manual',db:'50.000,00',cr:'50.000,00',tags:[{t:'Reversado por',ref:'AJ-3',lock:true}],autor:'C. Ortiz'},
+  {fecha:'10/10/2026',num:'NC-2',desc:'Reingreso al costo de salida',origen:'Inventario',db:'120.000,00',cr:'120.000,00',tags:[CONT],autor:'Sistema'},
+  {fecha:'10/10/2026',num:'NC-1',desc:'Nota crédito por devolución parcial',origen:'Ventas',db:'238.000,00',cr:'238.000,00',tags:[CONT],autor:'Sistema'},
+  {fecha:'05/10/2026',num:'FV-2',desc:'Costo de ventas',origen:'Ventas',db:'600.000,00',cr:'600.000,00',tags:[CONT],autor:'Sistema'},
+  {fecha:'05/10/2026',num:'FV-1',desc:'Factura de venta a crédito con IVA',origen:'Ventas',db:'1.190.000,00',cr:'1.190.000,00',tags:[CONT],autor:'Sistema'},
+  {fecha:'01/10/2026',num:'AJ-1',desc:'Apertura de inventario aportado como capital',origen:'Manual',db:'1.000.000,00',cr:'1.000.000,00',tags:[CONT],autor:'J. Murcia'}
+];
+const BAL = [['1110','Bancos','952.000,00',''],['1435','Mercancías','520.000,00',''],['2408','IVA por pagar','','152.000,00'],['3115','Aportes sociales','','1.000.000,00'],['4135','Comercio al por mayor y al por menor','','1.000.000,00'],['4175','Devoluciones en ventas','200.000,00',''],['6135','Costo de ventas','480.000,00','']].map(([code,name,d,c]) => ({code,name,d,c}));
+const PAL = [
+  {p:'>',label:'Nuevo comprobante',sub:'Contabilidad',k:'N'},
+  {p:'>',label:'Importar datos',sub:'Integraciones · Migración'},
+  {p:'>',label:'Cerrar período',sub:'Oct 2026'},
+  {p:'>',label:'Cambiar tema',sub:'Claro · Oscuro suave'},
+  {p:'',label:'Libro mayor',sub:'Contabilidad',k:'G C'},
+  {p:'',label:'Balance de prueba',sub:'Contabilidad'},
+  {p:'',label:'Períodos',sub:'Contabilidad'},
+  {p:'',label:'Cartera por edades',sub:'Cartera',k:'G V'},
+  {p:'#',label:'AJ-1',sub:'Apertura de inventario aportado como capital'},
+  {p:'#',label:'FV-1',sub:'Factura de venta a crédito con IVA'},
+  {p:'@',label:'Almacenes La Ceiba S.A.S.',sub:'Cliente · NIT 901.234.567-8'},
+  {p:'/',label:'Atajos de teclado',sub:'Ayuda',k:'?'}
+];
+const PAL_G = {'>':'Acciones','':'Pantallas','#':'Documentos','@':'Terceros','/':'Ayuda'};
+const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const SHELLS = [['1c','light',1440,900,'Web 1440 · Tema Claro · menú expandido'],['1d','dark',1440,900,'Web 1440 · Oscuro suave · menú expandido'],['1e','light',1024,768,'Web 1024 · Tema Claro · menú contraído · paleta Ctrl+K abierta'],['1f','dark',1024,768,'Web 1024 · Oscuro suave · menú contraído']];
+
+class Component extends DCLogic {
+  state = { collapsed:{'1e':true,'1f':true}, palette:{'1e':true}, q:'', density:'compact', cart:{'RES-CA75':10,'DET-2L':20,'CIN-48':4}, doc:'factura', pay:'credito', cat:'Todos' };
+  componentDidMount() {
+    this.onKey = e => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); this.setState(s => ({palette:{...s.palette,'1c':true}})); }
+      else if (e.key === 'Escape') this.setState({palette:{}});
+    };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); }
+  setQty(sku, d) {
+    this.setState(s => { const p = PRODUCTS.find(x => x.sku === sku); const cart = {...s.cart}; const q = Math.max(0, Math.min(p.stock, (cart[sku] || 0) + d)); if (q) cart[sku] = q; else delete cart[sku]; return {cart}; });
+  }
+  renderVals() {
+    const st = this.state;
+    const themes = ['light','dark'].map(k => {
+      const v = TH[k];
+      return {
+        key:k, name: k === 'light' ? 'Tema Claro' : 'Oscuro suave',
+        sub: k === 'light' ? 'Base #FFFFFF · superficies #F4F6F8 · texto #1B2430 · acento #0B5CAD' : 'Carbón y pizarra sin negro puro · base #161B22 / #11161D · superficies #1E242C · acento #7DB7F2',
+        tokId: k === 'light' ? '1a' : '1b', mobId: k === 'light' ? '1g' : '1h',
+        tokVars: {...v, width:'1180px', background:'var(--bg)', color:'var(--tx)'},
+        mobVars: {...v, display:'flex', gap:'48px', padding:'44px 52px 28px', background: k === 'light' ? '#EEF1F4' : '#0C1015', color:'var(--tx)'},
+        swatches: [
+          ['--bg','Fondo de página y tablas'],['--sf','Barras, cabeceras, tarjetas'],['--sf2','Pistas, chips, hover'],['--tx','Texto principal','tx'],['--mu','Texto secundario','tx'],['--pr','Acción, enlace, selección','pr'],['--bds','Borde de campo (≥ 3:1)','tx']
+        ].map(([token,use,m]) => ({token,use,hex:v[token], cr: m === 'tx' ? cr(v[token], v['--bg']) + ' s/ fondo' : m === 'pr' ? cr(v['--onpr'], v[token]) + ' botón' : '—'})),
+        sem: [['Éxito','--ok','--okb','Cuadrado · Aceptada · Abierto'],['Advertencia','--wa','--wab','Borrador · En alerta · Bloqueado'],['Peligro','--er','--erb','Descuadre · Rechazo · Error'],['Información','--pr','--prs','Información · Emitida'],['Neutro','--ne','--neb','Contabilizado · Reversado · Cerrado']]
+          .map(([name,f,b,use]) => ({name,use,fg:v[f],bg:v[b],cr:cr(v[f],v[b])}))
+      };
+    });
+
+    const shells = SHELLS.map(([id,th,w,h,label]) => {
+      const collapsed = !!st.collapsed[id], wide = w >= 1440;
+      return {
+        id, label, wide, expanded: !collapsed, sideW: collapsed ? 56 : 232, palette: !!st.palette[id],
+        vars: {...TH[th], width:w+'px', height:h+'px', position:'relative', display:'flex', flexDirection:'column', background:'var(--bg)', color:'var(--tx)'},
+        cols: wide ? '96px 64px minmax(0,1fr) 92px 136px 136px 200px 92px' : '92px 60px minmax(0,1fr) 128px 128px 184px',
+        footSpan: wide ? 4 : 3, pageSpan: wide ? 2 : 1,
+        collapseLabel: collapsed ? '»' : '« Contraer menú',
+        toggleSide: () => this.setState(s => ({collapsed:{...s.collapsed,[id]:!s.collapsed[id]}})),
+        openPalette: () => this.setState(s => ({palette:{...s.palette,[id]:true}})),
+        closePalette: () => this.setState(s => ({palette:{...s.palette,[id]:false}})),
+        groups: GROUPS.map(([code,name]) => {
+          const act = code === 'CT';
+          return { code, name, chev: act ? '▲' : '▼', color: act ? 'var(--tx)' : 'var(--tx)', weight: act ? 600 : 400,
+            tileBg: act ? 'var(--pr)' : 'var(--sf2)', tileFg: act ? 'var(--onpr)' : 'var(--mu)',
+            showChildren: act && !collapsed,
+            children: act ? CT_CHILD.map(([n,a,b]) => ({name:n, badge:b || '', bg: a ? 'var(--prs)' : 'transparent', fg: a ? 'var(--pr)' : 'var(--tx)', weight: a ? 600 : 400})) : [] };
+        })
+      };
+    });
+
+    let q = st.q.trim(), pre = null;
+    if (/^[>@#\/]/.test(q)) { pre = q[0]; q = q.slice(1).trim(); }
+    const hits = PAL.filter(i => (pre === null || i.p === pre) && (!q || norm(i.label + ' ' + i.sub).includes(norm(q))));
+    let first = true;
+    const palGroups = Object.keys(PAL_G).map(p => ({name:PAL_G[p], items: hits.filter(i => i.p === p).map(i => { const r = {...i, k:i.k || '', bg: first ? 'var(--prs)' : 'transparent'}; first = false; return r; })})).filter(g => g.items.length);
+
+    const dens = st.density === 'compact'
+      ? {h:28, fs:13, cBg:'var(--bg)', cFg:'var(--tx)', nBg:'transparent', nFg:'var(--mu)'}
+      : {h:36, fs:14, cBg:'transparent', cFg:'var(--mu)', nBg:'var(--bg)', nFg:'var(--tx)'};
+
+    const cart = st.cart;
+    const lines = PRODUCTS.filter(p => cart[p.sku]).map(p => {
+      const c = p.price * 100 * cart[p.sku];
+      return {name:p.name, qty:cart[p.sku], unit: cart[p.sku] + ' × ' + fm(p.price*100), totalFmt: fm(c), cents:c, inc:() => this.setQty(p.sku,1), dec:() => this.setQty(p.sku,-1)};
+    });
+    const sub = lines.reduce((a,l) => a + l.cents, 0), iva = Math.round(sub * 0.19), total = sub + iva;
+    const disp = CUPO - SALDO, credito = st.pay === 'credito';
+    const over = credito && total > disp;
+    const credit = {
+      over, overFmt: fm(total - disp),
+      saleW: credito ? Math.min(total / CUPO * 100, 18).toFixed(2) : 0,
+      saleColor: over ? 'var(--wa)' : 'var(--pr)',
+      note: !credito ? 'Contado: no afecta el cupo.' : over ? 'Con este pedido supera el cupo: ' + Math.round((SALDO + total) / CUPO * 100) + ' %.' : 'Con este pedido: ' + Math.round((SALDO + total) / CUPO * 100) + ' % del cupo · quedan ' + fm(disp - total) + '.',
+      noteFg: over ? 'var(--wa)' : 'var(--mu)'
+    };
+    const DOCS = {factura:['Emitir factura electrónica','Se transmite a la DIAN al emitir; se entrega cuando quede Aceptada.'], remision:['Emitir remisión','Documento de despacho; no se transmite a la DIAN.'], pedido:['Guardar pedido','Queda pendiente por facturar.']};
+    const cta = over
+      ? {label:'Enviar a retención', sub:'La retención de crédito se libera con motivo.', bg:'var(--wab)', fg:'var(--wa)'}
+      : {label:DOCS[st.doc][0], sub:DOCS[st.doc][1], bg: lines.length ? 'var(--pr)' : 'var(--sf2)', fg: lines.length ? 'var(--onpr)' : 'var(--mu)'};
+    const seg = (on) => ({bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--tx)' : 'var(--mu)', sh: on ? '0 1px 2px rgba(0,0,0,.12)' : 'none'});
+    const units = lines.reduce((a,l) => a + l.qty, 0);
+
+    return {
+      themes, shells, rows: ROWS, balance: BAL, dens, q: st.q,
+      onQ: e => this.setState({q: e.target.value}),
+      setCompact: () => this.setState({density:'compact'}), setNormal: () => this.setState({density:'normal'}),
+      types: ['Todos','AJ','FV','NC','RC','CE','CI'].map((k,i) => ({k, bg: i ? 'var(--bg)' : 'var(--prs)', fg: i ? 'var(--tx)' : 'var(--pr)'})),
+      palGroups, palEmpty: !palGroups.length,
+      cats: CATS.map(c => ({name:c, pick:() => this.setState({cat:c}), bg: st.cat === c ? 'var(--tx)' : 'var(--card)', fg: st.cat === c ? 'var(--card)' : 'var(--tx)', bd: st.cat === c ? 'var(--tx)' : 'var(--bd)'})),
+      products: PRODUCTS.filter(p => st.cat === 'Todos' || p.cat === st.cat).map(p => {
+        const qty = cart[p.sku] || 0, out = p.stock === 0, low = !out && p.stock <= 10;
+        return {...p, qty, priceFmt: fm(p.price*100), showAdd: !out && !qty, showStep: qty > 0, showOut: out,
+          stock: out ? 'Agotado' : low ? 'Bajo · ' + p.stock + ' und' : p.stock + ' und en bodega',
+          stBg: out ? 'var(--neb)' : low ? 'var(--wab)' : 'transparent', stFg: out ? 'var(--ne)' : low ? 'var(--wa)' : 'var(--mu)', stMl: (out || low) ? '0' : '-6px',
+          inc: () => this.setQty(p.sku,1), dec: () => this.setQty(p.sku,-1)};
+      }),
+      lines, hasCart: lines.length > 0, noCart: !lines.length,
+      cartLinesLabel: lines.length + (lines.length === 1 ? ' ítem' : ' ítems') + ' · ' + units + ' und',
+      subFmt: fm(sub), ivaFmt: fm(iva), totalFmt: fm(total), credit, cta,
+      nextNum: st.doc === 'factura' ? 'FV · sig. 3' : st.doc === 'remision' ? 'RM · sig. 1' : 'PD · sig. 1',
+      docOpts: [['factura','Factura'],['remision','Remisión'],['pedido','Pedido']].map(([k,n]) => ({name:n, pick:() => this.setState({doc:k}), ...seg(st.doc === k)})),
+      payOpts: [['credito','Crédito 30 días'],['contado','Contado']].map(([k,n]) => ({name:n, pick:() => this.setState({pay:k}), ...seg(st.pay === k)})),
+      tabsCat: [['Catálogo',1],['Pedido',0,lines.length ? String(lines.length) : ''],['Cobros'],['Más']].map(([n,a,b]) => ({name:n, badge:b || '', fg: a ? 'var(--pr)' : 'var(--mu)', w: a ? 600 : 500, bar: a ? 'var(--pr)' : 'transparent'}))
+    };
+  }
+}
+</script>
+</body>
+</html>

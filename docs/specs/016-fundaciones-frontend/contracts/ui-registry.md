@@ -37,6 +37,6 @@ Cada módulo exporta un `ModuleManifest` desde `apps/admin/src/modules/<modulo>/
 
 `modules/accounting/manifest.ts` registra, como pantalla de referencia, solo `accounting.journalEntries`
 (`/contabilidad/comprobantes`, permiso `accounting.report.read`), la acción `accounting.entry.new` (permiso
-`accounting.entry.post`, atajo `N`, ámbito de la lista; abre una pantalla «Disponible pronto» hasta la UI de la
+`accounting.entry.post`, atajo `N`, ámbito de la lista; abre la página «Próximamente» hasta la UI de la
 spec 001) y el proveedor `#` (comprobantes por tipo-número). El resto de entradas del menú aparece **deshabilitado
 con la etiqueta «Próximamente»** hasta que su spec lo registre.

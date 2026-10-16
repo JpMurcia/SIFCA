@@ -75,10 +75,21 @@ misma ruta que usa el contrato, de modo que React Hook Form `setError(path)` mar
 ## 5. Sesión, permisos y contexto de trabajo antes de la spec 012
 
 **Decision:**
-- **Modo de autenticación `dev-proxy`:** el servidor de desarrollo de Vite actúa como *proxy* de `/api` hacia la API y
-  **añade** `Authorization: Bearer <token>` leyendo `SIFCA_DEV_TOKEN` (generado con `pnpm --filter @sifca/api
-  dev:token`). El token **nunca** entra en el *bundle*. `vite build` con `mode=production` falla si el modo de
-  autenticación es `dev-proxy` (FR-021).
+- **Modo de autenticación `dev-proxy`:** el servidor de Vite (`server.proxy` **y** `preview.proxy`) actúa como
+  *proxy* de `/api` hacia la API y **añade** `Authorization: Bearer <token>`. El token se lee **en cada petición** desde
+  el archivo `SIFCA_DEV_TOKEN_FILE` (por defecto `apps/admin/.dev-token`, ignorado por git), de modo que regenerarlo
+  con `npm run -s dev:token -w @sifca/api > apps/admin/.dev-token` surte efecto al recargar, sin reiniciar. Si el
+  archivo no existe se usa la variable `SIFCA_DEV_TOKEN`. El token **nunca** entra en el *bundle*. `vite build` con
+  `mode=production` falla si el modo de autenticación es `dev-proxy` (FR-021).
+- **Pruebas E2E con permisos por escenario:** solo en `mode=e2e`, el *proxy* acepta la cabecera
+  `x-sifca-e2e-token` (que Playwright fija por escenario con `extraHTTPHeaders`), la convierte en `Authorization` y la
+  elimina antes de reenviar. En cualquier otro modo la cabecera se descarta. Así [016-07] y [016-12] usan un token con
+  solo `accounting.report.read` y el resto un token completo, sin reiniciar el servidor.
+- **Fecha de trabajo reproducible (FR-024):** la API calcula `workingDate` así: cabecera `X-Sifca-Working-Date` si
+  `SIFCA_ALLOW_DEV_OVERRIDES=true`; si no, la variable `SIFCA_DEV_WORKING_DATE`; si no, hoy en `America/Bogota`. Ambas
+  opciones solo existen fuera de producción (la API ya se niega a arrancar con `NODE_ENV=production`, y `loadEnv`
+  rechaza `SIFCA_ALLOW_DEV_OVERRIDES` en producción). Las pruebas E2E fijan la fecha por escenario: [016-01] con
+  `2026-10-16`, [016-02] con `2026-09-15`; así no fallan cuando cambie el mes real.
 - **Endpoint nuevo `GET /api/v1/me`** en la plataforma de la API: devuelve usuario, empresa (id, nombre, NIT),
   permisos y fecha de trabajo (hoy en Colombia). Mientras no exista la spec 013, nombre y NIT salen de variables de
   entorno de desarrollo (`SIFCA_DEV_COMPANY_NAME`, `SIFCA_DEV_COMPANY_NIT`). Contrato en
@@ -120,6 +131,9 @@ radios, densidades) que genera `tokens.css` (variables CSS consumidas por Tailwi
 reutilizarán la vitrina (024) y la app móvil (025). Fuentes Inter y JetBrains Mono **autoalojadas** (paquetes
 `@fontsource-variable/*`), sin llamadas a Google Fonts (privacidad y funcionamiento sin CDN). Íconos: el set SVG de
 las maquetas (`sifca-icons.js`) convertido a componentes; `lucide-react` solo como respaldo.
+
+**Nombre del tema oscuro:** «Slate» (tandas 2–7) reemplaza al «Oscuro suave» de la maqueta `1b`; en código y
+documentación se usa `slate`.
 
 **Contraste:** una prueba recorre los pares texto/fondo del JSON y exige ≥ 4,5:1 (texto) y ≥ 3:1 (bordes y foco) en
 ambos temas (SC-002).
@@ -170,3 +184,18 @@ globales, sin dependencias de `platform/` ni de módulos), `shell/` (cascarón, 
 **Decision:** el *build* es estático (`dist/`); en producción lo sirve el mismo dominio que la API detrás de un
 proxy inverso (`/api/v1` → API), así no hace falta CORS. Este despliegue queda **bloqueado** hasta la spec 012
 (FR-021); en esta spec solo hay `dev` y `preview` local.
+
+## 14. Pantalla de demostración para pruebas (FR-023)
+
+**Decision:** módulo `apps/admin/src/e2e-harness/` con rutas `/__e2e/componentes` (grilla de líneas de demostración,
+formulario con «Fecha contable» y «Descripción», diálogo de reversión simulado, formulario con cambios sin guardar) y
+`/__e2e/contabilizar` (envía un comprobante real a `POST /accounting/journal-entries` con `useIdempotentMutation`). Se
+registra **solo** si `import.meta.env.MODE` es `development` o `e2e`; en `production` el import dinámico no existe y
+el *bundler* lo elimina. Una prueba busca la cadena `__e2e` en `dist/` del *build* de producción y falla si aparece.
+
+**Rationale:** los escenarios [016-04], [016-05] y [016-08] y el estado «cambios sin guardar» necesitan grilla, campos
+y un envío real que pertenecen a la interfaz de la spec 001. Probar los componentes sobre una pantalla de demostración
+evita adelantar esa interfaz y sigue usando la API real.
+
+**Alternatives considered:** pasar esos escenarios a pruebas de componentes (pierde la verificación de punta a punta
+de la idempotencia); construir ya el editor de comprobantes (es la UI de la spec 001 y duplicaría su alcance).

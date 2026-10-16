@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<script src="./sifca-icons.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E3E7EC;font-family:Inter,system-ui,sans-serif;color:#1B2430;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}a{color:#0B5CAD}a:hover{color:#084A8C}button,input,textarea{font-family:inherit}input::placeholder{color:inherit;opacity:.6}.dv-turn{padding:40px 44px 40px;border-bottom:1px solid rgba(0,0,0,.08)}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Inter,system-ui,sans-serif;color:#1a1a1a}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 Inter,system-ui,sans-serif;color:rgba(0,0,0,.6)}.dv-card{border:1px solid rgba(0,0,0,.1);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden}.dv-opt:target .dv-oid{background:#0B5CAD;color:#fff}.dv-next{margin:32px 0 0;font:12px/1.5 Inter,system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-h{font:600 15px/1.2 Inter,system-ui,sans-serif;color:#1B2430;margin:44px 0 16px}@media (prefers-reduced-motion:reduce){*{transition:none!important}}</style>
+</helmet>
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Tandas 2, 3, 5 y 6 · Elevación visual + Oscuro Slate</span></div>
+
+<div style="max-width:1040px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:24px 28px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;font-size:13px;line-height:1.55;color:#1B2430">
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Qué cambia</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;text-wrap:pretty">
+<li><b>Oscuro Slate:</b> lienzo #1E293B, superficies #273548, cabeceras #2D3D53, bordes #3A4C63. Sin negro; los semánticos conservan su significado.</li>
+<li><b>Elevación en 3 niveles:</b> tarjetas (e1), menús y popovers (e2), diálogos (e3). El vidrio (desenfoque 24 px) solo aparece en capas flotantes: barra superior, popover de cupo, modal de pago y hoja inferior móvil.</li>
+<li>Contenido en tarjetas sobre un lienzo gris; las tablas contables siguen en 28 px por fila.</li>
+<li>Cada error lleva ícono, título y qué hacer: 401 de Alegra, rechazo DIAN, impuesto sin mapear y «No cuadra».</li>
+<li><b>Supuestos:</b> NIT de Papelería Los Andes, cuenta bancaria y tienda de la vitrina son inventados. IVA 19 % en todos los ítems de ejemplo y cortes ABC 80 / 95 configurables.</li>
+</ul>
+</div>
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Recorridos clicables</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+<li>Factura: «Validar cupo» → «Cerrar venta» → Efectivo o Transferencia → la línea DIAN avanza a Aceptada (en Tweaks puedes simular un rechazo).</li>
+<li>Inventario: clic en un ítem para ver su kardex (Promedio o PEPS).</li>
+<li>Alegra: «Probar conexión» corrige el 401. Migración: aplica el mapeo del IVA, revisa el ensayo y carga costos para que cuadre.</li>
+<li>Vitrina: agrega productos, escribe tu nombre y mira cómo se arma el mensaje de WhatsApp.</li>
+</ul>
+<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:baseline"><a class="dv-oid" href="#2a">2a</a><a class="dv-oid" href="#2c">2c</a><a class="dv-oid" href="#2e">2e</a><a class="dv-oid" href="#2g">2g</a><a class="dv-oid" href="#2i">2i</a><span style="color:#4B5767">web</span><a class="dv-oid" href="#2k">2k</a><a class="dv-oid" href="#2l">2l</a><a class="dv-oid" href="#2m">2m</a><a class="dv-oid" href="#2n">2n</a><span style="color:#4B5767">móvil</span></div>
+</div>
+</div>
+
+<h3 class="dv-h">Web 1440 · Acceso, facturación, inventario, integraciones (claro | Slate)</h3>
+<div style="display:grid;grid-template-columns:repeat(2,max-content);gap:40px 36px">
+<sc-for list="{{ web }}" as="w" hint-placeholder-count="10">
+<div class="dv-opt" id="{{ w.id }}">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ w.id }}">{{ w.id }}</a>{{ w.label }}</div>
+<div class="dv-card" style="{{ w.vars }}">
+
+<sc-if value="{{ w.isLogin }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:grid;grid-template-columns:600px minmax(0,1fr)">
+<div style="position:relative;overflow:hidden;background:var(--brand);color:#F2F6FB;padding:48px 56px;display:flex;flex-direction:column;justify-content:space-between">
+<div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:28px 28px"></div>
+<div style="position:relative;display:flex;align-items:center;gap:12px"><img src="assets/sifca-oscuro-lockup.png" alt="SIFCA · Sistema Integral Fiscal y Contable Ágil" style="height:56px;width:auto;display:block"></img></div>
+<div style="position:relative;display:flex;flex-direction:column;gap:28px">
+<div style="font-size:40px;font-weight:700;letter-spacing:-.02em;line-height:1.1;max-width:440px;text-wrap:balance">Rigor contable con agilidad de uso.</div>
+<div style="width:380px;border-radius:14px;padding:18px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(16px);box-shadow:0 24px 48px -16px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600">Balance de prueba · 31/10/2026</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:4px;background:#E6F4EA;color:#17663E">✓ Cuadrado</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px"><div><div style="opacity:.75">Σ Débitos</div><div style="font-size:18px;font-weight:600;font-variant-numeric:tabular-nums">$ 2.152.000,00</div></div><div><div style="opacity:.75">Σ Créditos</div><div style="font-size:18px;font-weight:600;font-variant-numeric:tabular-nums">$ 2.152.000,00</div></div></div>
+</div>
+</div>
+<div style="position:relative;font-size:12px;opacity:.8">Datos aislados por empresa · Horas en hora de Colombia</div>
+</div>
+<div style="display:grid;place-items:center;background:var(--bg)">
+<div style="width:400px;display:flex;flex-direction:column;gap:20px">
+<div style="width:120px;height:48px;border:1.5px dashed var(--bds);border-radius:10px;display:grid;place-items:center;font:500 11px 'JetBrains Mono',monospace;color:var(--mu)">logo empresa</div>
+<div><div style="font-size:28px;font-weight:700;letter-spacing:-.015em">Ingresa a tu cuenta</div><div style="font-size:14px;color:var(--mu);margin-top:4px">Elegirás la empresa después de ingresar.</div></div>
+<sc-if value="{{ w.loginErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:10px;padding:12px 14px;border-radius:10px;background:var(--erb);color:var(--er);font-size:13px;line-height:1.45"><span style="flex:none;width:18px;height:18px;border-radius:50%;background:var(--er);color:var(--erb);font-size:12px;font-weight:700;display:grid;place-items:center">!</span><span><b style="font-weight:600">No pudimos ingresar.</b> Correo o contraseña incorrectos. Revisa los datos o restablece tu contraseña.</span></div></sc-if>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Correo</span><span style="height:44px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 14px;font-size:16px;background:var(--bg)">juan.murcia@andina.com.co</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between;font-size:13px;font-weight:500">Contraseña<a href="#" style="font-weight:500">¿La olvidaste?</a></span><span style="height:44px;border:2px solid {{ w.pwBd }};border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;font-size:16px;background:var(--bg);letter-spacing:.2em">••••••••••<span style="font-size:13px;letter-spacing:0;color:var(--pr);font-weight:500">Mostrar</span></span></label>
+<label style="display:flex;align-items:center;gap:8px;font-size:14px"><span style="width:18px;height:18px;border-radius:4px;background:var(--pr);color:var(--onpr);display:grid;place-items:center;font-size:12px">✓</span>Mantener la sesión en este equipo</label>
+<button onClick="{{ w.doLogin }}" style="height:44px;border-radius:8px;border:0;background:var(--pr);color:var(--onpr);font-size:15px;font-weight:600;cursor:pointer;box-shadow:var(--e2)" style-hover="background:var(--prh)">Ingresar</button>
+<div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--mu)"><span style="flex:1;height:1px;background:var(--bd)"></span>o continúa con<span style="flex:1;height:1px;background:var(--bd)"></span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<button style="height:44px;border-radius:8px;border:1px solid var(--bds);background:var(--bg);color:var(--tx);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:var(--sf)">Google</button>
+<button style="height:44px;border-radius:8px;border:1px solid var(--bds);background:var(--bg);color:var(--tx);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:var(--sf)">Microsoft</button>
+<button style="grid-column:span 2;height:44px;border-radius:8px;border:1px solid var(--bds);background:var(--bg);color:var(--tx);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:var(--sf)">SSO empresarial (SAML)</button>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.hasShell }}" hint-placeholder-val="{{ true }}">
+<div style="height:56px;flex:none;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid var(--bd);background:var(--glass);backdrop-filter:blur(16px) saturate(1.4);position:relative;z-index:2">
+<div style="display:flex;align-items:center;gap:10px;flex:none;width:214px">
+<div role="img" aria-label="SIFCA" title="SIFCA" style="width:34px;height:34px;flex:none;background:var(--logo) center/contain no-repeat"></div>
+<div style="display:flex;flex-direction:column;line-height:1.25;min-width:0"><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ w.company }}</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">NIT {{ w.nit }}</span></div>
+</div>
+<div style="flex:1;max-width:520px;margin:0 auto;height:36px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--mu);display:flex;align-items:center;gap:10px;padding:0 8px 0 12px;font-size:13px;box-shadow:var(--e1)"><span style="width:12px;height:12px;border:1.6px solid currentColor;border-radius:50%"></span><span style="flex:1">Buscar o ejecutar…</span><span style="font:500 11px 'JetBrains Mono',monospace;padding:2px 6px;border:1px solid var(--bd);border-radius:5px;background:var(--sf)">Ctrl K</span></div>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:14px;background:var(--okb);color:var(--ok);font-size:12px;font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--okb)"></span>Oct 2026 · Abierto</span>
+<span style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);display:flex;align-items:center;gap:6px;font-size:13px">Alertas<span style="min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--pr);color:var(--onpr);font-size:11px;font-weight:700;display:grid;place-items:center">{{ w.alerts }}</span></span>
+<span style="width:32px;height:32px;border-radius:50%;background:var(--sf2);display:grid;place-items:center;font-size:12px;font-weight:600">JM</span>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex">
+<nav style="width:232px;flex:none;background:var(--side);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:12px 10px;gap:2px">
+<sc-for list="{{ w.groups }}" as="g" hint-placeholder-count="12">
+<div style="display:flex;flex-direction:column">
+<div style="height:32px;display:flex;align-items:center;gap:10px;padding:0 6px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:{{ g.weight }}" style-hover="background:var(--hov)">
+<span style="width:24px;height:22px;flex:none;border-radius:6px;background:{{ g.tileBg }};color:{{ g.tileFg }};display:grid;place-items:center;font:600 10px 'JetBrains Mono',monospace"><sf-icon name="{{ g.code }}" style="width:15px;height:15px"></sf-icon></span><span style="flex:1;white-space:nowrap">{{ g.name }}</span>
+</div>
+<sc-if value="{{ g.showChildren }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 40px">
+<sc-for list="{{ g.children }}" as="c" hint-placeholder-count="5"><div style="height:28px;display:flex;align-items:center;padding:0 8px;border-radius:6px;font-size:13px;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};font-weight:{{ c.weight }}" style-hover="background:var(--hov)">{{ c.name }}</div></sc-for>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</nav>
+
+<main style="flex:1;min-width:0;position:relative;background:var(--app);display:flex;flex-direction:column;overflow:hidden">
+
+<sc-if value="{{ w.isFactura }}" hint-placeholder-val="{{ false }}">
+<div style="padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div><div style="font-size:12px;color:var(--mu)">Ventas › Facturas de venta › Nueva</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:6px"><h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-.01em">Factura de venta</h1><span style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu)">FV · siguiente 3 (orientativo)</span><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:5px;font-size:12px;font-weight:600;background:{{ w.docBadge.bg }};color:{{ w.docBadge.fg }}">{{ w.docBadge.t }}</span></div></div>
+<div style="display:flex;gap:8px">
+<sc-if value="{{ w.editable }}" hint-placeholder-val="{{ true }}">
+<button style="height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:var(--e1)" style-hover="background:var(--hov)">Guardar borrador<span style="font:500 11px 'JetBrains Mono',monospace;color:var(--mu)">Ctrl S</span></button>
+<button onClick="{{ w.closeSale }}" style="height:36px;padding:0 14px;border-radius:8px;border:0;background:var(--pr);color:var(--onpr);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:var(--e2)" style-hover="background:var(--prh)">Cerrar venta<span style="font:500 11px 'JetBrains Mono',monospace;opacity:.8">Ctrl ↵</span></button>
+</sc-if>
+<sc-if value="{{ w.locked }}" hint-placeholder-val="{{ false }}">
+<button style="height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;font-weight:500;cursor:pointer">Nota crédito…</button>
+<button style="height:36px;padding:0 14px;border-radius:8px;border:0;background:{{ w.deliver.bg }};color:{{ w.deliver.fg }};font-size:13px;font-weight:600;cursor:{{ w.deliver.cur }}">Entregar al cliente</button>
+</sc-if>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 312px;gap:20px;padding:16px 28px 24px">
+<div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+
+<div style="position:relative;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:grid;grid-template-columns:minmax(0,1fr) 112px 112px 180px;gap:12px;align-items:end">
+<label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:500;color:var(--mu)">Cliente</span>
+<span style="height:44px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;gap:10px;padding:0 6px 0 8px;background:var(--bg)">
+<span style="width:30px;height:30px;border-radius:7px;background:var(--prs);color:var(--pr);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none">AC</span>
+<span style="display:flex;flex-direction:column;line-height:1.2;min-width:0;flex:1"><span style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Almacenes La Ceiba S.A.S.</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">@ NIT 901.234.567-8</span></span>
+<span title="En alerta · 82 % del cupo" style="font-size:12px;font-weight:700;padding:3px 7px;border-radius:5px;background:var(--wab);color:var(--wa);white-space:nowrap;flex:none">! 82 %</span>
+<button onClick="{{ w.toggleCredit }}" style="height:32px;padding:0 10px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);color:var(--pr);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap" style-hover="border-color:var(--pr)">Validar cupo</button>
+</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Fecha</span><span style="height:44px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:14px;font-variant-numeric:tabular-nums;background:var(--bg)">14/10/2026</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Vencimiento</span><span style="height:44px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:14px;font-variant-numeric:tabular-nums;background:var(--bg)">{{ venc }}</span></label>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Forma de pago</span><div style="height:44px;background:var(--sf2);border-radius:8px;padding:3px;display:grid;grid-template-columns:1fr 1fr;gap:3px"><sc-for list="{{ fpOpts }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="border:0;border-radius:6px;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.sh }};font-size:13px;font-weight:600;cursor:pointer">{{ o.name }}</button></sc-for></div></div>
+
+<sc-if value="{{ w.creditOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:calc(100% + 8px);left:18px;width:420px;z-index:5;border-radius:14px;border:1px solid var(--glassb);background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);box-shadow:var(--e3);padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">Cupo de crédito · Almacenes La Ceiba</span><button onClick="{{ w.toggleCredit }}" style="width:28px;height:28px;border:0;border-radius:6px;background:transparent;color:var(--mu);font-size:16px;cursor:pointer">×</button></div>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--wab);color:var(--wa)">! En alerta</span><span style="font-size:12px;color:var(--mu)">Plazo 30 días · Sin mora · umbral de alerta 80 %</span></div>
+<div style="height:10px;border-radius:5px;background:var(--sf2);display:flex;overflow:hidden"><span style="width:82%;background:var(--ne)"></span><span style="width:{{ credit.saleW }}%;background:{{ credit.saleColor }}"></span></div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;font-size:12px"><div><div style="color:var(--mu)">Cupo</div><div style="font-weight:600;font-variant-numeric:tabular-nums">$ 5.000.000,00</div></div><div><div style="color:var(--mu)">Saldo</div><div style="font-weight:600;font-variant-numeric:tabular-nums">$ 4.100.000,00</div></div><div><div style="color:var(--mu)">Esta factura</div><div style="font-weight:600;font-variant-numeric:tabular-nums">{{ fTotal }}</div></div><div><div style="color:var(--mu)">Disponible después</div><div style="font-weight:600;font-variant-numeric:tabular-nums;color:{{ credit.noteFg }}">{{ credit.afterF }}</div></div></div>
+<div style="border-top:1px solid var(--bd);padding-top:10px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;font-size:11px"><sc-for list="{{ aging }}" as="a" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;gap:3px"><span style="color:var(--mu)">{{ a.k }}</span><span style="font-weight:600;font-size:12px;font-variant-numeric:tabular-nums">{{ a.v }}</span></div></sc-for></div>
+<div style="font-size:12px;line-height:1.45;color:{{ credit.noteFg }}">{{ credit.note }}</div>
+</div>
+</sc-if>
+</div>
+
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:12px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--bd)">
+<div style="flex:1;height:36px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;gap:10px;padding:0 10px;font-size:13px;color:var(--mu);background:var(--bg)"><span style="width:12px;height:12px;border:1.6px solid currentColor;border-radius:50%"></span><span style="flex:1">Agregar ítem por código o nombre…</span><span style="font:500 11px 'JetBrains Mono',monospace;padding:1px 6px;border:1px solid var(--bd);border-radius:4px">/</span></div>
+<span style="font-size:12px;color:var(--mu)">Frecuentes</span>
+<sc-for list="{{ freq }}" as="f" hint-placeholder-count="2"><button onClick="{{ f.add }}" style="height:30px;padding:0 10px;border-radius:15px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:12px;font-weight:500;cursor:pointer" style-hover="border-color:var(--pr);color:var(--pr)">+ {{ f.name }}</button></sc-for>
+</div>
+<div style="display:grid;grid-template-columns:28px minmax(0,1fr) 96px 124px 60px 112px 128px 32px;height:32px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);padding:0 8px;border-bottom:1px solid var(--bd)"><span style="padding:0 6px">#</span><span style="padding:0 6px">Ítem</span><span style="padding:0 6px;text-align:right">Cantidad</span><span style="padding:0 6px;text-align:right">Precio unit.</span><span style="padding:0 6px;text-align:right">IVA</span><span style="padding:0 6px;text-align:right">Valor IVA</span><span style="padding:0 6px;text-align:right">Total</span><span></span></div>
+<div style="flex:1;overflow:auto">
+<sc-for list="{{ invLines }}" as="l" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:28px minmax(0,1fr) 96px 124px 60px 112px 128px 32px;height:40px;align-items:center;font-size:13px;padding:0 8px;border-bottom:1px solid var(--bd)" style-hover="background:var(--hov)">
+<span style="padding:0 6px;color:var(--mu);font-variant-numeric:tabular-nums">{{ l.n }}</span>
+<span style="padding:0 6px;display:flex;gap:10px;align-items:baseline;min-width:0"><span style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu);white-space:nowrap;flex:none">{{ l.sku }}</span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span></span>
+<span style="padding:0 6px;display:flex;justify-content:flex-end"><span style="height:28px;border:1px solid var(--bd);border-radius:6px;display:grid;grid-template-columns:22px 30px 22px;align-items:center;background:var(--bg)"><button onClick="{{ l.dec }}" style="height:26px;border:0;background:transparent;color:var(--pr);cursor:pointer">−</button><span style="text-align:center;font-weight:600;font-variant-numeric:tabular-nums">{{ l.qty }}</span><button onClick="{{ l.inc }}" style="height:26px;border:0;background:transparent;color:var(--pr);cursor:pointer">+</button></span></span>
+<span style="padding:0 6px;text-align:right;font-variant-numeric:tabular-nums">{{ l.price }}</span>
+<span style="padding:0 6px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mu)">19 %</span>
+<span style="padding:0 6px;text-align:right;font-variant-numeric:tabular-nums">{{ l.iva }}</span>
+<span style="padding:0 6px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600">{{ l.total }}</span>
+<button onClick="{{ l.del }}" title="Quitar línea" style="width:26px;height:26px;border:0;border-radius:6px;background:transparent;color:var(--mu);cursor:pointer" style-hover="background:var(--sf2)">×</button>
+</div>
+</sc-for>
+</div>
+<div style="border-top:1px solid var(--bd);display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;padding:14px 18px;background:var(--sf)">
+<div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+<span style="font-weight:600;color:var(--mu)">Desglose de impuestos</span>
+<div style="display:grid;grid-template-columns:110px 130px 120px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Tarifa</span><span style="color:var(--mu);text-align:right">Base</span><span style="color:var(--mu);text-align:right">Impuesto</span><span>IVA 19 %</span><span style="text-align:right">{{ fSub }}</span><span style="text-align:right">{{ fIva }}</span></div>
+<span style="color:var(--mu)">Tarifas según parametrización vigente · Impuestos › Tarifas y vigencias</span>
+</div>
+<div style="display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:13px;align-content:start">
+<span style="color:var(--mu)">Subtotal</span><span style="text-align:right;font-variant-numeric:tabular-nums">{{ fSub }}</span>
+<span style="color:var(--mu)">IVA</span><span style="text-align:right;font-variant-numeric:tabular-nums">{{ fIva }}</span>
+<span style="font-size:15px;font-weight:600;padding-top:6px;border-top:1px solid var(--bd)">Total</span><span style="text-align:right;font-variant-numeric:tabular-nums;font-size:22px;font-weight:700;padding-top:6px;border-top:1px solid var(--bd);letter-spacing:-.01em">{{ fTotal }}</span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:flex;flex-direction:column;gap:2px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span style="font-size:14px;font-weight:600">Estado DIAN</span><span style="font-size:12px;color:var(--mu)">Factura electrónica</span></div>
+<sc-for list="{{ w.timeline }}" as="s" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px">
+<div style="display:flex;flex-direction:column;align-items:center"><span style="width:22px;height:22px;border-radius:50%;background:{{ s.dotBg }};color:{{ s.dotFg }};border:1.5px solid {{ s.dotBd }};display:grid;place-items:center;font-size:11px;font-weight:700;flex:none;box-shadow:{{ s.glow }}">{{ s.icon }}</span><span style="width:2px;flex:1;min-height:16px;background:{{ s.line }}"></span></div>
+<div style="padding-bottom:14px"><div style="font-size:13px;font-weight:{{ s.w }};color:{{ s.fg }}">{{ s.name }}</div><div style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">{{ s.time }}</div></div>
+</div>
+</sc-for>
+<sc-if value="{{ w.dianErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:10px;padding:12px;border-radius:10px;background:var(--erb);color:var(--er);font-size:12px;line-height:1.45"><span style="flex:none;width:18px;height:18px;border-radius:50%;background:var(--er);color:var(--erb);font-weight:700;display:grid;place-items:center">!</span><span><b style="font-weight:600;display:block;font-size:13px">La DIAN rechazó el documento</b>El NIT del adquiriente no coincide con el registrado. Corrige los datos del cliente en Terceros y vuelve a transmitir.</span></div></sc-if>
+<sc-if value="{{ w.dianOk }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:4px;padding:12px;border-radius:10px;background:var(--sf);font-size:12px"><span style="color:var(--mu)">CUFE</span><span style="font:500 11px 'JetBrains Mono',monospace;word-break:break-all">c41e9a07b3…f20d5e18</span><span style="color:var(--mu);margin-top:4px">Aceptada: ya no se edita; se corrige con nota crédito.</span></div></sc-if>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:flex;flex-direction:column;gap:10px;font-size:12px">
+<span style="font-size:14px;font-weight:600">Numeración</span>
+<div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px"><span style="color:var(--mu)">Prefijo</span><span style="font-family:'JetBrains Mono',monospace">FV</span><span style="color:var(--mu)">Rango vigente</span><span style="font-variant-numeric:tabular-nums">1 – 5.000 · usados 2</span><span style="color:var(--mu)">Bodega</span><span>Principal</span></div>
+<span style="color:var(--mu)">El consecutivo se asigna al emitir; los borradores no lo consumen.</span>
+</div>
+</div>
+</div>
+
+<sc-if value="{{ w.payOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ w.closePay }}" style="position:absolute;inset:0;background:var(--scrim);backdrop-filter:blur(4px);z-index:8"></div>
+<div role="dialog" style="position:absolute;top:84px;left:50%;transform:translateX(-50%);width:560px;z-index:9;border-radius:16px;border:1px solid var(--glassb);background:var(--glass);backdrop-filter:blur(28px) saturate(1.6);box-shadow:var(--e3);display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:20px 24px 0;display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:18px;font-weight:600">Registrar pago</div><div style="font-size:13px;color:var(--mu);margin-top:2px">FV · siguiente 3 · Almacenes La Ceiba S.A.S.</div></div><button onClick="{{ w.closePay }}" style="width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:var(--mu);font-size:18px;cursor:pointer" style-hover="background:var(--sf2)">×</button></div>
+<div style="padding:18px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 16px;border-radius:12px;background:var(--sf)"><span style="font-size:13px;color:var(--mu)">Total a pagar</span><span style="font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums">{{ fTotal }}</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<sc-for list="{{ payOpts }}" as="p" hint-placeholder-count="2"><button onClick="{{ p.pick }}" style="text-align:left;padding:14px;border-radius:12px;border:2px solid {{ p.bd }};background:{{ p.bg }};color:var(--tx);cursor:pointer;display:flex;gap:12px;align-items:flex-start"><span style="width:18px;height:18px;border-radius:50%;border:2px solid {{ p.bd }};display:grid;place-items:center;flex:none;margin-top:1px"><span style="width:8px;height:8px;border-radius:50%;background:{{ p.dot }}"></span></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ p.name }}</span><span style="font-size:12px;color:var(--mu)">{{ p.sub }}</span></span></button></sc-for>
+</div>
+<sc-if value="{{ payEf }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:14px;align-items:end">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Efectivo recibido</span><span style="height:48px;border:2px solid var(--ring);border-radius:10px;display:flex;align-items:center;gap:6px;padding:0 13px;background:var(--bg)"><span style="color:var(--mu);font-size:18px">$</span><input value="{{ cashIn }}" onChange="{{ onCash }}" inputmode="numeric" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:20px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums"></input></span></label>
+<div style="display:flex;flex-direction:column;gap:2px;padding:6px 0"><span style="font-size:12px;color:var(--mu)">{{ cash.label }}</span><span style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ cash.fg }}">{{ cash.value }}</span></div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ quick }}" as="q" hint-placeholder-count="4"><button onClick="{{ q.pick }}" style="height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-size:12px;font-weight:500;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="border-color:var(--pr)">{{ q.label }}</button></sc-for></div>
+</sc-if>
+<sc-if value="{{ payTr }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:14px">
+<label style="display:flex;flex-direction:column;gap:6px;grid-column:span 2"><span style="font-size:13px;font-weight:500">Cuenta destino</span><span style="height:44px;border:1px solid var(--bds);border-radius:10px;display:flex;align-items:center;gap:10px;padding:0 13px;background:var(--bg);font-size:14px"><span style="font:500 13px 'JetBrains Mono',monospace">1110</span>Bancos · Cta. corriente ·· 4821<span style="margin-left:auto;color:var(--mu);font-size:10px">▼</span></span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Número de comprobante / referencia <span style="color:var(--er)">*</span></span><span style="height:44px;border:2px solid {{ refBd }};border-radius:10px;display:flex;align-items:center;padding:0 12px;background:var(--bg)"><input value="{{ refIn }}" onChange="{{ onRef }}" placeholder="Ej. 0048213377" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font:500 15px 'JetBrains Mono',monospace"></input></span><span style="font-size:12px;color:{{ refHintFg }}">{{ refHint }}</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Fecha</span><span style="height:44px;border:1px solid var(--bds);border-radius:10px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:14px;font-variant-numeric:tabular-nums">14/10/2026</span></label>
+</div>
+</sc-if>
+</div>
+<div style="padding:14px 24px;border-top:1px solid var(--bd);display:flex;align-items:center;gap:10px;background:var(--sf)">
+<span style="flex:1;font-size:12px;color:var(--mu);line-height:1.4">Se registra el recibo de caja y se emite la factura electrónica.</span>
+<button onClick="{{ w.closePay }}" style="height:40px;padding:0 14px;border-radius:8px;border:0;background:transparent;color:var(--pr);font-size:14px;font-weight:500;cursor:pointer">Cancelar</button>
+<button onClick="{{ w.confirmPay }}" style="height:40px;padding:0 16px;border-radius:8px;border:0;background:{{ payBtn.bg }};color:{{ payBtn.fg }};font-size:14px;font-weight:600;cursor:{{ payBtn.cur }};box-shadow:var(--e1)">Confirmar pago y emitir</button>
+</div>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ w.isInv }}" hint-placeholder-val="{{ false }}">
+<div style="padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div><div style="font-size:12px;color:var(--mu)">Inventario › Kardex</div><h1 style="margin:6px 0 0;font-size:24px;font-weight:600;letter-spacing:-.01em">Existencias y kardex</h1></div>
+<div style="display:flex;gap:8px;align-items:center">
+<span style="height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--bds);background:var(--card);display:flex;align-items:center;gap:8px;font-size:13px"><span style="color:var(--mu)">Bodega</span>Principal ▾</span>
+<span style="height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--bds);background:var(--card);display:flex;align-items:center;gap:8px;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Corte</span>14/10/2026</span>
+<button style="height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;font-weight:500;cursor:pointer">Exportar</button>
+<button style="height:36px;padding:0 14px;border-radius:8px;border:0;background:var(--pr);color:var(--onpr);font-size:13px;font-weight:600;cursor:pointer;box-shadow:var(--e2)">Ajuste o traslado</button>
+</div>
+</div>
+<div style="padding:16px 28px 24px;display:flex;flex-direction:column;gap:16px;flex:1;min-height:0">
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:var(--mu);font-weight:500">Valor del inventario al costo</span><span style="font-size:24px;font-weight:700;letter-spacing:-.015em;font-variant-numeric:tabular-nums">{{ kpi.val }}</span><span style="font-size:12px;color:var(--mu)">7 ítems · Bodega Principal</span></div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:var(--mu);font-weight:500">Bajo punto de reorden</span><span style="font-size:24px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--wa)"><span style="width:20px;height:20px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center;font-size:12px">!</span>{{ kpi.low }} ítems</span><span style="font-size:12px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ kpi.lowNames }}</span></div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:var(--mu);font-weight:500">Agotados</span><span style="font-size:24px;font-weight:700">{{ kpi.out }} ítem</span><span style="font-size:12px;color:var(--mu)">{{ kpi.outNames }}</span></div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 16px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:var(--mu);font-weight:500">Clasificación ABC por valor</span><div style="height:12px;border-radius:6px;display:flex;overflow:hidden;gap:2px"><span style="width:{{ kpi.aW }}%;background:var(--pr)"></span><span style="width:{{ kpi.bW }}%;background:var(--pr);opacity:.55"></span><span style="width:{{ kpi.cW }}%;background:var(--pr);opacity:.25"></span></div><div style="display:flex;justify-content:space-between;font-size:12px;font-variant-numeric:tabular-nums"><span><b>A</b> {{ kpi.aP }}</span><span><b>B</b> {{ kpi.bP }}</span><span><b>C</b> {{ kpi.cP }}</span><span style="color:var(--mu)">cortes 80 / 95</span></div></div>
+</div>
+
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 52px 120px 92px 92px 150px 118px 132px 190px;height:32px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);padding:0 8px;border-bottom:1px solid var(--bd)"><span style="padding:0 8px">Ítem</span><span style="padding:0 8px">ABC</span><span style="padding:0 8px">Costeo</span><span style="padding:0 8px;text-align:right">Existencia</span><span style="padding:0 8px;text-align:right">Reorden</span><span style="padding:0 8px">Cobertura</span><span style="padding:0 8px;text-align:right">Costo unit.</span><span style="padding:0 8px;text-align:right">Valor</span><span style="padding:0 8px">Alerta</span></div>
+<sc-for list="{{ items }}" as="it" hint-placeholder-count="7">
+<div onClick="{{ it.pick }}" style="display:grid;grid-template-columns:minmax(0,1fr) 52px 120px 92px 92px 150px 118px 132px 190px;height:{{ rowH }}px;align-items:center;font-size:13px;padding:0 8px;border-bottom:1px solid var(--bd);cursor:pointer;background:{{ it.bg }}" style-hover="background:var(--hov)">
+<span style="padding:0 8px;display:flex;gap:10px;align-items:baseline;min-width:0"><span style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu);width:72px;flex:none">{{ it.sku }}</span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:{{ it.fw }}">{{ it.name }}</span></span>
+<span style="padding:0 8px"><span style="width:20px;height:20px;border-radius:5px;display:grid;place-items:center;font-size:11px;font-weight:700;background:{{ it.abcBg }};color:{{ it.abcFg }}">{{ it.abc }}</span></span>
+<span style="padding:0 8px;display:flex;align-items:center;gap:5px;font-size:12px"><svg width="9" height="9" viewBox="0 0 10 10" style="color:var(--mu)"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>{{ it.method }}</span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600">{{ it.stock }}</span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mu)">{{ it.reorder }}</span>
+<span style="padding:0 8px"><span style="display:block;height:6px;border-radius:3px;background:var(--sf2);position:relative;overflow:hidden"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ it.covW }}%;background:{{ it.covC }};border-radius:3px"></span><span style="position:absolute;left:{{ it.rpL }}%;top:-2px;bottom:-2px;width:2px;background:var(--tx);opacity:.5"></span></span></span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums">{{ it.unit }}</span>
+<span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums">{{ it.val }}</span>
+<span style="padding:0 8px"><sc-if value="{{ it.alert }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 7px;border-radius:4px;font-size:12px;font-weight:500;background:var(--wab);color:var(--wa)">! {{ it.alert }}</span></sc-if></span>
+</div>
+</sc-for>
+</div>
+
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;display:flex;flex-direction:column">
+<div style="padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--bd)">
+<span style="font-size:14px;font-weight:600">Kardex</span><span style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu)">{{ kSel.sku }}</span><span style="font-size:14px">{{ kSel.name }}</span>
+<span style="flex:1"></span>
+<div style="height:30px;background:var(--sf2);border-radius:7px;padding:2px;display:flex;gap:2px;font-size:12px;font-weight:600"><span style="padding:0 10px;display:flex;align-items:center;border-radius:5px;background:{{ kSel.pBg }};color:{{ kSel.pFg }}">Promedio ponderado</span><span style="padding:0 10px;display:flex;align-items:center;border-radius:5px;background:{{ kSel.fBg }};color:{{ kSel.fFg }}">PEPS</span></div>
+<span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--mu)"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Bloqueado: el ítem tiene movimientos</span>
+</div>
+<div style="display:grid;grid-template-columns:96px 84px minmax(0,1fr) 3fr 3fr 3fr;height:26px;align-items:center;font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;background:var(--sf)"><span></span><span></span><span></span><span style="text-align:center;border-left:1px solid var(--bd);border-bottom:2px solid var(--ok);height:100%;display:grid;place-items:center">Entradas</span><span style="text-align:center;border-left:1px solid var(--bd);border-bottom:2px solid var(--wa);height:100%;display:grid;place-items:center">Salidas</span><span style="text-align:center;border-left:1px solid var(--bd);border-bottom:2px solid var(--pr);height:100%;display:grid;place-items:center">Saldo</span></div>
+<div style="display:grid;grid-template-columns:96px 84px minmax(0,1fr) repeat(9,minmax(0,1fr));height:28px;align-items:center;font-size:12px;font-weight:600;color:var(--mu);background:var(--sf);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">Fecha</span><span style="padding:0 8px">Documento</span><span style="padding:0 8px">Detalle</span><span style="padding:0 8px;text-align:right;border-left:1px solid var(--bd)">Cant.</span><span style="padding:0 8px;text-align:right">Costo u.</span><span style="padding:0 8px;text-align:right">Valor</span><span style="padding:0 8px;text-align:right;border-left:1px solid var(--bd)">Cant.</span><span style="padding:0 8px;text-align:right">Costo u.</span><span style="padding:0 8px;text-align:right">Valor</span><span style="padding:0 8px;text-align:right;border-left:1px solid var(--bd)">Cant.</span><span style="padding:0 8px;text-align:right">{{ kSel.unitLabel }}</span><span style="padding:0 8px;text-align:right">Valor</span></div>
+<div style="flex:1;overflow:auto">
+<sc-for list="{{ kardex }}" as="k" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:96px 84px minmax(0,1fr) repeat(9,minmax(0,1fr));height:{{ rowH }}px;align-items:center;font-size:13px;font-variant-numeric:tabular-nums;border-bottom:1px solid var(--bd)" style-hover="background:var(--hov)">
+<span style="padding:0 12px">{{ k.f }}</span><span style="padding:0 8px;font:500 12px 'JetBrains Mono',monospace;color:var(--pr)">{{ k.doc }}</span><span style="padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mu)">{{ k.det }}</span>
+<span style="padding:0 8px;text-align:right;border-left:1px solid var(--bd);height:100%;display:flex;align-items:center;justify-content:flex-end">{{ k.iq }}</span><span style="padding:0 8px;text-align:right">{{ k.ic }}</span><span style="padding:0 8px;text-align:right">{{ k.iv }}</span>
+<span style="padding:0 8px;text-align:right;border-left:1px solid var(--bd);height:100%;display:flex;align-items:center;justify-content:flex-end">{{ k.oq }}</span><span style="padding:0 8px;text-align:right">{{ k.oc }}</span><span style="padding:0 8px;text-align:right">{{ k.ov }}</span>
+<span style="padding:0 8px;text-align:right;border-left:1px solid var(--bd);height:100%;display:flex;align-items:center;justify-content:flex-end;font-weight:600">{{ k.sq }}</span><span style="padding:0 8px;text-align:right">{{ k.sc }}</span><span style="padding:0 8px;text-align:right;font-weight:600">{{ k.sv }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isAlegra }}" hint-placeholder-val="{{ false }}">
+<div style="padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div><div style="font-size:12px;color:var(--mu)">Integraciones › Conectores</div><h1 style="margin:6px 0 0;font-size:24px;font-weight:600;letter-spacing:-.01em">Conectores</h1></div>
+<div style="display:flex;gap:8px"><button style="height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;font-weight:500;cursor:pointer">Ejecuciones y errores</button><a href="#2i" style="height:36px;padding:0 14px;border-radius:8px;background:var(--pr);color:var(--onpr);font-size:13px;font-weight:600;display:flex;align-items:center;text-decoration:none;box-shadow:var(--e2)">Nueva migración</a></div>
+</div>
+<div style="padding:16px 28px 24px;display:flex;flex-direction:column;gap:16px;flex:1;min-height:0">
+<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px">
+<sc-for list="{{ w.conns }}" as="c" hint-placeholder-count="5">
+<div style="background:var(--card);border:{{ c.bdw }} solid {{ c.bd }};border-radius:12px;box-shadow:{{ c.sh }};padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer" style-hover="box-shadow:var(--e2)">
+<div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;border-radius:8px;background:var(--sf2);display:grid;place-items:center;font:600 11px 'JetBrains Mono',monospace;color:var(--mu)">{{ c.code }}</span><span style="display:flex;flex-direction:column;line-height:1.25;min-width:0"><span style="font-size:14px;font-weight:600">{{ c.name }}</span><span style="font-size:11px;color:var(--mu)">{{ c.type }}</span></span></div>
+<span style="align-self:flex-start;display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:5px;font-size:12px;font-weight:600;background:{{ c.stBg }};color:{{ c.stFg }}">{{ c.st }}</span>
+<span style="font-size:12px;color:var(--mu);line-height:1.4">{{ c.meta }}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:16px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:12px">
+<span style="width:36px;height:36px;border-radius:9px;background:var(--sf2);display:grid;place-items:center;font:600 12px 'JetBrains Mono',monospace;color:var(--mu)">AL</span>
+<div style="flex:1"><div style="font-size:16px;font-weight:600">Configurar Alegra</div><div style="font-size:12px;color:var(--mu)">Origen de datos · API REST · Papelería Los Andes S.A.S.</div></div>
+<span style="display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:13px;background:var(--neb);color:var(--ne);font-size:12px;font-weight:600"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Solo lectura</span>
+<div style="display:flex;gap:2px;font-size:13px;margin-left:8px"><span style="padding:6px 10px;border-radius:6px;background:var(--prs);color:var(--pr);font-weight:600">Conexión</span><span style="padding:6px 10px;color:var(--mu)">Historial</span></div>
+</div>
+<div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;align-content:start">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Nombre de la conexión</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:14px;background:var(--bg)">Alegra · Papelería Los Andes</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Correo de la cuenta</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:14px;background:var(--bg)">contabilidad@papelerialosandes.co</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Token de API</span><span style="height:40px;border:{{ w.tokBd }};border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 6px 0 12px;font-size:14px;background:var(--bg)"><span style="flex:1;font-family:'JetBrains Mono',monospace;letter-spacing:.1em">•••••••••••• 7f3a</span><button style="height:28px;padding:0 10px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:12px;cursor:pointer">Reemplazar</button><button style="height:28px;padding:0 10px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:12px;cursor:pointer">Revocar</button></span><span style="font-size:12px;color:var(--mu)">Se guarda cifrado y nunca se muestra completo.</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">URL base</span><span style="height:40px;border:1px solid var(--bd);border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 12px;font:500 13px 'JetBrains Mono',monospace;background:var(--sf);color:var(--mu)"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>https://api.alegra.com/api/v1</span><span style="font-size:12px;color:var(--mu)">Autenticación HTTP Basic (correo + token)</span></label>
+<div style="grid-column:span 2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 18px;padding-top:4px;border-top:1px solid var(--bd)">
+<label style="display:flex;flex-direction:column;gap:6px;padding-top:12px"><span style="font-size:13px;font-weight:500">Tamaño de página</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:14px;background:var(--bg);font-variant-numeric:tabular-nums">30<span style="font-size:12px;color:var(--mu)">de 1 a 30</span></span></label>
+<label style="display:flex;flex-direction:column;gap:6px;padding-top:12px"><span style="font-size:13px;font-weight:500">Pausa ante 429</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:14px;background:var(--bg)">Respetar Retry-After<span style="font-size:12px;color:var(--mu)">mín. 2 s</span></span></label>
+<label style="display:flex;flex-direction:column;gap:6px;padding-top:12px"><span style="font-size:13px;font-weight:500">Reintentos</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:14px;background:var(--bg);font-variant-numeric:tabular-nums">5</span></label>
+</div>
+</div>
+<div style="margin-top:auto;padding:14px 20px;border-top:1px solid var(--bd);background:var(--sf);display:flex;align-items:center;gap:10px">
+<span style="flex:1;font-size:12px;color:var(--mu)">SIFCA nunca escribe en Alegra. Los cambios quedan en la bitácora.</span>
+<button onClick="{{ w.testConn }}" style="height:38px;padding:0 14px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;font-weight:600;cursor:pointer" style-hover="border-color:var(--pr)">{{ w.testLabel }}</button>
+<button style="height:38px;padding:0 16px;border-radius:8px;border:0;background:var(--pr);color:var(--onpr);font-size:13px;font-weight:600;cursor:pointer;box-shadow:var(--e1)">Guardar</button>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px;min-height:0">
+<sc-if value="{{ w.connErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="border-radius:12px;border:1px solid var(--er);background:var(--erb);color:var(--er);padding:16px;display:flex;gap:12px;font-size:13px;line-height:1.5"><span style="flex:none;width:22px;height:22px;border-radius:50%;background:var(--er);color:var(--erb);font-weight:700;display:grid;place-items:center">!</span><div><div style="font-size:14px;font-weight:600">Alegra rechazó las credenciales (401)</div><div><b style="font-weight:600">Qué pasó:</b> el correo y el token no coinciden o el token fue revocado.</div><div><b style="font-weight:600">Qué hacer:</b> genera un token nuevo en Alegra, usa «Reemplazar» y vuelve a probar.</div><div style="font:500 11px 'JetBrains Mono',monospace;margin-top:6px;opacity:.9">GET /company · 14/10/2026 10:42 · req 7c1f-29ab</div></div></div></sc-if>
+<sc-if value="{{ w.connBusy }}" hint-placeholder-val="{{ false }}"><div style="border-radius:12px;border:1px solid var(--bd);background:var(--card);box-shadow:var(--e1);padding:16px;display:flex;gap:12px;align-items:center;font-size:13px"><span style="width:22px;height:22px;border-radius:50%;border:3px solid var(--sf2);border-top-color:var(--pr)"></span><span>Probando conexión · <span style="font-family:'JetBrains Mono',monospace;font-size:12px">GET /company</span></span></div></sc-if>
+<sc-if value="{{ w.connOk }}" hint-placeholder-val="{{ false }}"><div style="border-radius:12px;border:1px solid var(--bd);background:var(--okb);color:var(--ok);padding:16px;display:flex;gap:12px;font-size:13px;line-height:1.5"><span style="flex:none;width:22px;height:22px;border-radius:50%;background:var(--ok);color:var(--okb);font-weight:700;display:grid;place-items:center">✓</span><div><div style="font-size:14px;font-weight:600">Conexión verificada</div><div>Empresa en Alegra: Papelería Los Andes S.A.S.</div><div style="font:500 11px 'JetBrains Mono',monospace;margin-top:6px">GET /company · 200 · 14/10/2026 10:46</div></div></div></sc-if>
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;display:flex;flex-direction:column">
+<div style="padding:12px 16px;font-size:14px;font-weight:600;border-bottom:1px solid var(--bd)">Actividad reciente</div>
+<sc-for list="{{ activity }}" as="a" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--bd);font-size:12px"><span style="font-variant-numeric:tabular-nums;color:var(--mu)">{{ a.t }}</span><span style="min-width:0"><span style="display:block;font-family:'JetBrains Mono',monospace;font-size:11.5px">{{ a.req }}</span><span style="color:var(--mu)">{{ a.txt }}</span></span><span style="font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;background:{{ a.bg }};color:{{ a.fg }}">{{ a.code }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isMig }}" hint-placeholder-val="{{ false }}">
+<div style="padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div><div style="font-size:12px;color:var(--mu)">Integraciones › Migración de datos</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:6px"><h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-.01em">Migración desde Alegra</h1>
+<span style="font-size:12px;padding:3px 9px;border-radius:12px;background:var(--card);border:1px solid var(--bd);font-variant-numeric:tabular-nums">Corte 30/09/2026</span><span style="font-size:12px;padding:3px 9px;border-radius:12px;background:var(--card);border:1px solid var(--bd)">Saldos iniciales</span></div></div>
+<span style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok)"></span>Avance guardado 14/10/2026 10:52 · puedes retomar en cualquier paso</span>
+</div>
+<div style="margin:16px 28px 0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:12px 14px;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px">
+<sc-for list="{{ w.steps }}" as="s" hint-placeholder-count="9">
+<button onClick="{{ s.pick }}" style="border:0;background:{{ s.bg }};border-radius:8px;padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:var(--tx)" style-hover="background:var(--hov)">
+<span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:{{ s.dotBg }};color:{{ s.dotFg }};border:1.5px solid {{ s.dotBd }}">{{ s.icon }}</span>
+<span style="font-size:11.5px;font-weight:{{ s.fw }};color:{{ s.fg }};text-align:center;line-height:1.25">{{ s.name }}</span>
+</button>
+</sc-for>
+</div>
+<div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;padding:16px 28px 24px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;display:flex;flex-direction:column;min-height:0">
+
+<sc-if value="{{ w.s4 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:12px">
+<div style="flex:1"><div style="font-size:16px;font-weight:600">4 · Mapeos</div><div style="font-size:12px;color:var(--mu)">Cada valor de Alegra debe tener su equivalente en SIFCA. Los obligatorios sin resolver bloquean.</div></div>
+<span style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);display:flex;align-items:center;gap:6px;font-size:12px"><span style="color:var(--mu)">Plantilla</span>Alegra estándar ▾</span>
+<button style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;cursor:pointer">Importar CSV</button><button style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;cursor:pointer">Exportar CSV</button>
+</div>
+<div style="display:flex;gap:4px;padding:10px 18px 0;border-bottom:1px solid var(--bd)">
+<sc-for list="{{ mapTabs }}" as="t" hint-placeholder-count="5"><span style="padding:8px 12px;font-size:13px;font-weight:{{ t.fw }};color:{{ t.fg }};border-bottom:2px solid {{ t.bd }};display:flex;gap:6px;align-items:center">{{ t.name }}<span style="font-size:11px;padding:1px 6px;border-radius:8px;background:{{ t.cBg }};color:{{ t.cFg }};font-variant-numeric:tabular-nums">{{ t.n }}</span></span></sc-for>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 36px minmax(0,1.3fr) 140px 170px;height:32px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);padding:0 10px;border-bottom:1px solid var(--bd)"><span style="padding:0 8px">Valor en Alegra</span><span></span><span style="padding:0 8px">Valor en SIFCA</span><span style="padding:0 8px">Confianza</span><span style="padding:0 8px">Acción</span></div>
+<sc-for list="{{ mapRows }}" as="r" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 36px minmax(0,1.3fr) 140px 170px;min-height:48px;align-items:center;font-size:13px;padding:0 10px;border-bottom:1px solid var(--bd);background:{{ r.rowBg }}">
+<span style="padding:0 8px;display:flex;flex-direction:column"><span style="font-weight:500">{{ r.src }}</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">{{ r.sid }}</span></span>
+<span style="color:var(--mu);text-align:center">→</span>
+<span style="padding:0 8px"><span style="height:34px;border:1px solid {{ r.dstBd }};border-radius:7px;display:flex;align-items:center;gap:8px;padding:0 10px;background:var(--bg);color:{{ r.dstFg }}"><span style="font:500 12px 'JetBrains Mono',monospace">{{ r.acct }}</span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.dst }}</span><span style="margin-left:auto;font-size:9px;color:var(--mu)">▼</span></span></span>
+<span style="padding:0 8px"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:5px;font-size:12px;font-weight:600;background:{{ r.cBg }};color:{{ r.cFg }}">{{ r.conf }}</span></span>
+<span style="padding:0 8px"><sc-if value="{{ r.hasAct }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.act }}" style="height:30px;padding:0 10px;border-radius:7px;border:0;background:{{ r.aBg }};color:{{ r.aFg }};font-size:12px;font-weight:600;cursor:pointer">{{ r.aLabel }}</button></sc-if></span>
+</div>
+</sc-for>
+<div style="margin-top:auto;padding:12px 18px;border-top:1px solid var(--bd);background:var(--sf);display:flex;align-items:center;gap:12px">
+<span style="flex:1;font-size:12px;color:{{ mig.noteFg }}">{{ mig.mapNote }}</span>
+<button onClick="{{ w.goEnsayo }}" style="height:36px;padding:0 16px;border-radius:8px;border:0;background:{{ mig.nextBg }};color:{{ mig.nextFg }};font-size:13px;font-weight:600;cursor:pointer">Continuar a revisión →</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.s6 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 18px;border-bottom:1px solid var(--bd)"><div style="font-size:16px;font-weight:600">6 · Informe del ensayo</div><div style="font-size:12px;color:var(--mu)">Simulación completa sin escribir nada. Ejecutar solo se habilita sin problemas que bloqueen.</div></div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) repeat(5,96px);height:32px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);padding:0 10px;border-bottom:1px solid var(--bd)"><span style="padding:0 8px">Entidad</span><span style="padding:0 8px;text-align:right">Leídos</span><span style="padding:0 8px;text-align:right">A crear</span><span style="padding:0 8px;text-align:right">A actualizar</span><span style="padding:0 8px;text-align:right">Ignorados</span><span style="padding:0 8px;text-align:right">Con error</span></div>
+<sc-for list="{{ ensayo }}" as="e" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:minmax(0,1fr) repeat(5,96px);height:{{ rowH }}px;align-items:center;font-size:13px;padding:0 10px;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums"><span style="padding:0 8px">{{ e.n }}</span><span style="padding:0 8px;text-align:right;font-weight:600">{{ e.r }}</span><span style="padding:0 8px;text-align:right">{{ e.c }}</span><span style="padding:0 8px;text-align:right">{{ e.u }}</span><span style="padding:0 8px;text-align:right">{{ e.i }}</span><span style="padding:0 8px;text-align:right;color:{{ e.errFg }};font-weight:{{ e.errW }}">{{ e.e }}</span></div></sc-for>
+<div style="padding:14px 18px;display:flex;flex-direction:column;gap:8px">
+<span style="font-size:13px;font-weight:600">Problemas</span>
+<sc-for list="{{ problems }}" as="p" hint-placeholder-count="2"><div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:{{ p.bg }};color:{{ p.fg }};font-size:13px;line-height:1.45"><span style="flex:none;font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:{{ p.fg }};color:{{ p.bg }}">{{ p.sev }}</span><span style="flex:1">{{ p.txt }}</span><a href="#" style="color:{{ p.fg }};font-weight:600;white-space:nowrap">{{ p.link }}</a></div></sc-for>
+</div>
+<div style="margin-top:auto;padding:12px 18px;border-top:1px solid var(--bd);background:var(--sf);display:flex;align-items:center;gap:10px"><span style="flex:1;font-size:12px;color:var(--mu)">Descarga los registros rechazados para corregirlos en origen.</span><button style="height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;cursor:pointer">Descargar rechazados</button></div>
+</sc-if>
+
+<sc-if value="{{ w.s8 }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:12px"><div style="flex:1"><div style="font-size:16px;font-weight:600">8 · Conciliación</div><div style="font-size:12px;color:var(--mu)">Origen contra SIFCA. Tolerancia en dinero: $ 0,00 (configurable).</div></div></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:12px 18px;border-bottom:1px solid var(--bd)">
+<sc-for list="{{ concTabs }}" as="t" hint-placeholder-count="3"><div style="padding:10px 12px;border-radius:10px;border:{{ t.bdw }} solid {{ t.bd }};display:flex;justify-content:space-between;align-items:center;background:var(--bg)"><span style="font-size:13px;font-weight:{{ t.fw }}">{{ t.name }}</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:{{ t.sBg }};color:{{ t.sFg }}">{{ t.seal }}</span></div></sc-for>
+</div>
+<div style="display:grid;grid-template-columns:72px minmax(0,1fr) 140px 140px 130px 120px;height:32px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);padding:0 10px;border-bottom:1px solid var(--bd)"><span style="padding:0 8px">Cuenta</span><span style="padding:0 8px">Nombre</span><span style="padding:0 8px;text-align:right">Origen</span><span style="padding:0 8px;text-align:right">SIFCA</span><span style="padding:0 8px;text-align:right">Diferencia</span><span style="padding:0 8px">Estado</span></div>
+<sc-for list="{{ conc }}" as="c" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:72px minmax(0,1fr) 140px 140px 130px 120px;height:{{ rowH }}px;align-items:center;font-size:13px;padding:0 10px;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums;background:{{ c.rowBg }}"><span style="padding:0 8px;font:500 12px 'JetBrains Mono',monospace">{{ c.code }}</span><span style="padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span><span style="padding:0 8px;text-align:right">{{ c.o }}</span><span style="padding:0 8px;text-align:right">{{ c.s }}</span><span style="padding:0 8px;text-align:right;color:{{ c.dFg }};font-weight:{{ c.dW }}">{{ c.d }}</span><span style="padding:0 8px"><span style="font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:{{ c.sBg }};color:{{ c.sFg }}">{{ c.seal }}</span></span></div></sc-for>
+<sc-if value="{{ mig.concBad }}" hint-placeholder-val="{{ false }}"><div role="alert" style="margin:14px 18px 0;display:flex;gap:10px;padding:12px 14px;border-radius:10px;background:var(--erb);color:var(--er);font-size:13px;line-height:1.45;align-items:flex-start"><span style="flex:none;width:18px;height:18px;border-radius:50%;background:var(--er);color:var(--erb);font-size:12px;font-weight:700;display:grid;place-items:center">!</span><span style="flex:1"><b style="font-weight:600">No cuadra 1435 Mercancías:</b> origen $ 1.000.000,00 y SIFCA $ 0,00. Faltó el costo unitario inicial de las existencias. Carga los costos y repite la conciliación.</span><button onClick="{{ loadCost }}" style="height:32px;padding:0 12px;border-radius:7px;border:0;background:var(--er);color:var(--erb);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Cargar costos y repetir</button></div></sc-if>
+<div style="margin-top:auto;padding:12px 18px;border-top:1px solid var(--bd);background:var(--sf);display:flex;align-items:center;gap:10px"><span style="flex:1;font-size:12px;color:var(--mu)">Deshacer la corrida no borra nada contabilizado: genera reversiones.</span><button style="height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:13px;cursor:pointer">Deshacer corrida…</button><button style="height:36px;padding:0 16px;border-radius:8px;border:0;background:{{ mig.closeBg }};color:{{ mig.closeFg }};font-size:13px;font-weight:600;cursor:pointer">Cerrar migración</button></div>
+</sc-if>
+
+<sc-if value="{{ w.sOther }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:grid;place-items:center;padding:40px;text-align:center"><div style="max-width:420px;display:flex;flex-direction:column;gap:8px;align-items:center"><span style="width:44px;height:44px;border-radius:50%;background:var(--sf2);display:grid;place-items:center;font-size:16px;font-weight:700;color:var(--mu)">{{ w.stepNum }}</span><div style="font-size:18px;font-weight:600">{{ w.stepName }}</div><div style="font-size:13px;color:var(--mu);line-height:1.5">{{ w.stepDesc }}</div></div></div>
+</sc-if>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:14px;font-weight:600">Resumen de la corrida</span>
+<div style="display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Ítems leídos</span><b>1.236</b><span style="color:var(--mu)">Terceros leídos</span><b>148</b><span style="color:var(--mu)">Cuentas</span><b>214</b><span style="color:var(--mu)">Impuestos</span><b>4</b><span style="color:var(--mu)">Saldos iniciales</span><b>6</b></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--bd)"><span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:5px;background:{{ mig.blkBg }};color:{{ mig.blkFg }}">{{ mig.blkLabel }}</span><span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--wab);color:var(--wa)">! 3 advierten</span></div>
+<button style="height:40px;border-radius:8px;border:0;background:{{ mig.runBg }};color:{{ mig.runFg }};font-size:14px;font-weight:600;cursor:{{ mig.runCur }};margin-top:4px">Ejecutar migración</button>
+<span style="font-size:12px;color:var(--mu);line-height:1.4">{{ mig.runNote }}</span>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600">Comprobante de apertura</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--okb);color:var(--ok)">✓ Cuadra</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px"><div><div style="color:var(--mu)">Σ Débitos</div><div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">$ 4.190.000,00</div></div><div><div style="color:var(--mu)">Σ Créditos</div><div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">$ 4.190.000,00</div></div></div>
+<span style="font-size:12px;color:var(--mu)">Entra con origen MIGRATION y su referencia externa; volver a correr no duplica.</span>
+</div>
+</div>
+</div>
+</sc-if>
+
+</main>
+</div>
+</sc-if>
+
+</div>
+</div>
+</sc-for>
+</div>
+
+<h3 class="dv-h">Móvil 390 · Acceso, cobro POS, vitrina pública y carrito (fila superior claro · inferior Slate)</h3>
+<div style="display:grid;grid-template-columns:repeat(4,max-content);gap:40px 44px;padding:12px">
+<sc-for list="{{ mob }}" as="m" hint-placeholder-count="8">
+<div class="dv-opt" id="{{ m.id }}" style="gap:16px">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ m.id }}">{{ m.id }}</a>{{ m.label }}</div>
+<div style="{{ m.vars }}">
+<div style="height:47px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font-size:15px;font-weight:600;background:{{ m.barBg }};color:{{ m.barFg }}"><span style="font-variant-numeric:tabular-nums">9:41</span><span style="display:flex;gap:6px;align-items:center"><span style="width:17px;height:10px;border-radius:2px;background:currentColor"></span><span style="width:25px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1.5px;display:flex"><span style="width:72%;background:currentColor;border-radius:1px"></span></span></span></div>
+
+<sc-if value="{{ m.isLogin }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--brand);color:#F2F6FB;padding:28px 24px 36px;position:relative;overflow:hidden">
+<div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:24px 24px"></div>
+<div style="position:relative;display:flex;align-items:center;gap:10px"><img src="assets/sifca-oscuro-lockup.png" alt="SIFCA · Sistema Integral Fiscal y Contable Ágil" style="height:46px;width:auto;display:block"></img></div>
+<div style="position:relative;font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:28px">Vende, factura y cobra desde la calle.</div>
+</div>
+<div style="flex:1;margin-top:-16px;border-radius:20px 20px 0 0;background:var(--card);position:relative;padding:24px 20px;display:flex;flex-direction:column;gap:16px">
+<div style="width:110px;height:40px;border:1.5px dashed var(--bds);border-radius:9px;display:grid;place-items:center;font:500 10px 'JetBrains Mono',monospace;color:var(--mu)">logo empresa</div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:500">Correo</span><span style="height:48px;border:1px solid var(--bds);border-radius:10px;display:flex;align-items:center;padding:0 14px;font-size:16px;background:var(--bg)">vendedor@andina.com.co</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:500">Contraseña</span><span style="height:48px;border:1px solid var(--bds);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:16px;background:var(--bg);letter-spacing:.2em">••••••••<span style="font-size:14px;letter-spacing:0;color:var(--pr);font-weight:500">Mostrar</span></span></label>
+<button style="height:52px;border-radius:12px;border:0;background:var(--pr);color:var(--onpr);font-size:16px;font-weight:600;box-shadow:var(--e2)">Ingresar</button>
+<a href="#" style="text-align:center;font-size:14px;font-weight:500;padding:12px 0">¿Olvidaste tu contraseña?</a>
+<div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--mu)"><span style="flex:1;height:1px;background:var(--bd)"></span>o<span style="flex:1;height:1px;background:var(--bd)"></span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button style="height:48px;border-radius:10px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:15px;font-weight:500">Google</button><button style="height:48px;border-radius:10px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:15px;font-weight:500">Microsoft</button></div>
+<button style="height:48px;border-radius:10px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:15px;font-weight:500">SSO empresarial</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ m.isPos }}" hint-placeholder-val="{{ false }}">
+<div style="height:52px;flex:none;background:var(--card);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:4px;padding:0 8px"><button style="width:44px;height:44px;border:0;background:transparent;color:var(--pr);font-size:26px">‹</button><div style="flex:1;font-size:17px;font-weight:600">Cobrar venta</div><span style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu);padding-right:10px">FV · sig. 3</span></div>
+<div style="flex:1;overflow:hidden;padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--e1);padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="min-width:0"><div style="font-size:15px;font-weight:600">Almacenes La Ceiba S.A.S.</div><div style="font:400 12px 'JetBrains Mono',monospace;color:var(--mu)">NIT 901.234.567-8</div></div><button onClick="{{ m.toggleCredit }}" style="height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--bd);background:var(--sf);color:var(--pr);font-size:13px;font-weight:600;white-space:nowrap">Validar cupo</button></div>
+<sc-if value="{{ m.creditOpen }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:8px;padding-top:10px;border-top:1px solid var(--bd)"><span style="align-self:flex-start;font-size:12px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--wab);color:var(--wa)">! En alerta · 82 % del cupo</span><div style="height:8px;border-radius:4px;background:var(--sf2);display:flex;overflow:hidden"><span style="width:82%;background:var(--ne)"></span><span style="width:{{ credit.saleW }}%;background:{{ credit.saleColor }}"></span></div><span style="font-size:12px;color:{{ credit.noteFg }}">{{ credit.note }}</span></div></sc-if>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--e1);overflow:hidden">
+<sc-for list="{{ invLines }}" as="l" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bd);font-size:14px"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b style="font-weight:600;font-variant-numeric:tabular-nums">{{ l.qty }} ×</b> {{ l.name }}</span><span style="font-variant-numeric:tabular-nums;flex:none">{{ l.total }}</span></div></sc-for>
+<div style="padding:10px 14px;background:var(--sf);display:grid;grid-template-columns:1fr auto;gap:3px;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Subtotal</span><span style="text-align:right">{{ fSub }}</span><span style="color:var(--mu)">IVA 19 %</span><span style="text-align:right">{{ fIva }}</span></div>
+</div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;border-radius:24px 24px 0 0;background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);border-top:1px solid var(--glassb);box-shadow:0 -12px 32px -8px rgba(0,0,0,.2);padding:10px 16px 32px;display:flex;flex-direction:column;gap:12px">
+<span style="align-self:center;width:40px;height:5px;border-radius:3px;background:var(--bds);opacity:.6"></span>
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;color:var(--mu)">Total a cobrar</span><span style="font-size:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums">{{ fTotal }}</span></div>
+<sc-if value="{{ m.sheetPay }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><sc-for list="{{ payOpts }}" as="p" hint-placeholder-count="2"><button onClick="{{ p.pick }}" style="height:60px;border-radius:12px;border:2px solid {{ p.bd }};background:{{ p.bg }};color:var(--tx);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px"><span style="font-size:15px;font-weight:600">{{ p.name }}</span><span style="font-size:11px;color:var(--mu)">{{ p.short }}</span></button></sc-for></div>
+<sc-if value="{{ payEf }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:10px;align-items:stretch"><span style="flex:1;min-width:0;height:48px;border:2px solid var(--ring);border-radius:10px;display:flex;align-items:center;gap:6px;padding:0 12px;background:var(--bg)"><span style="color:var(--mu);font-size:13px;white-space:nowrap">Recibido $</span><input value="{{ cashIn }}" onChange="{{ onCash }}" inputmode="numeric" size="1" style="flex:1;min-width:0;width:100%;border:0;outline:0;background:transparent;color:var(--tx);font-size:18px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums"></input></span><span style="width:116px;flex:none;display:flex;flex-direction:column;justify-content:center"><span style="font-size:11px;color:var(--mu)">{{ cash.label }}</span><span style="font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ cash.fg }}">{{ cash.value }}</span></span></div>
+<div style="display:flex;gap:6px;overflow:hidden"><sc-for list="{{ quick }}" as="q" hint-placeholder-count="4"><button onClick="{{ q.pick }}" style="height:36px;flex:none;padding:0 10px;border-radius:18px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-size:12px;font-weight:500;font-variant-numeric:tabular-nums">{{ q.label }}</button></sc-for></div>
+</sc-if>
+<sc-if value="{{ payTr }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Número de comprobante / referencia *</span><span style="height:48px;border:2px solid {{ refBd }};border-radius:10px;display:flex;align-items:center;padding:0 12px;background:var(--bg)"><input value="{{ refIn }}" onChange="{{ onRef }}" placeholder="Ej. 0048213377" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font:500 16px 'JetBrains Mono',monospace"></input></span><span style="font-size:12px;color:{{ refHintFg }}">{{ refHint }} · Bancos 1110 ·· 4821</span></label>
+</sc-if>
+<button onClick="{{ m.confirm }}" style="height:52px;border-radius:12px;border:0;background:{{ payBtn.bg }};color:{{ payBtn.fg }};font-size:16px;font-weight:600;box-shadow:var(--e1)">Confirmar pago y emitir</button>
+</sc-if>
+<sc-if value="{{ m.sheetDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px"><sc-for list="{{ m.timeline }}" as="s" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center"><span style="width:28px;height:28px;border-radius:50%;background:{{ s.dotBg }};color:{{ s.dotFg }};border:1.5px solid {{ s.dotBd }};display:grid;place-items:center;font-size:12px;font-weight:700">{{ s.icon }}</span><span style="font-size:11px;font-weight:{{ s.w }};color:{{ s.fg }};line-height:1.2">{{ s.name }}</span></div></sc-for></div>
+<sc-if value="{{ m.dianErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:10px;padding:10px 12px;border-radius:10px;background:var(--erb);color:var(--er);font-size:12px;line-height:1.4"><span style="flex:none;width:18px;height:18px;border-radius:50%;background:var(--er);color:var(--erb);font-weight:700;display:grid;place-items:center">!</span><span><b>La DIAN rechazó el documento.</b> El NIT del cliente no coincide. Corrígelo y vuelve a transmitir.</span></div></sc-if>
+<button style="height:52px;border-radius:12px;border:0;background:{{ m.shareBg }};color:{{ m.shareFg }};font-size:16px;font-weight:600">Compartir factura al cliente</button>
+<button onClick="{{ m.reset }}" style="height:44px;border:0;background:transparent;color:var(--pr);font-size:15px;font-weight:600">Nueva venta</button>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ m.isShop }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--card);padding:6px 16px 12px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid var(--bd)">
+<div style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:44px;border-radius:12px;border:1.5px dashed var(--bds);display:grid;place-items:center;font:500 9px 'JetBrains Mono',monospace;color:var(--mu)">logo</span><div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:700">Comercializadora Andina</div><div style="font-size:12px;color:var(--mu)">Pedidos por WhatsApp · entrega o recogida</div></div></div>
+<div style="height:44px;border:1px solid var(--bd);border-radius:22px;display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--mu);font-size:15px;background:var(--app)"><span style="width:14px;height:14px;border:1.7px solid currentColor;border-radius:50%"></span>¿Qué estás buscando?</div>
+<div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px"><sc-for list="{{ shopCats }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.pick }}" style="height:36px;flex:none;padding:0 14px;border-radius:18px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:14px;font-weight:500">{{ c.name }}</button></sc-for></div>
+</div>
+<div style="flex:1;min-height:0;overflow:auto;scrollbar-width:none"><div style="padding:14px 16px 120px;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:max-content;gap:12px">
+<sc-for list="{{ shop }}" as="p" hint-placeholder-count="6">
+<div style="background:var(--card);border-radius:16px;box-shadow:var(--e2);overflow:hidden;display:flex;flex-direction:column">
+<div style="height:132px;background:repeating-linear-gradient(135deg,var(--sf) 0 8px,var(--sf2) 8px 16px);display:grid;place-items:center;font:500 10px 'JetBrains Mono',monospace;color:var(--mu);position:relative">foto producto<sc-if value="{{ p.low }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:8px;left:8px;font:600 11px Inter,sans-serif;padding:3px 8px;border-radius:10px;background:var(--wab);color:var(--wa)">Últimas {{ p.stock }}</span></sc-if></div>
+<div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1">
+<div style="font-size:14px;font-weight:600;line-height:1.3">{{ p.name }}</div>
+<div style="font-size:12px;color:var(--mu);line-height:1.35;min-height:32px">{{ p.desc }}</div>
+<div style="font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px">{{ p.priceF }}</div>
+<div style="font-size:11px;color:var(--mu)">IVA incluido</div>
+<div style="margin-top:8px">
+<sc-if value="{{ p.showAdd }}" hint-placeholder-val="{{ true }}"><button onClick="{{ p.inc }}" style="width:100%;height:44px;border-radius:22px;border:0;background:var(--pr);color:var(--onpr);font-size:15px;font-weight:600;cursor:pointer">Agregar</button></sc-if>
+<sc-if value="{{ p.showStep }}" hint-placeholder-val="{{ false }}"><div style="height:44px;border-radius:22px;border:1.5px solid var(--pr);display:grid;grid-template-columns:44px 1fr 44px;align-items:center;color:var(--pr)"><button onClick="{{ p.dec }}" style="height:42px;border:0;background:transparent;color:inherit;font-size:20px;cursor:pointer">−</button><span style="text-align:center;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--tx)">{{ p.qty }}</span><button onClick="{{ p.inc }}" style="height:42px;border:0;background:transparent;color:inherit;font-size:20px;cursor:pointer">+</button></div></sc-if>
+<sc-if value="{{ p.showOut }}" hint-placeholder-val="{{ false }}"><button disabled="disabled" style="width:100%;height:44px;border-radius:22px;border:1px solid var(--bd);background:var(--sf2);color:var(--mu);font-size:14px">Agotado</button></sc-if>
+</div>
+</div>
+</div>
+</sc-for>
+</div></div>
+<sc-if value="{{ hasShop }}" hint-placeholder-val="{{ true }}"><a href="#{{ m.cartId }}" style="position:absolute;left:16px;right:16px;bottom:34px;height:58px;border-radius:29px;background:var(--tx);color:var(--card);display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 22px;box-shadow:var(--e3);text-decoration:none"><span style="font-size:15px;font-weight:600">Ver carrito · {{ shopUnits }}</span><span style="height:42px;padding:0 16px;border-radius:21px;background:var(--card);color:var(--tx);display:flex;align-items:center;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums">{{ shopTotal }}</span></a></sc-if>
+</sc-if>
+
+<sc-if value="{{ m.isCart }}" hint-placeholder-val="{{ false }}">
+<div style="height:52px;flex:none;background:var(--card);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:4px;padding:0 8px"><a href="#{{ m.shopId }}" style="width:44px;height:44px;display:grid;place-items:center;color:var(--pr);font-size:26px;text-decoration:none">‹</a><div style="flex:1;font-size:17px;font-weight:600">Tu pedido</div><span style="font-size:13px;color:var(--mu);padding-right:12px">{{ shopUnits }}</span></div>
+<div style="flex:1;min-height:0;overflow:auto;scrollbar-width:none"><div style="padding:14px 16px 190px;display:flex;flex-direction:column;gap:12px">
+<div style="background:var(--card);border-radius:14px;box-shadow:var(--e1);border:1px solid var(--bd);overflow:hidden">
+<sc-for list="{{ shopLines }}" as="l" hint-placeholder-count="2"><div style="display:grid;grid-template-columns:52px minmax(0,1fr) 112px;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bd)"><span style="width:52px;height:52px;border-radius:10px;background:repeating-linear-gradient(135deg,var(--sf) 0 6px,var(--sf2) 6px 12px)"></span><span style="min-width:0"><span style="display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.name }}</span><span style="font-size:14px;font-variant-numeric:tabular-nums">{{ l.total }}</span></span><span style="height:44px;border:1px solid var(--bd);border-radius:22px;display:grid;grid-template-columns:36px 1fr 36px;align-items:center"><button onClick="{{ l.dec }}" style="height:42px;border:0;background:transparent;color:var(--pr);font-size:18px">−</button><span style="text-align:center;font-weight:700;font-variant-numeric:tabular-nums">{{ l.qty }}</span><button onClick="{{ l.inc }}" style="height:42px;border:0;background:transparent;color:var(--pr);font-size:18px">+</button></span></div></sc-for>
+<sc-if value="{{ noShop }}" hint-placeholder-val="{{ false }}"><div style="padding:24px;text-align:center;font-size:14px;color:var(--mu)">Tu carrito está vacío.</div></sc-if>
+<div style="padding:12px 14px;background:var(--sf);display:grid;grid-template-columns:1fr auto;gap:3px;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Incluye IVA</span><span style="text-align:right">{{ shopIva }}</span><span style="font-size:16px;font-weight:600">Total</span><span style="text-align:right;font-size:18px;font-weight:700">{{ shopTotal }}</span></div>
+</div>
+<div style="height:44px;background:var(--sf2);border-radius:12px;padding:3px;display:grid;grid-template-columns:1fr 1fr;gap:3px"><sc-for list="{{ delivOpts }}" as="d" hint-placeholder-count="2"><button onClick="{{ d.pick }}" style="border:0;border-radius:9px;background:{{ d.bg }};color:{{ d.fg }};box-shadow:{{ d.sh }};font-size:14px;font-weight:600">{{ d.name }}</button></sc-for></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Tu nombre</span><span style="height:48px;border:1px solid var(--bds);border-radius:10px;display:flex;align-items:center;padding:0 14px;background:var(--card)"><input value="{{ custName }}" onChange="{{ onName }}" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:16px"></input></span></label>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500;display:flex;justify-content:space-between">Mensaje que se enviará<span style="color:var(--mu);font-weight:400">vista previa</span></span>
+<div style="align-self:flex-end;max-width:92%;border-radius:14px 14px 4px 14px;padding:10px 12px;background:var(--prs);color:var(--tx);font-size:13px;line-height:1.45;white-space:pre-line;font-variant-numeric:tabular-nums">{{ waMsg }}</div></div>
+</div></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);border-top:1px solid var(--glassb);padding:12px 16px 32px;display:flex;flex-direction:column;gap:8px">
+<button style="height:54px;border-radius:27px;border:0;background:{{ waBtn.bg }};color:{{ waBtn.fg }};font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:var(--e2)"><span style="width:20px;height:20px;border-radius:50% 50% 50% 4px;border:2px solid currentColor"></span>Enviar pedido por WhatsApp</button>
+<button style="height:44px;border-radius:22px;border:1px solid var(--bds);background:transparent;color:var(--tx);font-size:15px;font-weight:500">Generar link de pago</button>
+<span style="font-size:12px;color:var(--mu);text-align:center">El comercio confirma disponibilidad y pago contigo por WhatsApp.</span>
+</div>
+</sc-if>
+
+</div>
+</div>
+</sc-for>
+</div>
+
+<p class="dv-next">Siguiente: «Tanda 2 contable completa: editor de comprobante con grilla y Reversar» · «IN.7 Ejecuciones y deshacer corrida» · «vitrina: ficha de producto y pedidos web en el ERP».</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dianOutcome&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;aceptada&quot;,&quot;rechazada&quot;],&quot;default&quot;:&quot;aceptada&quot;,&quot;tsType&quot;:&quot;'aceptada'|'rechazada'&quot;,&quot;section&quot;:&quot;Simulación&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;compacta&quot;,&quot;normal&quot;],&quot;default&quot;:&quot;compacta&quot;,&quot;tsType&quot;:&quot;'compacta'|'normal'&quot;,&quot;section&quot;:&quot;Tablas&quot;}}">
+const TH = {
+  light: {'--logo':'url(assets/sifca-claro-mark.png)','--logofull':'url(assets/sifca-claro-lockup.png)','--app':'#F4F6F8','--bg':'#FFFFFF','--card':'#FFFFFF','--side':'#FAFBFC','--sf':'#F4F6F8','--sf2':'#E9EDF2','--hov':'#F3F6F9','--bd':'#E1E5EA','--bds':'#7B8794','--tx':'#1B2430','--mu':'#4B5767','--pr':'#0B5CAD','--prh':'#094C8F','--onpr':'#FFFFFF','--prs':'#E8F1FB','--ok':'#17663E','--okb':'#E6F4EA','--wa':'#7A4B00','--wab':'#FFF1D6','--er':'#A8201A','--erb':'#FDECEA','--ne':'#3F4A59','--neb':'#E9EDF2','--ring':'#0B5CAD','--glass':'rgba(255,255,255,.8)','--glassb':'rgba(255,255,255,.7)','--scrim':'rgba(27,36,48,.28)','--e1':'0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06)','--e2':'0 6px 16px -4px rgba(16,24,40,.12),0 2px 4px rgba(16,24,40,.05)','--e3':'0 28px 56px -16px rgba(16,24,40,.32),0 4px 10px rgba(16,24,40,.08)','--brand':'#0B3E73'},
+  dark: {'--logo':'url(assets/sifca-oscuro-mark.png)','--logofull':'url(assets/sifca-oscuro-lockup.png)','--app':'#1E293B','--bg':'#1E293B','--card':'#273548','--side':'#1A2434','--sf':'#2D3D53','--sf2':'#36485F','--hov':'#2F405A','--bd':'#3A4C63','--bds':'#7D8EA5','--tx':'#E8EDF3','--mu':'#AEBACB','--pr':'#7DB7F2','--prh':'#A0CBF6','--onpr':'#0B1B2E','--prs':'#2A4466','--ok':'#86D9A8','--okb':'#1F4034','--wa':'#F2C879','--wab':'#463A23','--er':'#FFA197','--erb':'#4D2C30','--ne':'#CBD4DF','--neb':'#3A4A60','--ring':'#7DB7F2','--glass':'rgba(39,53,72,.8)','--glassb':'rgba(255,255,255,.08)','--scrim':'rgba(12,18,28,.5)','--e1':'0 1px 2px rgba(0,0,0,.22)','--e2':'0 8px 20px -6px rgba(0,0,0,.42)','--e3':'0 32px 64px -16px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04)','--brand':'#16202D'}
+};
+const fmn = c => { const neg = c < 0; c = Math.abs(Math.round(c)); return (neg ? '− ' : '') + String(Math.floor(c/100)).replace(/\B(?=(\d{3})+(?!\d))/g,'.') + ',' + String(c%100).padStart(2,'0'); };
+const fm = c => (c < 0 ? '− $ ' + fmn(-c) : '$ ' + fmn(c));
+const fq = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const CUPO = 500000000, SALDO = 410000000;
+const PRODUCTS = [
+  {sku:'RES-CA75',name:'Resma papel carta 75 g',price:21500,stock:48,cat:'Papelería',desc:'500 hojas, blancura alta, para impresora láser.'},
+  {sku:'DET-2L',name:'Detergente líquido 2 L',price:18900,stock:120,cat:'Aseo',desc:'Rinde 40 lavadas, aroma suave.'},
+  {sku:'CIN-48',name:'Cinta de embalar 48 mm',price:4300,stock:6,cat:'Empaque',desc:'Transparente, 100 m, alta adherencia.'},
+  {sku:'GUA-N100',name:'Guantes de nitrilo x 100',price:32800,stock:0,cat:'Seguridad',desc:'Talla M, sin polvo, azul.'},
+  {sku:'BOL-X10',name:'Bolsas para basura x 10',price:7400,stock:64,cat:'Aseo',desc:'Calibre grueso, 65 × 90 cm.'},
+  {sku:'MAR-PER',name:'Marcador permanente',price:3200,stock:210,cat:'Papelería',desc:'Punta biselada, tinta negra.'}
+];
+const P = Object.fromEntries(PRODUCTS.map(p => [p.sku, p]));
+const ITEMS = [
+  {sku:'DET-2L',name:'Detergente líquido 2 L',m:'Promedio',ro:40,mv:[['01/10/2026','SI','Saldo inicial',80,1120000],['09/10/2026','FC-118','Compra a proveedor',60,1150000],['14/10/2026','FV-3','Venta · Almacenes La Ceiba',-20]]},
+  {sku:'RES-CA75',name:'Resma papel carta 75 g',m:'Promedio',ro:30,mv:[['01/10/2026','SI','Saldo inicial',30,1500000],['04/10/2026','RM-1','Despacho a cliente',-12],['09/10/2026','FC-118','Compra a proveedor',40,1570000],['14/10/2026','FV-3','Venta · Almacenes La Ceiba',-10]]},
+  {sku:'MAR-PER',name:'Marcador permanente',m:'Promedio',ro:60,mv:[['01/10/2026','SI','Saldo inicial',150,170000],['09/10/2026','FC-118','Compra a proveedor',100,175000],['11/10/2026','RM-1','Despacho a cliente',-40]]},
+  {sku:'BOL-X10',name:'Bolsas para basura x 10',m:'Promedio',ro:25,mv:[['01/10/2026','SI','Saldo inicial',64,410000]]},
+  {sku:'GEL-1L',name:'Gel antibacterial 1 L (perecedero)',m:'PEPS',ro:30,mv:[['01/10/2026','SI','Saldo inicial · lote L-0926',20,980000],['08/10/2026','FC-117','Compra · lote L-1010',30,1040000],['12/10/2026','RM-2','Despacho a cliente',-25]]},
+  {sku:'CIN-48',name:'Cinta de embalar 48 mm',m:'Promedio',ro:20,mv:[['01/10/2026','SI','Saldo inicial',30,240000],['04/10/2026','RM-1','Despacho a cliente',-24]]},
+  {sku:'GUA-N100',name:'Guantes de nitrilo x 100',m:'Promedio',ro:10,mv:[['01/10/2026','SI','Saldo inicial',15,2100000],['12/10/2026','RM-2','Despacho a cliente',-15]]}
+];
+const kardexOf = it => {
+  let q = 0, v = 0, layers = []; const rows = [];
+  it.mv.forEach(([f,doc,det,qty,c]) => {
+    const r = {f,doc,det,iq:'',ic:'',iv:'',oq:'',oc:'',ov:''};
+    if (qty > 0) { q += qty; v += qty*c; layers.push({q:qty,c}); r.iq = fq(qty); r.ic = fmn(c); r.iv = fmn(qty*c); }
+    else { const n = -qty; let ov;
+      if (it.m === 'PEPS') { ov = 0; let left = n; while (left > 0) { const L = layers[0]; const t = Math.min(L.q,left); ov += t*L.c; L.q -= t; left -= t; if (!L.q) layers.shift(); } }
+      else ov = Math.round(v * n / q);
+      q -= n; v -= ov; r.oq = fq(n); r.oc = fmn(Math.round(ov/n)); r.ov = fmn(ov); }
+    r.sq = fq(q); r.sc = q ? fmn(Math.round(v/q)) : '—'; r.sv = fmn(v); rows.push(r);
+  });
+  return {rows, q, v, unit: q ? Math.round(v/q) : 0};
+};
+const KX = ITEMS.map(it => ({...it, ...kardexOf(it)}));
+const KTOT = KX.reduce((a,i) => a + i.v, 0);
+(() => { let cum = 0; [...KX].sort((a,b) => b.v - a.v).forEach(i => { cum += i.v; const s = cum / KTOT; i.abc = (s <= .80 || cum === i.v) ? 'A' : s <= .95 ? 'B' : 'C'; }); })();
+const STEPS = ['Origen y fecha de corte','Estrategia','Qué traer','Mapeos','Revisión de datos','Ensayo','Ejecución','Conciliación','Cierre'];
+const STEP_DESC = {1:'Alegra conectado · fecha de corte 30/09/2026.',2:'Saldos iniciales a la fecha de corte (recomendada). El histórico completo es opcional.',3:'Plan de cuentas, impuestos, terceros, bodegas, ítems, existencias con costo, saldos y cartera abierta.',5:'148 terceros y 1.236 ítems listos para revisar antes del ensayo.',7:'Se ejecuta por entidad en orden de dependencia, con pausa y reanudación.',9:'La migración se cierra cuando la conciliación cuadra por cuenta, tercero e ítem.'};
+const GROUPS = [['IN','Inicio'],['VE','Ventas'],['CA','Cartera'],['CO','Compras'],['IV','Inventario'],['CT','Contabilidad'],['IM','Impuestos'],['FE','Factura electrónica'],['TE','Terceros'],['VI','Catálogo y vitrina'],['IG','Integraciones'],['CF','Configuración']];
+const CHILD = {VE:['Cotizaciones','Pedidos','Facturas de venta','Notas crédito y débito','Punto de venta'], IV:['Ítems','Existencias','Kardex','Ajustes y traslados','ABC y conteos','Reposición'], IG:['Conectores','Migración de datos','Mapeos','Ejecuciones y errores','API Keys','Webhooks y entregas']};
+const KIND = {login:{}, factura:{g:'VE',c:'Facturas de venta',t:'Facturación · editor con cupo, pago y DIAN'}, inv:{g:'IV',c:'Kardex',t:'Inventario · existencias, ABC y kardex'}, alegra:{g:'IG',c:'Conectores',t:'Integraciones · Conectores y configurar Alegra (IN.1, IN.2)'}, mig:{g:'IG',c:'Migración de datos',t:'Asistente de migración · mapeos y conciliación (IN.3–IN.6)'}};
+const WEB = [['2a','light','login'],['2b','dark','login'],['2c','light','factura'],['2d','dark','factura'],['2e','light','inv'],['2f','dark','inv'],['2g','light','alegra'],['2h','dark','alegra'],['2i','light','mig'],['2j','dark','mig']];
+const MOB = [['2k','light','login','Acceso'],['2l','light','pos','POS · cobro con medio de pago'],['2m','light','shop','Vitrina pública · catálogo'],['2n','light','cart','Carrito · pedido por WhatsApp'],['2o','dark','login','Acceso'],['2p','dark','pos','POS · cobro'],['2q','dark','shop','Vitrina · catálogo'],['2r','dark','cart','Carrito · WhatsApp']];
+
+class Component extends DCLogic {
+  state = { loginErr:{'2b':true}, pay:{'2c':true}, credit:{'2d':true}, dian:{}, step:{'2i':4,'2j':8}, conn:{'2g':'error','2h':'error'}, mcredit:{'2p':true},
+    inv:{'RES-CA75':10,'DET-2L':20,'CIN-48':4}, fp:'contado', method:'efectivo', cash:'750.000', ref:'', sel:'RES-CA75', taxMapped:false, costLoaded:false,
+    shop:{'RES-CA75':2,'MAR-PER':6}, shopCat:'Todos', deliv:'domicilio', custName:'Laura Gómez' };
+  timers = [];
+  componentWillUnmount() { this.timers.forEach(clearTimeout); }
+  setMap(k, id, v) { this.setState(s => ({[k]: {...s[k], [id]: v}})); }
+  emit(id) {
+    const out = this.props.dianOutcome ?? 'aceptada';
+    this.setState(s => ({pay:{...s.pay,[id]:false}, dian:{...s.dian,[id]:'emitida'}}));
+    this.timers.push(setTimeout(() => this.setMap('dian', id, 'transmision'), 900));
+    this.timers.push(setTimeout(() => this.setMap('dian', id, out), 2200));
+  }
+  qty(key, sku, d) { this.setState(s => { const c = {...s[key]}; const max = P[sku] ? P[sku].stock : 999; const q = Math.max(0, Math.min(max, (c[sku]||0) + d)); if (q) c[sku] = q; else delete c[sku]; return {[key]: c}; }); }
+  timeline(state, compact) {
+    const order = ['borrador','emitida','transmision','fin'];
+    const cur = state === 'aceptada' || state === 'rechazada' ? 3 : order.indexOf(state || 'borrador');
+    const rej = state === 'rechazada';
+    const times = ['14/10/2026 10:31','14/10/2026 10:58','14/10/2026 10:58','14/10/2026 10:59'];
+    return [['Borrador'],['Emitida'],['En transmisión'],[rej ? 'Rechazada' : 'Aceptada']].map(([name], i) => {
+      const done = i < cur || (i === 3 && cur === 3), now = i === cur && i < 3, err = i === 3 && rej;
+      return { name, time: done || now ? (i === 0 && !done ? 'Actual · sin consecutivo' : times[i]) : 'Pendiente',
+        icon: err ? '!' : done ? '✓' : String(i+1),
+        dotBg: err ? 'var(--er)' : done ? (i === 3 ? 'var(--ok)' : 'var(--pr)') : now ? 'var(--prs)' : 'var(--card)',
+        dotFg: err ? 'var(--erb)' : done ? (i === 3 ? 'var(--okb)' : 'var(--onpr)') : now ? 'var(--pr)' : 'var(--mu)',
+        dotBd: err ? 'var(--er)' : done ? (i === 3 ? 'var(--ok)' : 'var(--pr)') : now ? 'var(--pr)' : 'var(--bd)',
+        glow: now ? '0 0 0 4px var(--prs)' : 'none',
+        line: i === 3 ? 'transparent' : i < cur ? 'var(--pr)' : 'var(--bd)',
+        fg: err ? 'var(--er)' : (done || now) ? 'var(--tx)' : 'var(--mu)', w: (done || now) ? 600 : 400 };
+    });
+  }
+  renderVals() {
+    const st = this.state;
+    const seg = on => ({bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--tx)' : 'var(--mu)', sh: on ? '0 1px 3px rgba(0,0,0,.14)' : 'none'});
+    // invoice
+    const invLines = PRODUCTS.filter(p => st.inv[p.sku]).map((p,i) => { const q = st.inv[p.sku], base = p.price*100*q, iva = Math.round(base*.19);
+      return {n:i+1, sku:p.sku, name:p.name, qty:q, base, ivaC:iva, price:fmn(p.price*100), iva:fmn(iva), total:fmn(base+iva), inc:() => this.qty('inv',p.sku,1), dec:() => this.qty('inv',p.sku,-1), del:() => this.setState(s => { const c = {...s.inv}; delete c[p.sku]; return {inv:c}; })}; });
+    const sub = invLines.reduce((a,l) => a + l.base, 0), iva = invLines.reduce((a,l) => a + l.ivaC, 0), total = sub + iva;
+    invLines.forEach(l => { l.total = fm(l.base + l.ivaC); });
+    const disp = CUPO - SALDO, credito = st.fp === 'credito', over = credito && total > disp;
+    const credit = { saleW: Math.min(total/CUPO*100, 18).toFixed(2), saleColor: total > disp ? 'var(--wa)' : 'var(--pr)', afterF: fm(disp - total),
+      noteFg: total > disp ? 'var(--wa)' : 'var(--mu)',
+      note: total > disp ? 'Esta venta supera el cupo por ' + fm(total - disp) + '. A crédito quedaría retenida hasta que un usuario autorizado la libere con motivo.' : 'Con esta venta el cliente quedaría en ' + Math.round((SALDO+total)/CUPO*100) + ' % del cupo. ' + (credito ? 'Se puede emitir a crédito.' : 'De contado no afecta el cupo.') };
+    const cashC = (parseInt(String(st.cash).replace(/\D/g,''),10) || 0) * 100;
+    const ef = st.method === 'efectivo', refOk = st.ref.trim().length >= 4;
+    const payValid = ef ? cashC >= total : refOk;
+    const cash = cashC >= total ? {label:'Cambio', value:fm(cashC - total), fg:'var(--ok)'} : {label:'Falta', value:fm(total - cashC), fg:'var(--wa)'};
+    const totalPesos = Math.ceil(total/100);
+    const quick = [['Exacto', totalPesos], ['$ 730.000', 730000], ['$ 750.000', 750000], ['$ 800.000', 800000]].map(([label,v]) => ({label, pick:() => this.setState({cash:fq(v)})}));
+    const dianOf = id => st.dian[id] || 'borrador';
+    const web = WEB.map(([id,th,kind]) => {
+      const K = KIND[kind], dark = th === 'dark';
+      const w = { id, label: (kind === 'login' ? 'Login web' : K.t) + (dark ? ' · Slate' : ' · Claro'), isLogin: kind === 'login', hasShell: kind !== 'login',
+        vars: {...TH[th], width:'1440px', height:'900px', position:'relative', display:'flex', flexDirection:'column', background:'var(--app)', color:'var(--tx)', fontFamily:'Inter,system-ui,sans-serif'},
+        isFactura: kind === 'factura', isInv: kind === 'inv', isAlegra: kind === 'alegra', isMig: kind === 'mig',
+        company: kind === 'alegra' || kind === 'mig' ? 'Papelería Los Andes S.A.S.' : 'Comercializadora Andina S.A.S.',
+        nit: kind === 'alegra' || kind === 'mig' ? '901.555.210-3' : '900.123.456-7', alerts: kind === 'alegra' ? '4' : '3',
+        groups: GROUPS.map(([code,name]) => { const act = code === K.g; return {code, name, weight: act ? 600 : 400, tileBg: act ? 'var(--pr)' : 'var(--sf2)', tileFg: act ? 'var(--onpr)' : 'var(--mu)', showChildren: act, children: act ? CHILD[code].map(c => ({name:c, bg: c === K.c ? 'var(--prs)' : 'transparent', fg: c === K.c ? 'var(--pr)' : 'var(--tx)', weight: c === K.c ? 600 : 400})) : []}; }) };
+      if (kind === 'login') { w.loginErr = !!st.loginErr[id]; w.pwBd = w.loginErr ? 'var(--er)' : 'var(--bds)'; w.doLogin = () => this.setMap('loginErr', id, !st.loginErr[id]); }
+      if (kind === 'factura') {
+        const d = dianOf(id);
+        w.editable = d === 'borrador'; w.locked = !w.editable;
+        w.payOpen = !!st.pay[id] && w.editable; w.creditOpen = !!st.credit[id] && w.editable;
+        w.toggleCredit = () => this.setMap('credit', id, !st.credit[id]);
+        w.closeSale = () => { if (credito) { if (!over) this.emit(id); else this.setMap('credit', id, true); } else this.setState(s => ({pay:{...s.pay,[id]:true}, credit:{...s.credit,[id]:false}})); };
+        w.closePay = () => this.setMap('pay', id, false);
+        w.confirmPay = () => { if (payValid) this.emit(id); };
+        w.timeline = this.timeline(d);
+        w.dianErr = d === 'rechazada'; w.dianOk = d === 'aceptada';
+        w.docBadge = d === 'borrador' ? {t:'Borrador', bg:'var(--wab)', fg:'var(--wa)'} : d === 'aceptada' ? {t:'✓ Aceptada', bg:'var(--okb)', fg:'var(--ok)'} : d === 'rechazada' ? {t:'! Rechazada', bg:'var(--erb)', fg:'var(--er)'} : {t: d === 'emitida' ? 'Emitida' : 'En transmisión', bg:'var(--prs)', fg:'var(--pr)'};
+        w.deliver = d === 'aceptada' ? {bg:'var(--pr)', fg:'var(--onpr)', cur:'pointer'} : {bg:'var(--sf2)', fg:'var(--mu)', cur:'not-allowed'};
+      }
+      if (kind === 'alegra') {
+        const c = st.conn[id];
+        w.connErr = c === 'error'; w.connBusy = c === 'busy'; w.connOk = c === 'ok';
+        w.tokBd = c === 'error' ? '2px solid var(--er)' : '1px solid var(--bds)';
+        w.testLabel = c === 'busy' ? 'Probando…' : 'Probar conexión';
+        w.testConn = () => { this.setMap('conn', id, 'busy'); this.timers.push(setTimeout(() => this.setMap('conn', id, 'ok'), 1100)); };
+        w.conns = [
+          ['AL','Alegra','Origen de datos · API', c === 'ok' ? ['✓ Conectado','var(--okb)','var(--ok)'] : c === 'busy' ? ['Probando…','var(--prs)','var(--pr)'] : ['! Error 401','var(--erb)','var(--er)'], c === 'ok' ? 'Verificado 14/10/2026 10:46' : 'Alegra rechazó las credenciales (401)', true],
+          ['CSV','Archivos','CSV / XLSX con plantillas',['Listo','var(--okb)','var(--ok)'],'Plantillas descargables por entidad'],
+          ['FE','Factura electrónica','Proveedor tecnológico',['✓ Conectado','var(--okb)','var(--ok)'],'Última transmisión 14/10/2026 10:59'],
+          ['API','API Keys','Entrada · alcances',['2 activas','var(--neb)','var(--ne)'],'Último uso 13/10/2026 18:20'],
+          ['WH','Webhooks','Salida firmada',['! 1 en pausa','var(--wab)','var(--wa)'],'3 entregas fallidas en reintento']
+        ].map(([code,name,type,[stt,stBg,stFg],meta,sel]) => ({code,name,type,st:stt,stBg,stFg,meta, bd: sel ? 'var(--pr)' : 'var(--bd)', bdw: sel ? '2px' : '1px', sh: sel ? '0 0 0 4px var(--prs)' : 'var(--e1)'}));
+      }
+      if (kind === 'mig') {
+        const cur = st.step[id];
+        w.steps = STEPS.map((name,i) => { const n = i+1, done = n < cur, now = n === cur;
+          return {name, icon: done ? '✓' : String(n), pick:() => this.setMap('step', id, n), bg: now ? 'var(--prs)' : 'transparent',
+            dotBg: done ? 'var(--pr)' : now ? 'var(--card)' : 'var(--sf)', dotFg: done ? 'var(--onpr)' : now ? 'var(--pr)' : 'var(--mu)', dotBd: done || now ? 'var(--pr)' : 'var(--bd)',
+            fg: now ? 'var(--pr)' : done ? 'var(--tx)' : 'var(--mu)', fw: now ? 700 : 500}; });
+        w.s4 = cur === 4; w.s6 = cur === 6; w.s8 = cur === 8; w.sOther = ![4,6,8].includes(cur);
+        w.stepNum = String(cur); w.stepName = STEPS[cur-1]; w.stepDesc = STEP_DESC[cur] || '';
+        w.goEnsayo = () => { if (st.taxMapped) this.setMap('step', id, 6); };
+      }
+      return w;
+    });
+    // inventory
+    const rowH = (this.props.density ?? 'compacta') === 'normal' ? 36 : 28;
+    const items = KX.map(i => { const low = i.q > 0 && i.q <= i.ro, out = i.q === 0, sel = st.sel === i.sku, maxv = Math.max(i.ro*3, i.q, 1);
+      return {sku:i.sku, name:i.name, abc:i.abc, method:i.m, stock:fq(i.q), reorder:fq(i.ro), unit: i.q ? fmn(i.unit) : '—', val:fmn(i.v),
+        abcBg: i.abc === 'A' ? 'var(--pr)' : i.abc === 'B' ? 'var(--prs)' : 'var(--sf2)', abcFg: i.abc === 'A' ? 'var(--onpr)' : i.abc === 'B' ? 'var(--pr)' : 'var(--mu)',
+        covW: (i.q/maxv*100).toFixed(1), rpL: (i.ro/maxv*100).toFixed(1), covC: out || low ? 'var(--wa)' : 'var(--ok)',
+        alert: out ? 'Agotado · reponer' : low ? 'Bajo punto de reorden' : '', bg: sel ? 'var(--prs)' : 'transparent', fw: sel ? 600 : 400, pick:() => this.setState({sel:i.sku})}; });
+    const selI = KX.find(i => i.sku === st.sel), peps = selI.m === 'PEPS';
+    const kSel = {sku:selI.sku, name:selI.name, unitLabel: peps ? 'Costo u.' : 'Costo prom.', pBg: peps ? 'transparent' : 'var(--card)', pFg: peps ? 'var(--mu)' : 'var(--tx)', fBg: peps ? 'var(--card)' : 'transparent', fFg: peps ? 'var(--tx)' : 'var(--mu)'};
+    const lows = KX.filter(i => i.q > 0 && i.q <= i.ro), outs = KX.filter(i => i.q === 0);
+    const share = k => KX.filter(i => i.abc === k).reduce((a,i) => a + i.v, 0) / KTOT * 100;
+    const pc = x => x.toFixed(0) + ' %';
+    const kpi = {val:fm(KTOT), low:lows.length, lowNames:lows.map(i => i.name.split(' (')[0]).join(' · '), out:outs.length, outNames:outs.map(i => i.name).join(' · '), aW:share('A').toFixed(1), bW:share('B').toFixed(1), cW:share('C').toFixed(1), aP:pc(share('A')), bP:pc(share('B')), cP:pc(share('C'))};
+    // migration
+    const tm = st.taxMapped;
+    const mapRows = [
+      {src:'IVA 19%', sid:'alegra:tax/1', acct: tm ? '2408' : '—', dst: tm ? 'IVA 19 % generado' : 'Sin asignar', conf: tm ? '✓ Manual' : '! Sin resolver · bloquea', cBg: tm ? 'var(--okb)' : 'var(--erb)', cFg: tm ? 'var(--ok)' : 'var(--er)', dstBd: tm ? 'var(--bds)' : 'var(--er)', dstFg: tm ? 'var(--tx)' : 'var(--er)', rowBg: tm ? 'transparent' : 'var(--erb)', hasAct:true, aLabel: tm ? 'Deshacer' : 'Aplicar: IVA 19 % · 2408', aBg: tm ? 'var(--sf2)' : 'var(--pr)', aFg: tm ? 'var(--tx)' : 'var(--onpr)', act:() => this.setState({taxMapped:!tm})},
+      {src:'IVA 5%', sid:'alegra:tax/2', acct:'2408', dst:'IVA 5 % generado', conf:'✓ Exacto', cBg:'var(--okb)', cFg:'var(--ok)', dstBd:'var(--bds)', dstFg:'var(--tx)', rowBg:'transparent', hasAct:false},
+      {src:'Exento', sid:'alegra:tax/3', acct:'—', dst:'Exento (0 %)', conf:'✓ Exacto', cBg:'var(--okb)', cFg:'var(--ok)', dstBd:'var(--bds)', dstFg:'var(--tx)', rowBg:'transparent', hasAct:false},
+      {src:'Retención compras 2,5%', sid:'alegra:retention/7', acct:'2365', dst:'Retefuente compras 2,5 %', conf:'~ Sugerido', cBg:'var(--prs)', cFg:'var(--pr)', dstBd:'var(--bds)', dstFg:'var(--tx)', rowBg:'transparent', hasAct:true, aLabel:'Confirmar', aBg:'var(--sf2)', aFg:'var(--tx)', act:() => {}}
+    ];
+    const mapTabs = [['Cuentas','214',0],['Impuestos', tm ? '4' : '1 sin resolver',1],['Terceros','148',0],['Bodegas','2',0],['Ítems','1.236',0]].map(([name,n,a]) => ({name,n, fw: a ? 600 : 500, fg: a ? 'var(--pr)' : 'var(--mu)', bd: a ? 'var(--pr)' : 'transparent', cBg: a && !tm ? 'var(--erb)' : 'var(--sf2)', cFg: a && !tm ? 'var(--er)' : 'var(--mu)'}));
+    const ensayo = [['Plan de cuentas','214','38','0','176','0'],['Impuestos y retenciones','4','3','0','0', tm ? '0' : '1'],['Terceros','148','148','0','0','0'],['Bodegas, categorías y listas','9','9','0','0','0'],['Ítems','1.236','1.236','0','0','0'],['Saldos iniciales','6','6','0','0','0']].map(([n,r,c,u,i,e]) => ({n,r,c,u,i,e, errFg: e !== '0' ? 'var(--er)' : 'var(--mu)', errW: e !== '0' ? 700 : 400}));
+    const problems = (tm ? [] : [{sev:'BLOQUEA', txt:'El impuesto «IVA 19%» de Alegra no tiene equivalente en SIFCA. Mapéalo para poder ejecutar.', link:'Ir a Mapeos', bg:'var(--erb)', fg:'var(--er)'}]).concat([{sev:'ADVIERTE', txt:'3 terceros tienen NIT sin dígito de verificación (p. ej. Distribuidora El Roble S.A.S.). Se calculará y se marcará para revisión.', link:'Ver 3', bg:'var(--wab)', fg:'var(--wa)'}]);
+    const cl = st.costLoaded;
+    const conc = [['1110','Bancos',200000000],['130505','Clientes nacionales',119000000],['1435','Mercancías',100000000],['2205','Proveedores nacionales',65000000],['2408','IVA por pagar',19000000],['3115','Aportes sociales',335000000]].map(([code,name,o]) => {
+      const s = code === '1435' && !cl ? 0 : o, bad = s !== o;
+      return {code,name,o:fmn(o),s:fmn(s),d:fmn(s-o), dFg: bad ? 'var(--er)' : 'var(--mu)', dW: bad ? 700 : 400, seal: bad ? '! No cuadra' : '✓ Cuadra', sBg: bad ? 'var(--erb)' : 'var(--okb)', sFg: bad ? 'var(--er)' : 'var(--ok)', rowBg: bad ? 'var(--erb)' : 'transparent'}; });
+    const concTabs = [['Por cuenta', !cl, true],['Por tercero', false],['Por ítem y bodega', !cl]].map(([name,bad,act]) => ({name, seal: bad ? '! No cuadra' : '✓ Cuadra', sBg: bad ? 'var(--erb)' : 'var(--okb)', sFg: bad ? 'var(--er)' : 'var(--ok)', bd: act ? 'var(--pr)' : 'var(--bd)', bdw: act ? '2px' : '1px', fw: act ? 600 : 500}));
+    const mig = { mapNote: tm ? 'Todos los obligatorios están resueltos.' : '1 obligatorio sin resolver: no puedes avanzar hasta mapearlo.', noteFg: tm ? 'var(--ok)' : 'var(--er)',
+      nextBg: tm ? 'var(--pr)' : 'var(--sf2)', nextFg: tm ? 'var(--onpr)' : 'var(--mu)',
+      blkLabel: tm ? '✓ 0 bloquean' : '! 1 bloquea', blkBg: tm ? 'var(--okb)' : 'var(--erb)', blkFg: tm ? 'var(--ok)' : 'var(--er)',
+      runBg: tm ? 'var(--pr)' : 'var(--sf2)', runFg: tm ? 'var(--onpr)' : 'var(--mu)', runCur: tm ? 'pointer' : 'not-allowed',
+      runNote: tm ? 'Listo para ejecutar. Lo importado entra como borrador revisable o comprobante de apertura.' : 'Deshabilitado: el impuesto «IVA 19%» sin mapear bloquea la ejecución.',
+      concBad: !cl, closeBg: cl ? 'var(--pr)' : 'var(--sf2)', closeFg: cl ? 'var(--onpr)' : 'var(--mu)' };
+    // mobile + shop
+    const shopLinesRaw = PRODUCTS.filter(p => st.shop[p.sku]).map(p => { const q = st.shop[p.sku], unit = Math.round(p.price*119); return {name:p.name, qty:q, c:unit*q, total:fm(unit*q), inc:() => this.qty('shop',p.sku,1), dec:() => this.qty('shop',p.sku,-1)}; });
+    const shopTot = shopLinesRaw.reduce((a,l) => a + l.c, 0), shopIva = Math.round(shopTot - shopTot/1.19), units = shopLinesRaw.reduce((a,l) => a + l.qty, 0);
+    const waMsg = 'Hola, Comercializadora Andina. Quiero hacer este pedido:\n' + (shopLinesRaw.map(l => '• ' + l.qty + ' × ' + l.name + ' · ' + l.total).join('\n') || '• (sin productos)') + '\nTotal: ' + fm(shopTot) + ' (IVA incluido)\n' + (st.deliv === 'domicilio' ? 'Entrega a domicilio' : 'Recojo en tienda') + '\nA nombre de: ' + (st.custName || '—');
+    const mob = MOB.map(([id,th,kind,label]) => {
+      const dark = th === 'dark', d = dianOf(id), paid = d !== 'borrador';
+      const m = { id, label: label + (dark ? ' · Slate' : ' · Claro'), isLogin: kind === 'login', isPos: kind === 'pos', isShop: kind === 'shop', isCart: kind === 'cart',
+        vars: {...TH[th], width:'390px', height:'844px', borderRadius:'48px', background:'var(--app)', color:'var(--tx)', boxShadow:'0 0 0 10px #1A2028,0 0 0 11px #2E3742,0 30px 60px -12px rgba(0,0,0,.35)', overflow:'hidden', display:'flex', flexDirection:'column', position:'relative', margin:'11px', fontFamily:'Inter,system-ui,sans-serif'},
+        barBg: kind === 'login' ? 'var(--brand)' : 'var(--card)', barFg: kind === 'login' ? '#F2F6FB' : 'var(--tx)',
+        cartId: dark ? '2r' : '2n', shopId: dark ? '2q' : '2m' };
+      if (kind === 'pos') {
+        m.creditOpen = !!st.mcredit[id]; m.toggleCredit = () => this.setMap('mcredit', id, !st.mcredit[id]);
+        m.sheetPay = !paid; m.sheetDone = paid; m.timeline = this.timeline(d); m.dianErr = d === 'rechazada';
+        m.confirm = () => { if (payValid) this.emit(id); };
+        m.reset = () => this.setMap('dian', id, 'borrador');
+        m.shareBg = d === 'aceptada' ? 'var(--pr)' : 'var(--sf2)'; m.shareFg = d === 'aceptada' ? 'var(--onpr)' : 'var(--mu)';
+      }
+      return m;
+    });
+    return {
+      web, mob, invLines, fSub:fm(sub), fIva:fm(iva), fTotal:fm(total), credit, venc: credito ? '13/11/2026' : '14/10/2026',
+      aging: [['Corriente','4.100.000'],['1–30','0'],['31–60','0'],['61–90','0'],['+90','0']].map(([k,v]) => ({k, v})),
+      fpOpts: [['contado','Contado'],['credito','Crédito 30 d']].map(([k,n]) => ({name:n, pick:() => this.setState({fp:k}), ...seg(st.fp === k)})),
+      freq: ['BOL-X10','MAR-PER'].map(s => ({name:P[s].name.split(' ')[0] + ' ' + P[s].name.split(' ').slice(-2).join(' '), add:() => this.qty('inv',s,1)})),
+      payOpts: [['efectivo','Efectivo','Caja general · 1105','Caja 1105'],['transferencia','Transferencia','Bancos · 1110 ·· 4821','Bancos 1110']].map(([k,n,sub,short]) => { const on = st.method === k; return {name:n, sub, short, pick:() => this.setState({method:k}), bd: on ? 'var(--pr)' : 'var(--bd)', bg: on ? 'var(--prs)' : 'var(--card)', dot: on ? 'var(--pr)' : 'transparent'}; }),
+      payEf: ef, payTr: !ef, cashIn: st.cash, onCash: e => this.setState({cash:e.target.value}), cash, quick,
+      refIn: st.ref, onRef: e => this.setState({ref:e.target.value}), refBd: refOk ? 'var(--ring)' : st.ref ? 'var(--er)' : 'var(--bds)',
+      refHint: refOk ? '✓ Referencia válida' : st.ref ? '! Mínimo 4 caracteres' : 'Obligatorio para conciliar el banco', refHintFg: refOk ? 'var(--ok)' : st.ref ? 'var(--er)' : 'var(--mu)',
+      payBtn: payValid ? {bg:'var(--pr)', fg:'var(--onpr)', cur:'pointer'} : {bg:'var(--sf2)', fg:'var(--mu)', cur:'not-allowed'},
+      items, kardex: selI.rows, kSel, kpi, rowH,
+      activity: [['10:42','GET /company','Credenciales rechazadas','401','var(--erb)','var(--er)'],['10:40','GET /items?start=330&limit=30','Límite de tasa: esperó 12 s (Retry-After)','429','var(--wab)','var(--wa)'],['10:39','GET /contacts?start=120&limit=30','148 contactos leídos','200','var(--okb)','var(--ok)'],['10:38','GET /company','Conexión verificada','200','var(--okb)','var(--ok)']].map(([t,req,txt,code,bg,fg]) => ({t,req,txt,code,bg,fg})),
+      mapRows, mapTabs, ensayo, problems, conc, concTabs, mig, loadCost: () => this.setState({costLoaded:true}),
+      shopCats: ['Todos','Papelería','Aseo','Empaque','Seguridad'].map(c => { const on = st.shopCat === c; return {name:c, pick:() => this.setState({shopCat:c}), bg: on ? 'var(--tx)' : 'var(--card)', fg: on ? 'var(--card)' : 'var(--tx)', bd: on ? 'var(--tx)' : 'var(--bd)'}; }),
+      shop: PRODUCTS.filter(p => st.shopCat === 'Todos' || p.cat === st.shopCat).map(p => { const q = st.shop[p.sku] || 0, out = !p.stock;
+        return {...p, qty:q, priceF:fm(Math.round(p.price*119)), low: !out && p.stock <= 10, showAdd: !out && !q, showStep: q > 0, showOut: out, inc:() => this.qty('shop',p.sku,1), dec:() => this.qty('shop',p.sku,-1)}; }),
+      shopLines: shopLinesRaw, hasShop: units > 0, noShop: !units, shopUnits: units + (units === 1 ? ' producto' : ' productos'), shopTotal: fm(shopTot), shopIva: fm(shopIva),
+      delivOpts: [['domicilio','Domicilio'],['recoger','Recoger en tienda']].map(([k,n]) => ({name:n, pick:() => this.setState({deliv:k}), ...seg(st.deliv === k)})),
+      custName: st.custName, onName: e => this.setState({custName:e.target.value}), waMsg,
+      waBtn: units ? {bg:'#1F7A4D', fg:'#FFFFFF'} : {bg:'var(--sf2)', fg:'var(--mu)'}
+    };
+  }
+}
+</script>
+</body>
+</html>

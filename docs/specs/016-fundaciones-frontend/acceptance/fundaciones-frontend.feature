@@ -41,25 +41,28 @@ Característica: Fundaciones del back-office web
   @P-V @ADR-0009
   Esquema del escenario: [016-04] Cada error tipificado se muestra con su texto y en su lugar
     Dado un usuario con todos los permisos de contabilidad
-    Cuando la API responde con el código "<code>" y estado <http>
+    Y la pantalla de demostración de componentes abierta
+    Cuando la API responde con el código "<code>" y estado <http> al <contexto>
     Entonces se muestra "<texto>"
     Y el mensaje aparece en "<lugar>"
 
     Ejemplos:
-      | code                 | http | texto                                                         | lugar                      |
-      | ENTRY_NOT_BALANCED   | 422  | El comprobante no cuadra                                      | banner sobre la grilla     |
-      | PERIOD_CLOSED        | 409  | El período 2026-09 está cerrado                               | campo Fecha contable       |
-      | PERIOD_NOT_FOUND     | 422  | No existe un período contable para esa fecha                  | campo Fecha contable       |
-      | ALREADY_REVERSED     | 409  | Este comprobante ya fue reversado                             | diálogo de reversión       |
-      | FORBIDDEN            | 403  | No tienes permiso para esta acción                            | toast                      |
-      | NOT_FOUND            | 404  | No encontramos ese registro                                   | página de error            |
-      | CONFLICT             | 409  | cambió en otra sesión                                         | diálogo con Recargar       |
-      | IDEMPOTENCY_CONFLICT | 422  | Este envío ya se había realizado con otros datos              | toast                      |
-      | INTERNAL_ERROR       | 500  | Ocurrió un error inesperado                                   | página con código copiable |
+      | code                 | http | contexto  | texto                                            | lugar                      |
+      | ENTRY_NOT_BALANCED   | 422  | enviar    | El comprobante no cuadra                         | banner sobre la grilla     |
+      | PERIOD_CLOSED        | 409  | enviar    | El período 2026-09 está cerrado                  | campo Fecha contable       |
+      | PERIOD_NOT_FOUND     | 422  | enviar    | No existe un período contable para esa fecha     | campo Fecha contable       |
+      | ALREADY_REVERSED     | 409  | reversar  | Este comprobante ya fue reversado                | diálogo de reversión       |
+      | FORBIDDEN            | 403  | enviar    | No tienes permiso para esta acción               | toast                      |
+      | NOT_FOUND            | 404  | cargar    | No encontramos ese registro                      | página de error            |
+      | CONFLICT             | 409  | enviar    | cambió en otra sesión                            | diálogo con Recargar       |
+      | IDEMPOTENCY_CONFLICT | 422  | enviar    | Este envío ya se había realizado con otros datos | toast                      |
+      | INTERNAL_ERROR       | 500  | cargar    | Ocurrió un error inesperado                      | página con código copiable |
+      | INTERNAL_ERROR       | 500  | enviar    | Ocurrió un error inesperado                      | toast con código copiable  |
 
   @P-V
   Escenario: [016-05] Los errores de validación marcan cada campo y llevan el foco al primero
     Dado un usuario con el permiso "accounting.entry.post"
+    Y la pantalla de demostración de componentes abierta
     Cuando la API responde "VALIDATION_FAILED" con errores en "lines[2].accountCode" y "description"
     Entonces la celda de cuenta de la línea 3 y el campo Descripción muestran su mensaje
     Y arriba aparece un resumen con un enlace a cada campo
@@ -84,7 +87,7 @@ Característica: Fundaciones del back-office web
   @P-III @ADR-0006
   Escenario: [016-08] Un reintento tras perder la conexión no duplica el registro
     Dado un usuario con el permiso "accounting.entry.post"
-    Y un comprobante válido listo para contabilizar
+    Y un comprobante válido listo para contabilizar en la pantalla de demostración
     Cuando envía el comprobante y la conexión se pierde antes de recibir la respuesta
     Y la conexión vuelve y la interfaz reintenta
     Entonces el reintento usa la misma clave de idempotencia

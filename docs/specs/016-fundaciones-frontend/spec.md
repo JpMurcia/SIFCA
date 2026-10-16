@@ -142,7 +142,8 @@ acciones de todas las specs.
 
 1. **Dado** la paleta abierta, **Cuando** escribe «balance», **Entonces** aparece «Balance de prueba» y Enter
    navega a esa pantalla.
-2. **Dado** la paleta abierta, **Cuando** escribe «#AJ-1», **Entonces** ofrece abrir el comprobante AJ-1 si existe.
+2. **Dado** la paleta abierta, **Cuando** escribe «#AJ-1», **Entonces** ofrece abrir la lista de comprobantes
+   filtrada por AJ-1 si existe (el detalle del comprobante llega con la interfaz de la spec 001).
 3. **Dado** cualquier pantalla del cascarón, **Cuando** el usuario navega con Tab, **Entonces** el foco es visible
    en todo control, sigue un orden lógico y no queda atrapado fuera de los diálogos.
 
@@ -217,6 +218,8 @@ totales en pantalla nunca usan aritmética de coma flotante.
 - **FR-020**: La lista de comprobantes (`/contabilidad/comprobantes`) MUST construirse sobre el cascarón con datos reales de la API existente, como pantalla de referencia que ejercita esqueleto, vacío, error, filtros, paginación y permisos; sus filas MUST mostrar las etiquetas «Contabilizado», «Reversado por…» y «Reversión de…» y nunca «Editar» ni «Eliminar» *(R-CON-005, R-CON-010)*.
 - **FR-021**: Mientras no exista la spec de autenticación (012), la aplicación MUST funcionar en desarrollo con el token provisional de la spec 001 y MUST negarse a construirse para producción en ese modo *(P-IV)*.
 - **FR-022**: Cada componente compartido MUST tener un catálogo navegable de sus variantes y estados (en ambos temas y las tres densidades) que sirva de referencia a las specs posteriores *(P-VIII)*.
+- **FR-023**: Mientras las pantallas de negocio que muestran errores de campo, de grilla y de diálogo no existan (llegan con la interfaz de la spec 001), el entorno de pruebas MUST ofrecer una **pantalla de demostración** con una grilla de líneas, un formulario con fecha contable y un envío de comprobante sobre la API real, excluida por completo de cualquier versión para producción; los escenarios de errores, cambios sin guardar e idempotencia se verifican sobre ella *(P-VIII)*.
+- **FR-024**: En desarrollo y pruebas la fecha de trabajo MUST poder fijarse por configuración y, en pruebas, por solicitud, para que los escenarios que dependen del período sean reproducibles en cualquier fecha; en producción esta posibilidad MUST no existir *(R-CON-014, P-VIII)*.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -255,12 +258,15 @@ totales en pantalla nunca usan aritmética de coma flotante.
   con el token provisional de desarrollo y con respuestas simuladas.
 - **Datos de empresa:** mientras no exista la configuración por empresa (013), el nombre y el NIT de la barra
   superior vienen de la configuración del entorno de desarrollo.
-- **Fecha de trabajo:** es la fecha actual en hora de Colombia; elegir otra fecha de trabajo queda para 013.
+- **Fecha de trabajo:** es la fecha actual en hora de Colombia; en desarrollo y pruebas puede fijarse por configuración (FR-024). Que el usuario elija otra fecha de trabajo queda para 013.
 - **«Solicitar permiso»:** en esta spec registra la intención y muestra la confirmación; el envío real al
   administrador llega con la spec 017.
 - **Preferencias:** se guardan en el equipo del usuario; sincronizarlas entre equipos queda para 017.
 - **Alertas:** la campana se muestra con contador en cero; cada módulo aporta sus alertas en su spec.
 - **Tablero de inicio** (`4a`): se entrega vacío con el mensaje de bienvenida; las tarjetas las aportan los módulos.
+- **Pantallas aún no construidas:** las entradas de menú de specs futuras se muestran deshabilitadas con la etiqueta
+  «Próximamente»; las rutas registradas sin pantalla todavía (p. ej. Períodos, Nuevo comprobante) muestran la página
+  «Próximamente».
 - **Navegadores:** las dos últimas versiones de Chrome, Edge, Firefox y Safari de escritorio.
 - **Bibliotecas de componentes:** la elección (provisional en `03-evaluacion-de-librerias.md`) se confirma en
   `/speckit-plan` con el *spike* S-UI; esta spec no depende de ella.
@@ -287,5 +293,5 @@ reproducibles) y R-CON-014 (zona horaria). La relación se genera en
 | G-07 | No crea tablas; respeta el aislamiento: la empresa y los permisos salen del token |
 | G-08 | Tipos y errores derivados de los contratos compartidos (FR-014) |
 | G-09 | Importes como cadenas y aritmética decimal exacta en pantalla (FR-015) |
-| G-11 | Escenarios Gherkin `[016-01]…[016-12]` etiquetados |
+| G-11 | Escenarios Gherkin `[016-01]…[016-12]` etiquetados; los que necesitan pantallas de la spec 001 corren sobre la pantalla de demostración de pruebas (FR-023) |
 | G-12 | Sin acoplamiento con sistemas externos |

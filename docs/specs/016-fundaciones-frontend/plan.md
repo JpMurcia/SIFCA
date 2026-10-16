@@ -15,7 +15,7 @@ cascarón 1440/1024 con menú, barra superior, chip de período y paleta `Ctrl+K
 densidades con los tokens de las maquetas; componentes de estado global; traducción de cada `code` de
 `problem+json` al texto y lugar del catálogo A.0; guardas por permiso; idempotencia en reintentos; formatos `es-CO`
 con decimal exacto. Se demuestra con la **lista de comprobantes** sobre la API real de la spec 001 (spec 016: US1–US3
-en P1, US4–US6 en P2; FR-001…FR-022).
+en P1, US4–US6 en P2; FR-001…FR-024).
 
 Enfoque técnico, por zona:
 
@@ -47,9 +47,9 @@ Enfoque técnico, por zona:
 
 **Performance Goals**: SC-004 — primera pantalla usable (LCP) < 2,5 s con 10 Mbps; navegación entre pantallas cargadas < 300 ms; *bundle* inicial ≤ 250 KB gzip (sin pantallas de módulo, que se cargan bajo demanda); lista de 5.000 filas virtualizadas sin cortes (spike S-UI)
 
-**Constraints**: ningún `number` en importes (G-09); el token de desarrollo nunca en el *bundle*; *build* de producción bloqueado sin la spec 012 (FR-021); WCAG 2.1 AA (FR-018); sin CDN externos (fuentes e íconos locales); solo `platform/http` llama a `fetch`
+**Constraints**: ningún `number` en importes (G-09); el token de desarrollo nunca en el *bundle* (se lee por petición desde `SIFCA_DEV_TOKEN_FILE`); `__e2e` y las anulaciones de fecha nunca en producción (FR-023, FR-024); *build* de producción bloqueado sin la spec 012 (FR-021); WCAG 2.1 AA (FR-018); sin CDN externos (fuentes e íconos locales); solo `platform/http` llama a `fetch`
 
-**Scale/Scope**: 6 historias, 22 FR, 12 escenarios; ~25 componentes de UI, 1 pantalla de módulo de referencia, 2 cambios de API; base para ~45 pantallas de las specs siguientes
+**Scale/Scope**: 6 historias, 24 FR, 12 escenarios; ~25 componentes de UI, 1 pantalla de módulo de referencia, 2 cambios de API; base para ~45 pantallas de las specs siguientes
 
 ## Constitution Check
 
@@ -130,7 +130,8 @@ apps/admin/                          # NUEVO
 │   │                 # Form, MoneyText, DateText, Skeleton, EmptyState, ErrorBanner, OfflineBanner,
 │   │                 # UnsavedChangesGuard, ReadOnlyNotice, ForbiddenPage, NotFoundPage, icons/
 │   ├── shell/        # AppShell, Sidebar, Topbar, PeriodChip, UserMenu, CommandPalette, ShortcutsHelp, registry/
-│   └── modules/accounting/   # manifest.ts, journal-entries/JournalEntriesListPage.tsx
+│   ├── modules/accounting/   # manifest.ts, journal-entries/JournalEntriesListPage.tsx
+│   └── e2e-harness/          # /__e2e/*: pantalla de demostración, solo en development/e2e (research §14)
 ├── test/
 │   ├── unit/  component/ (MSW handlers por code)  arch/ (.dependency-cruiser.cjs)
 │   └── e2e/   # steps de playwright-bdd para acceptance/fundaciones-frontend.feature
@@ -149,5 +150,6 @@ componentes, arquitectura, E2E con la API y PostgreSQL de pruebas, axe).
 |---|---|---|
 | Autenticación provisional (`dev-proxy`) y *build* de producción bloqueado | La spec 012 va justo después; permite construir y probar sesión, 401 y permisos sin adelantar IAM | Construir login ahora: duplicaría la spec 012 y su modelo de sesiones |
 | Cambio pequeño en la API de la spec 001 (`number`) | Necesario para `#AJ-1` en la paleta (US5); parámetro opcional y retrocompatible, con prueba de contrato | Filtrar en el cliente: incorrecto con paginación por cursor |
+| Pantalla de demostración `/__e2e/*` (FR-023) y anulación de fecha de trabajo (FR-024) | Hacen ejecutables [016-02], [016-04], [016-05] y [016-08] sin adelantar la UI de la spec 001 ni depender del mes real | Probar solo con componentes: pierde la verificación de punta a punta de la idempotencia |
 | Biblioteca de UI elegida antes de cerrar el spike S-UI | El spike se acota a la grilla editable (research §9); el resto de componentes no depende de su resultado | Esperar el spike completo: bloquearía toda la Ola 0 por una pieza que solo usa la UI de la spec 001 |
 | G-10 provisional | Mismo tratamiento que la spec 001; la puerta de liberación lo controla | — |

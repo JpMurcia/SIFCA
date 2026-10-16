@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<script src="./sifca-icons.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#E3E7EC;font-family:Inter,system-ui,sans-serif;color:#1B2430;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}a{color:#0B5CAD}a:hover{color:#084A8C}button,input,textarea{font-family:inherit}input::placeholder,textarea::placeholder{color:inherit;opacity:.55}.dv-turn{padding:40px 44px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Inter,system-ui,sans-serif;color:#1a1a1a}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 Inter,system-ui,sans-serif;color:rgba(0,0,0,.6)}.dv-card{border:1px solid rgba(0,0,0,.1);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:hidden}.dv-opt:target .dv-oid{background:#0B5CAD;color:#fff}.dv-h{font:600 15px/1.2 Inter,system-ui,sans-serif;color:#1B2430;margin:44px 0 16px}.dv-next{margin:32px 0 0;font:12px/1.5 Inter,system-ui,sans-serif;color:rgba(0,0,0,.55)}</style>
+</helmet>
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Tanda 3 · Pantallas faltantes · Contabilidad, cartera, impuestos, DIAN, auditoría, multiempresa y cobro móvil</span></div>
+
+<div style="max-width:1080px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:24px 28px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;font-size:13px;line-height:1.55;color:#1B2430">
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Un solo libro conectado</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;text-wrap:pretty">
+<li>Libros, balance y auditoría se calculan con los mismos 8 comprobantes de la Tanda 1 (Σ $ 4.200.000,00). Si contabilizas en el editor o reversas AJ-1, el diario, el mayor y el balance se recalculan y siguen cuadrados.</li>
+<li>Si cierras Oct 2026, el chip de período cambia en todos los cascarones, y el editor y la reversión con fecha 14/10/2026 quedan bloqueados con error explicado.</li>
+<li><b>Supuestos:</b> la cartera por edades y las facturas del cobro móvil son datos de ejemplo con numeración heredada (FE-2291…), no salen del libro. También son de ejemplo los NIT, la resolución DIAN, el certificado y las IP.</li>
+</ul>
+</div>
+<div>
+<div style="font-size:12px;font-weight:600;color:#4B5767;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Pruébalo</div>
+<ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+<li>Editor: corrige 99.999,99 a 100.000,00 y contabiliza. Prueba la cuenta «11» o poner débito y crédito en la misma línea.</li>
+<li>Detalle: escribe un motivo y reversa AJ-1.</li>
+<li>Períodos: descarta el borrador y cierra octubre.</li>
+<li>Móvil: cambia el valor del abono y registra el recibo.</li>
+</ul>
+<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:baseline"><a class="dv-oid" href="#3a">3a</a><a class="dv-oid" href="#3c">3c</a><a class="dv-oid" href="#3e">3e</a><a class="dv-oid" href="#3g">3g</a><a class="dv-oid" href="#3i">3i</a><a class="dv-oid" href="#3k">3k</a><a class="dv-oid" href="#3m">3m</a><a class="dv-oid" href="#3o">3o</a><a class="dv-oid" href="#3q">3q</a><span style="color:#4B5767">web</span><a class="dv-oid" href="#3s">3s</a><a class="dv-oid" href="#3t">3t</a><a class="dv-oid" href="#3u">3u</a><span style="color:#4B5767">móvil</span></div>
+</div>
+</div>
+
+<h3 class="dv-h">Web 1440 · Claro | Slate</h3>
+<div style="display:grid;grid-template-columns:repeat(2,max-content);gap:40px 36px">
+<sc-for list="{{ web }}" as="w" hint-placeholder-count="18">
+<div class="dv-opt" id="{{ w.id }}">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ w.id }}">{{ w.id }}</a>{{ w.label }}</div>
+<div class="dv-card" style="{{ w.vars }}">
+
+<div style="height:56px;flex:none;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid var(--bd);background:var(--glass);backdrop-filter:blur(16px) saturate(1.4);position:relative;z-index:2">
+<div style="display:flex;align-items:center;gap:10px;flex:none;width:214px"><div role="img" aria-label="SIFCA" title="SIFCA" style="width:34px;height:34px;flex:none;background:var(--logo) center/contain no-repeat"></div><div style="display:flex;flex-direction:column;line-height:1.25;min-width:0"><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Comercializadora Andina S.A.S.</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">NIT 900.123.456-7</span></div></div>
+<div style="flex:1;max-width:520px;margin:0 auto;height:36px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--mu);display:flex;align-items:center;gap:10px;padding:0 8px 0 12px;font-size:13px;box-shadow:var(--e1)"><span style="width:12px;height:12px;border:1.6px solid currentColor;border-radius:50%"></span><span style="flex:1">Buscar o ejecutar…</span><span style="font:500 11px 'JetBrains Mono',monospace;padding:2px 6px;border:1px solid var(--bd);border-radius:5px;background:var(--sf)">Ctrl K</span></div>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:14px;background:var(--okb);color:var(--ok);font-size:12px;font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--okb)"></span>{{ chip }}</span>
+<span style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);display:flex;align-items:center;gap:6px;font-size:13px">Alertas<span style="min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--pr);color:var(--onpr);font-size:11px;font-weight:700;display:grid;place-items:center">3</span></span>
+<span style="width:32px;height:32px;border-radius:50%;background:var(--sf2);display:grid;place-items:center;font-size:12px;font-weight:600">JM</span>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex">
+<nav style="width:232px;flex:none;background:var(--side);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:12px 10px;gap:2px">
+<sc-for list="{{ w.groups }}" as="g" hint-placeholder-count="12">
+<div style="display:flex;flex-direction:column">
+<div style="height:32px;display:flex;align-items:center;gap:10px;padding:0 6px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:{{ g.weight }}" style-hover="background:var(--hov)"><span style="width:24px;height:22px;flex:none;border-radius:6px;background:{{ g.tileBg }};color:{{ g.tileFg }};display:grid;place-items:center;font:600 10px 'JetBrains Mono',monospace"><sf-icon name="{{ g.code }}" style="width:15px;height:15px"></sf-icon></span><span style="flex:1;white-space:nowrap">{{ g.name }}</span></div>
+<sc-if value="{{ g.showChildren }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 40px"><sc-for list="{{ g.children }}" as="c" hint-placeholder-count="5"><div style="height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-radius:6px;font-size:13px;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};font-weight:{{ c.weight }}" style-hover="background:var(--hov)"><span>{{ c.name }}</span><sc-if value="{{ c.badge }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:600;padding:0 6px;height:18px;border-radius:9px;background:var(--wab);color:var(--wa);display:grid;place-items:center">{{ c.badge }}</span></sc-if></div></sc-for></div></sc-if>
+</div>
+</sc-for>
+</nav>
+
+<main style="flex:1;min-width:0;position:relative;background:var(--app);display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:20px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex:none">
+<div style="min-width:0"><div style="font-size:12px;color:var(--mu)">{{ w.crumb }}</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:6px"><h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-.01em;white-space:nowrap">{{ w.title }}</h1>
+<sc-for list="{{ w.badges }}" as="b" hint-placeholder-count="1"><span style="display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:6px;font-size:12px;font-weight:600;background:{{ b.bg }};color:{{ b.fg }};white-space:nowrap">{{ b.t }}<sc-if value="{{ b.ref }}" hint-placeholder-val="{{ false }}"><span style="text-decoration:underline;font-family:'JetBrains Mono',monospace">{{ b.ref }}</span></sc-if></span></sc-for>
+</div></div>
+<div style="display:flex;gap:8px;align-items:center;flex:none">
+<sc-for list="{{ w.actions }}" as="a" hint-placeholder-count="2"><button onClick="{{ a.on }}" title="{{ a.tip }}" style="height:36px;padding:0 14px;border-radius:8px;border:{{ a.bd }};background:{{ a.bg }};color:{{ a.fg }};font-size:13px;font-weight:{{ a.fw }};display:flex;align-items:center;gap:8px;cursor:{{ a.cur }};box-shadow:{{ a.sh }};white-space:nowrap">{{ a.label }}<sc-if value="{{ a.k }}" hint-placeholder-val="{{ false }}"><span style="font:500 11px 'JetBrains Mono',monospace;opacity:.75">{{ a.k }}</span></sc-if></button></sc-for>
+</div>
+</div>
+
+<sc-if value="{{ w.isEditor }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 18px;display:grid;grid-template-columns:200px 200px minmax(0,1fr) 200px;gap:14px;align-items:start">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Tipo</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:14px;background:var(--bg)"><b style="font:600 13px 'JetBrains Mono',monospace">AJ</b>Ajuste contable<span style="margin-left:auto;font-size:9px;color:var(--mu)">▼</span></span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Fecha contable</span><span style="height:40px;border:{{ ed.dateBd }};border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:14px;font-variant-numeric:tabular-nums;background:var(--bg)">14/10/2026<sc-if value="{{ ed.perClosed }}" hint-placeholder-val="{{ false }}"><span style="width:18px;height:18px;border-radius:50%;background:var(--er);color:var(--erb);font-size:12px;font-weight:700;display:grid;place-items:center">!</span></sc-if></span><span style="font-size:12px;font-weight:500;color:{{ ed.perFg }};line-height:1.35">{{ ed.perMsg }}</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Descripción</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg)"><input value="{{ ed.desc }}" onChange="{{ ed.onDesc }}" readOnly="{{ ed.posted }}" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:14px"></input></span></label>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--mu)">Número</span><span style="height:40px;border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--sf);font:500 13px 'JetBrains Mono',monospace;color:{{ ed.numFg }}">{{ ed.num }}</span></div>
+</div>
+
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:10px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--bd)">
+<sc-if value="{{ ed.editable }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ed.addLine }}" style="height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;font-weight:500;cursor:pointer" style-hover="border-color:var(--pr);color:var(--pr)">+ Agregar línea</button><button style="height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-size:12px;cursor:pointer">Pegar desde Excel</button></sc-if>
+<span style="flex:1"></span>
+<span style="font-size:12px;color:var(--mu);display:flex;gap:12px"><span><b style="font-family:'JetBrains Mono',monospace;color:var(--tx)">Tab</b> siguiente celda</span><span><b style="font-family:'JetBrains Mono',monospace;color:var(--tx)">Enter</b> nueva línea</span><span><b style="font-family:'JetBrains Mono',monospace;color:var(--tx)">F2</b> buscar cuenta</span></span>
+</div>
+<div style="display:grid;grid-template-columns:{{ edCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 10px;text-align:right">#</span><span style="padding:0 8px;border-left:1px solid var(--bd)">Cuenta</span><span style="padding:0 8px;border-left:1px solid var(--bd)">Tercero</span><span style="padding:0 8px;border-left:1px solid var(--bd)">Descripción de la línea</span><span style="padding:0 8px;border-left:1px solid var(--bd);text-align:right">Débito</span><span style="padding:0 8px;border-left:1px solid var(--bd);text-align:right">Crédito</span><span style="padding:0 8px;border-left:1px solid var(--bd)">C. costo</span><span></span></div>
+<div style="flex:1;overflow:auto">
+<sc-for list="{{ ed.lines }}" as="l" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:{{ edCols }};height:28px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);background:{{ l.rowBg }}">
+<span style="padding:0 10px;text-align:right;color:var(--mu);font-variant-numeric:tabular-nums">{{ l.n }}</span>
+<span style="display:flex;align-items:center;height:100%;border-left:1px solid var(--bd);min-width:0"><input value="{{ l.acct }}" onChange="{{ l.onAcct }}" readOnly="{{ ed.posted }}" placeholder="Cuenta" style="width:76px;flex:none;height:27px;border:0;outline:0;background:transparent;color:var(--tx);padding:0 8px;font:500 12px 'JetBrains Mono',monospace" style-focus="box-shadow:inset 0 0 0 2px var(--ring);background:var(--bg)"></input><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:{{ l.nameFg }};font-weight:{{ l.nameW }};padding-right:6px">{{ l.acctName }}</span></span>
+<input value="{{ l.terc }}" onChange="{{ l.onTerc }}" readOnly="{{ ed.posted }}" style="height:27px;border:0;border-left:1px solid var(--bd);outline:0;background:transparent;color:var(--tx);padding:0 8px;font-size:13px;min-width:0" style-focus="box-shadow:inset 0 0 0 2px var(--ring);background:var(--bg)"></input>
+<input value="{{ l.desc }}" onChange="{{ l.onDesc }}" readOnly="{{ ed.posted }}" style="height:27px;border:0;border-left:1px solid var(--bd);outline:0;background:transparent;color:var(--tx);padding:0 8px;font-size:13px;min-width:0" style-focus="box-shadow:inset 0 0 0 2px var(--ring);background:var(--bg)"></input>
+<input value="{{ l.d }}" onChange="{{ l.onD }}" onBlur="{{ l.fmtD }}" readOnly="{{ ed.posted }}" inputmode="decimal" style="height:27px;border:0;border-left:1px solid var(--bd);outline:0;background:transparent;color:var(--tx);padding:0 8px;font-size:13px;text-align:right;font-variant-numeric:tabular-nums;min-width:0" style-focus="box-shadow:inset 0 0 0 2px var(--ring);background:var(--bg)"></input>
+<input value="{{ l.c }}" onChange="{{ l.onC }}" onBlur="{{ l.fmtC }}" readOnly="{{ ed.posted }}" inputmode="decimal" style="height:27px;border:0;border-left:1px solid var(--bd);outline:0;background:transparent;color:var(--tx);padding:0 8px;font-size:13px;text-align:right;font-variant-numeric:tabular-nums;min-width:0" style-focus="box-shadow:inset 0 0 0 2px var(--ring);background:var(--bg)"></input>
+<span style="padding:0 8px;border-left:1px solid var(--bd);height:100%;display:flex;align-items:center;font:500 12px 'JetBrains Mono',monospace;color:var(--mu)">ADM</span>
+<span style="display:grid;place-items:center"><sc-if value="{{ ed.editable }}" hint-placeholder-val="{{ true }}"><button onClick="{{ l.del }}" title="Quitar línea" style="width:24px;height:24px;border:0;border-radius:5px;background:transparent;color:var(--mu);cursor:pointer" style-hover="background:var(--sf2)">×</button></sc-if></span>
+</div>
+</sc-for>
+<sc-if value="{{ ed.hasErrs }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 14px;display:flex;flex-direction:column;gap:6px"><sc-for list="{{ ed.errs }}" as="e" hint-placeholder-count="1"><div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--er)"><span style="width:16px;height:16px;border-radius:50%;background:var(--er);color:var(--erb);font-size:10px;font-weight:700;display:grid;place-items:center;flex:none">!</span><b style="font-weight:600">Línea {{ e.n }}:</b>{{ e.t }}</div></sc-for></div></sc-if>
+</div>
+<div style="border-top:1px solid var(--bd);background:var(--sf);display:grid;grid-template-columns:{{ edCols }};align-items:center;min-height:56px">
+<span style="grid-column:span 4;padding:0 14px;display:flex;align-items:center;gap:10px;font-size:13px">
+<sc-if value="{{ ed.balanced }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 9px;border-radius:5px;font-size:12px;font-weight:600;background:var(--okb);color:var(--ok)">✓ Cuadrado</span></sc-if>
+<sc-if value="{{ ed.unbal }}" hint-placeholder-val="{{ true }}"><span role="alert" style="display:flex;align-items:center;gap:8px;color:var(--er);font-size:12px;line-height:1.35"><span style="width:18px;height:18px;border-radius:50%;background:var(--er);color:var(--erb);font-size:11px;font-weight:700;display:grid;place-items:center;flex:none">!</span><span><b style="font-weight:600">ENTRY_NOT_BALANCED</b> · No cuadra: débitos {{ ed.sd }} ≠ créditos {{ ed.sc }}.</span></span></sc-if>
+</span>
+<span style="padding:6px 8px;display:flex;flex-direction:column;align-items:flex-end;gap:1px"><span style="font-size:11px;color:var(--mu)">Σ Débitos</span><span style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums">{{ ed.sd }}</span></span>
+<span style="padding:6px 8px;display:flex;flex-direction:column;align-items:flex-end;gap:1px"><span style="font-size:11px;color:var(--mu)">Σ Créditos</span><span style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums">{{ ed.sc }}</span></span>
+<span style="grid-column:span 2;padding:6px 14px 6px 8px;display:flex;flex-direction:column;gap:1px"><span style="font-size:11px;color:var(--mu)">Diferencia</span><span style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ ed.diffFg }}">{{ ed.diff }}</span></span>
+</div>
+</div>
+<sc-if value="{{ ed.posted }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;right:28px;bottom:24px;z-index:6;border-radius:12px;border:1px solid var(--glassb);background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);box-shadow:var(--e3);padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:13px"><span style="width:22px;height:22px;border-radius:50%;background:var(--ok);color:var(--okb);font-weight:700;display:grid;place-items:center">✓</span><span>Contabilizado como <b style="font-family:'JetBrains Mono',monospace">{{ ed.num }}</b>. Ya es inmutable; se corrige con Reversar.</span><button onClick="{{ ed.newOne }}" style="height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;font-weight:600;cursor:pointer">Nuevo</button></div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isDetalle }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px">
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+<sc-if value="{{ rev.done }}" hint-placeholder-val="{{ false }}"><div style="border-radius:12px;background:var(--neb);color:var(--ne);padding:12px 16px;font-size:13px;line-height:1.5;display:flex;gap:10px"><span style="font-weight:700">↺</span><span>Reversado por <b style="font-family:'JetBrains Mono',monospace">{{ rev.num }}</b> el 14/10/2026 · J. Murcia. Motivo: «{{ rev.motivo }}». Ambos comprobantes siguen visibles y enlazados.</span></div></sc-if>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;font-size:13px">
+<div><div style="font-size:12px;color:var(--mu)">Fecha contable</div><div style="font-weight:600;font-variant-numeric:tabular-nums">01/10/2026</div></div>
+<div><div style="font-size:12px;color:var(--mu)">Período</div><div style="font-weight:600">Oct 2026</div></div>
+<div><div style="font-size:12px;color:var(--mu)">Origen</div><div style="font-weight:600">Manual</div></div>
+<div><div style="font-size:12px;color:var(--mu)">Autor</div><div style="font-weight:600">J. Murcia</div></div>
+<div><div style="font-size:12px;color:var(--mu)">Contabilizado</div><div style="font-weight:600;font-variant-numeric:tabular-nums">01/10/2026 · 09:14</div></div>
+<div style="grid-column:span 5;padding-top:10px;border-top:1px solid var(--bd)"><div style="font-size:12px;color:var(--mu)">Descripción</div><div style="font-size:15px;font-weight:500">Apertura de inventario aportado como capital</div></div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="display:grid;grid-template-columns:90px minmax(0,1fr) 180px minmax(0,1fr) 150px 150px;height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">Cuenta</span><span style="padding:0 8px">Nombre</span><span style="padding:0 8px">Tercero</span><span style="padding:0 8px">Descripción</span><span style="padding:0 12px;text-align:right">Débito</span><span style="padding:0 12px;text-align:right">Crédito</span></div>
+<sc-for list="{{ aj1 }}" as="l" hint-placeholder-count="2"><div style="display:grid;grid-template-columns:90px minmax(0,1fr) 180px minmax(0,1fr) 150px 150px;height:{{ rowH }}px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd)"><span style="padding:0 12px;font:500 12px 'JetBrains Mono',monospace">{{ l.a }}</span><span style="padding:0 8px">{{ l.name }}</span><span style="padding:0 8px;color:var(--mu)">{{ l.t }}</span><span style="padding:0 8px;color:var(--mu)">{{ l.desc }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ l.d }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ l.c }}</span></div></sc-for>
+<div style="display:grid;grid-template-columns:90px minmax(0,1fr) 180px minmax(0,1fr) 150px 150px;height:38px;align-items:center;font-size:13px;font-weight:600;background:var(--sf)"><span style="grid-column:span 4;padding:0 12px;display:flex;gap:10px;align-items:center">Totales<span style="font-size:12px;padding:2px 8px;border-radius:5px;background:var(--okb);color:var(--ok)">✓ Cuadrado</span></span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">1.000.000,00</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">1.000.000,00</span></div>
+</div>
+<div style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:8px"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Contabilizado: no se edita ni se elimina. Para corregirlo, revérsalo y registra uno nuevo.</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px 18px;display:flex;flex-direction:column;align-self:start">
+<span style="font-size:14px;font-weight:600;margin-bottom:14px">Trazabilidad</span>
+<sc-for list="{{ trace }}" as="s" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:12px"><div style="display:flex;flex-direction:column;align-items:center"><span style="width:12px;height:12px;border-radius:50%;background:{{ s.dot }};margin-top:3px;box-shadow:0 0 0 4px var(--card)"></span><span style="width:2px;flex:1;min-height:14px;background:var(--bd)"></span></div><div style="padding-bottom:14px"><div style="font-size:13px;font-weight:600">{{ s.t }}</div><div style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">{{ s.s }}</div></div></div></sc-for>
+</div>
+</div>
+<sc-if value="{{ w.revOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ w.closeRev }}" style="position:absolute;inset:0;background:var(--scrim);backdrop-filter:blur(4px);z-index:8"></div>
+<div role="dialog" style="position:absolute;top:70px;left:50%;transform:translateX(-50%);width:600px;z-index:9;border-radius:16px;border:1px solid var(--glassb);background:var(--glass);backdrop-filter:blur(28px) saturate(1.6);box-shadow:var(--e3);overflow:hidden">
+<div style="padding:20px 24px 0;display:flex;justify-content:space-between"><div><div style="font-size:18px;font-weight:600">Reversar AJ-1</div><div style="font-size:13px;color:var(--mu);margin-top:2px">Se crea un comprobante nuevo con débitos y créditos invertidos. AJ-1 no cambia.</div></div><button onClick="{{ w.closeRev }}" style="width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:var(--mu);font-size:18px;cursor:pointer">×</button></div>
+<div style="padding:18px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:grid;grid-template-columns:180px minmax(0,1fr);gap:14px">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Fecha de la reversión</span><span style="height:44px;border:{{ rev.dateBd }};border-radius:10px;display:flex;align-items:center;padding:0 12px;background:var(--bg);font-size:15px;font-variant-numeric:tabular-nums">14/10/2026</span><span style="font-size:12px;color:{{ ed.perFg }};font-weight:500">{{ ed.perMsg }}</span></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Motivo <span style="color:var(--er)">*</span></span><span style="height:44px;border:2px solid var(--ring);border-radius:10px;display:flex;align-items:center;padding:0 12px;background:var(--bg)"><input value="{{ rev.motivoIn }}" onChange="{{ onMotivo }}" placeholder="Explica por qué se reversa" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:15px"></input></span><span style="font-size:12px;color:{{ rev.hintFg }};display:flex;justify-content:space-between"><span>Queda en la bitácora y en ambos comprobantes.</span><span style="font-variant-numeric:tabular-nums">{{ rev.count }}</span></span></label>
+</div>
+<div style="border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:var(--bg)">
+<div style="display:grid;grid-template-columns:80px minmax(0,1fr) 130px 130px;height:28px;align-items:center;font-size:12px;font-weight:600;color:var(--mu);background:var(--sf)"><span style="padding:0 10px">Cuenta</span><span style="padding:0 8px">Vista previa</span><span style="padding:0 10px;text-align:right">Débito</span><span style="padding:0 10px;text-align:right">Crédito</span></div>
+<sc-for list="{{ revPrev }}" as="l" hint-placeholder-count="2"><div style="display:grid;grid-template-columns:80px minmax(0,1fr) 130px 130px;height:28px;align-items:center;font-size:13px;border-top:1px solid var(--bd)"><span style="padding:0 10px;font:500 12px 'JetBrains Mono',monospace">{{ l.a }}</span><span style="padding:0 8px">{{ l.name }}</span><span style="padding:0 10px;text-align:right;font-variant-numeric:tabular-nums">{{ l.d }}</span><span style="padding:0 10px;text-align:right;font-variant-numeric:tabular-nums">{{ l.c }}</span></div></sc-for>
+</div>
+</div>
+<div style="padding:14px 24px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:10px;background:var(--sf)"><button onClick="{{ w.closeRev }}" style="height:40px;padding:0 14px;border-radius:8px;border:0;background:transparent;color:var(--pr);font-size:14px;font-weight:500;cursor:pointer">Cancelar</button><button onClick="{{ w.doRev }}" style="height:40px;padding:0 16px;border-radius:8px;border:0;background:{{ rev.btnBg }};color:{{ rev.btnFg }};font-size:14px;font-weight:600;cursor:{{ rev.btnCur }}">Reversar y contabilizar</button></div>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ w.isLibros }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="height:36px;background:var(--sf2);border-radius:9px;padding:3px;display:flex;gap:3px"><sc-for list="{{ w.libTabs }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.pick }}" style="border:0;border-radius:7px;padding:0 14px;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.sh }};font-size:13px;font-weight:600;cursor:pointer">{{ t.name }}</button></sc-for></div>
+<span style="height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--bds);background:var(--card);display:flex;align-items:center;gap:8px;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Rango</span>01/10/2026 – 31/10/2026</span>
+<sc-if value="{{ w.isMayor }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:6px;margin-left:8px"><sc-for list="{{ mayorAccts }}" as="m" hint-placeholder-count="6"><button onClick="{{ m.pick }}" style="height:32px;padding:0 10px;border-radius:16px;border:1px solid {{ m.bd }};background:{{ m.bg }};color:{{ m.fg }};font:500 12px 'JetBrains Mono',monospace;cursor:pointer">{{ m.code }}</button></sc-for></div></sc-if>
+</div>
+<sc-if value="{{ w.isMayor }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:minmax(0,1.6fr) repeat(4,minmax(0,1fr));gap:12px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:12px 16px"><div style="font:500 12px 'JetBrains Mono',monospace;color:var(--mu)">{{ mayor.code }}</div><div style="font-size:16px;font-weight:600">{{ mayor.name }}</div><div style="font-size:12px;color:var(--mu)">Naturaleza {{ mayor.nat }}</div></div>
+<sc-for list="{{ mayor.kpis }}" as="k" hint-placeholder-count="4"><div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:12px 16px"><div style="font-size:12px;color:var(--mu)">{{ k.l }}</div><div style="font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px">{{ k.v }}</div></div></sc-for>
+</div>
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;display:flex;flex-direction:column">
+<div style="display:grid;grid-template-columns:{{ lbCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">Fecha</span><span style="padding:0 8px">Documento</span><span style="padding:0 8px">Tercero</span><span style="padding:0 8px">Descripción</span><span style="padding:0 12px;text-align:right">Débito</span><span style="padding:0 12px;text-align:right">Crédito</span><span style="padding:0 12px;text-align:right">Saldo</span></div>
+<div style="display:grid;grid-template-columns:{{ lbCols }};height:{{ rowH }}px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);color:var(--mu)"><span style="padding:0 12px;font-variant-numeric:tabular-nums">01/10/2026</span><span style="padding:0 8px;grid-column:span 5">Saldo anterior</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">0,00</span></div>
+<div style="flex:1;overflow:auto"><sc-for list="{{ mayor.rows }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:{{ lbCols }};height:{{ rowH }}px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd)" style-hover="background:var(--hov)"><span style="padding:0 12px;font-variant-numeric:tabular-nums">{{ r.f }}</span><span style="padding:0 8px;font:500 12px 'JetBrains Mono',monospace;color:var(--pr)">{{ r.n }}</span><span style="padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mu)">{{ r.t }}</span><span style="padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.desc }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ r.d }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ r.c }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600">{{ r.s }}</span></div></sc-for></div>
+<div style="display:grid;grid-template-columns:{{ lbCols }};height:38px;align-items:center;font-size:13px;font-weight:600;background:var(--sf);border-top:1px solid var(--bd)"><span style="grid-column:span 4;padding:0 12px">Totales del rango</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ mayor.td }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ mayor.tc }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ mayor.ts }}</span></div>
+</div>
+</sc-if>
+<sc-if value="{{ w.isDiario }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;display:flex;flex-direction:column">
+<div style="display:grid;grid-template-columns:{{ djCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">Fecha · Doc.</span><span style="padding:0 8px">Cuenta</span><span style="padding:0 8px">Nombre</span><span style="padding:0 8px">Tercero</span><span style="padding:0 12px;text-align:right">Débito</span><span style="padding:0 12px;text-align:right">Crédito</span></div>
+<div style="flex:1;overflow:auto"><sc-for list="{{ diario }}" as="r" hint-placeholder-count="8">
+<sc-if value="{{ r.head }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:{{ djCols }};height:{{ rowH }}px;align-items:center;font-size:13px;background:var(--sf);border-bottom:1px solid var(--bd);font-weight:600"><span style="padding:0 12px;display:flex;gap:10px"><span style="font-variant-numeric:tabular-nums;font-weight:400;color:var(--mu)">{{ r.f }}</span><span style="font:600 12px 'JetBrains Mono',monospace;color:var(--pr)">{{ r.n }}</span></span><span style="grid-column:span 3;padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.desc }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mu);font-weight:500">{{ r.d }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mu);font-weight:500">{{ r.c }}</span></div></sc-if>
+<sc-if value="{{ r.line }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:{{ djCols }};height:{{ rowH }}px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd)"><span></span><span style="padding:0 8px;font:500 12px 'JetBrains Mono',monospace;padding-left:{{ r.ind }}">{{ r.a }}</span><span style="padding:0 8px;padding-left:{{ r.ind }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span><span style="padding:0 8px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.t }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ r.d }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ r.c }}</span></div></sc-if>
+</sc-for></div>
+<div style="display:grid;grid-template-columns:{{ djCols }};height:38px;align-items:center;font-size:13px;font-weight:600;background:var(--sf);border-top:1px solid var(--bd)"><span style="grid-column:span 4;padding:0 12px;display:flex;gap:10px;align-items:center">{{ diarioCount }}<span style="font-size:12px;padding:2px 8px;border-radius:5px;background:var(--okb);color:var(--ok)">✓ Cuadrado</span></span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ totD }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ totC }}</span></div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isBalance }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font-size:12px;color:var(--mu)">Nivel</span>
+<div style="height:36px;background:var(--sf2);border-radius:9px;padding:3px;display:flex;gap:3px"><sc-for list="{{ levels }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" style="border:0;border-radius:7px;padding:0 12px;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.sh }};font-size:13px;font-weight:600;cursor:pointer">{{ t.name }}</button></sc-for></div>
+<span style="height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--bds);background:var(--card);display:flex;align-items:center;gap:8px;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Corte</span>31/10/2026</span>
+<span style="flex:1"></span>
+<span style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:16px;background:var(--okb);color:var(--ok);font-size:13px;font-weight:600">✓ Cuadrado · diferencia $ 0,00</span>
+</div>
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;display:flex;flex-direction:column">
+<div style="display:grid;grid-template-columns:{{ bpCols }};height:26px;align-items:stretch;font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;background:var(--sf)"><span></span><span></span><span style="grid-column:span 2;border-left:1px solid var(--bd);display:grid;place-items:center">Saldo anterior</span><span style="grid-column:span 2;border-left:1px solid var(--bd);display:grid;place-items:center;border-bottom:2px solid var(--pr)">Movimientos del período</span><span style="grid-column:span 2;border-left:1px solid var(--bd);display:grid;place-items:center">Saldo final</span></div>
+<div style="display:grid;grid-template-columns:{{ bpCols }};height:28px;align-items:center;font-size:12px;font-weight:600;color:var(--mu);background:var(--sf);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">Código</span><span style="padding:0 8px">Nombre</span><span style="padding:0 12px;text-align:right;border-left:1px solid var(--bd)">Débito</span><span style="padding:0 12px;text-align:right">Crédito</span><span style="padding:0 12px;text-align:right;border-left:1px solid var(--bd)">Débito</span><span style="padding:0 12px;text-align:right">Crédito</span><span style="padding:0 12px;text-align:right;border-left:1px solid var(--bd)">Débito</span><span style="padding:0 12px;text-align:right">Crédito</span></div>
+<div style="flex:1;overflow:auto"><sc-for list="{{ bal }}" as="b" hint-placeholder-count="9"><div style="display:grid;grid-template-columns:{{ bpCols }};height:{{ rowH }}px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);font-weight:{{ b.fw }};background:{{ b.bg }}" style-hover="background:var(--hov)"><span style="padding:0 12px;padding-left:{{ b.ind }};font:500 12px 'JetBrains Mono',monospace">{{ b.code }}</span><span style="padding:0 8px;padding-left:{{ b.ind }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.name }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mu);border-left:1px solid var(--bd);height:100%;display:flex;align-items:center;justify-content:flex-end">—</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mu)">—</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;border-left:1px solid var(--bd);height:100%;display:flex;align-items:center;justify-content:flex-end">{{ b.md }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ b.mc }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums;border-left:1px solid var(--bd);height:100%;display:flex;align-items:center;justify-content:flex-end">{{ b.fd }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ b.fc }}</span></div></sc-for></div>
+<div style="display:grid;grid-template-columns:{{ bpCols }};height:40px;align-items:center;font-size:13px;font-weight:700;background:var(--sf);border-top:1px solid var(--bd)"><span style="grid-column:span 2;padding:0 12px">Totales</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">0,00</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">0,00</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ totD }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ totC }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ finD }}</span><span style="padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">{{ finC }}</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isPeriodos }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:16px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:18px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px;font-weight:600">Año fiscal 2026</span><span style="font-size:12px;color:var(--mu)">Cierre anual disponible cuando los 12 meses estén cerrados</span></div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+<sc-for list="{{ w.months }}" as="m" hint-placeholder-count="12"><button onClick="{{ m.pick }}" style="text-align:left;padding:14px;border-radius:12px;border:{{ m.bd }};background:{{ m.bg }};color:var(--tx);cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:{{ m.sh }}" style-hover="box-shadow:var(--e2)"><span style="font-size:16px;font-weight:600">{{ m.name }}</span><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:11px;font-size:12px;font-weight:600;background:{{ m.sBg }};color:{{ m.sFg }}">{{ m.st }}</span><span style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">{{ m.meta }}</span></button></sc-for>
+</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:16px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px"><span style="font-size:16px;font-weight:600;flex:1">{{ w.pm.name }}</span><span style="display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:12px;font-size:12px;font-weight:600;background:{{ w.pm.sBg }};color:{{ w.pm.sFg }}">{{ w.pm.st }}</span></div>
+<sc-if value="{{ w.pm.isOpen }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px;flex:1">
+<span style="font-size:13px;font-weight:600">Lista de cierre</span>
+<sc-for list="{{ w.pm.checks }}" as="c" hint-placeholder-count="5"><div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:{{ c.bg }}"><span style="flex:none;width:20px;height:20px;border-radius:50%;background:{{ c.dot }};color:{{ c.dotFg }};font-size:11px;font-weight:700;display:grid;place-items:center">{{ c.icon }}</span><span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600;color:{{ c.fg }}">{{ c.t }}</span><span style="font-size:12px;color:var(--mu);line-height:1.4">{{ c.s }}</span></span><sc-if value="{{ c.act }}" hint-placeholder-val="{{ false }}"><button onClick="{{ c.on }}" style="height:28px;padding:0 10px;border-radius:6px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ c.act }}</button></sc-if></div></sc-for>
+</div>
+<div style="padding:14px 18px;border-top:1px solid var(--bd);background:var(--sf);display:flex;flex-direction:column;gap:6px"><button onClick="{{ w.askClose }}" style="height:42px;border-radius:8px;border:0;background:{{ w.pm.btnBg }};color:{{ w.pm.btnFg }};font-size:14px;font-weight:600;cursor:{{ w.pm.btnCur }}">Cerrar {{ w.pm.name }}</button><span style="font-size:12px;color:var(--mu);text-align:center">{{ w.pm.btnNote }}</span></div>
+</sc-if>
+<sc-if value="{{ w.pm.isClosed }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 18px;display:flex;flex-direction:column;gap:12px;font-size:13px">
+<div style="display:grid;grid-template-columns:auto 1fr;gap:6px 14px"><span style="color:var(--mu)">Cerrado por</span><span>J. Murcia</span><span style="color:var(--mu)">Fecha</span><span style="font-variant-numeric:tabular-nums">{{ w.pm.closedAt }}</span><span style="color:var(--mu)">Efecto</span><span>No admite comprobantes con fecha en el período.</span></div>
+<label style="display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--bd)"><span style="font-weight:500">Motivo para reabrir</span><span style="height:40px;border:1px solid var(--bds);border-radius:8px;display:flex;align-items:center;padding:0 12px;background:var(--bg)"><input value="{{ reopenIn }}" onChange="{{ onReopen }}" placeholder="Mínimo 5 caracteres" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:14px"></input></span><span style="font-size:12px;color:var(--mu)">Requiere el permiso «Reabrir períodos». Queda en la bitácora.</span></label>
+<button onClick="{{ w.reopen }}" style="height:40px;border-radius:8px;border:1px solid var(--bds);background:var(--card);color:{{ reopenFg }};font-size:14px;font-weight:600;cursor:pointer">Reabrir {{ w.pm.name }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ w.pm.isFuture }}" hint-placeholder-val="{{ false }}"><div style="padding:24px 18px;font-size:13px;color:var(--mu);line-height:1.5">Este período se abre automáticamente cuando se cierra el anterior.</div></sc-if>
+</div>
+<sc-if value="{{ w.closeOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ w.cancelClose }}" style="position:absolute;inset:0;background:var(--scrim);backdrop-filter:blur(4px);z-index:8"></div>
+<div role="dialog" style="position:absolute;top:110px;left:50%;transform:translateX(-50%);width:480px;z-index:9;border-radius:16px;border:1px solid var(--glassb);background:var(--glass);backdrop-filter:blur(28px) saturate(1.6);box-shadow:var(--e3);overflow:hidden">
+<div style="padding:22px 24px;display:flex;flex-direction:column;gap:10px"><div style="font-size:18px;font-weight:600">¿Cerrar Oct 2026?</div><div style="font-size:14px;color:var(--mu);line-height:1.5">No se podrán registrar ni reversar comprobantes con fecha en octubre. Nov 2026 quedará abierto. Puedes reabrirlo después con motivo y permiso.</div></div>
+<div style="padding:14px 24px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:10px;background:var(--sf)"><button onClick="{{ w.cancelClose }}" style="height:40px;padding:0 14px;border-radius:8px;border:0;background:transparent;color:var(--pr);font-size:14px;font-weight:500;cursor:pointer">Cancelar</button><button onClick="{{ w.doClose }}" style="height:40px;padding:0 16px;border-radius:8px;border:0;background:var(--pr);color:var(--onpr);font-size:14px;font-weight:600;cursor:pointer">Cerrar período</button></div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isCartera }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.6fr);gap:12px">
+<sc-for list="{{ car.kpis }}" as="k" hint-placeholder-count="3"><div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:var(--mu);font-weight:500">{{ k.l }}</span><span style="font-size:22px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;color:{{ k.fg }}">{{ k.v }}</span><span style="font-size:12px;color:var(--mu)">{{ k.s }}</span></div></sc-for>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:14px 16px;display:flex;flex-direction:column;gap:10px"><span style="font-size:12px;color:var(--mu);font-weight:500">Distribución por edad</span><div style="height:14px;border-radius:7px;display:flex;gap:2px;overflow:hidden"><sc-for list="{{ car.bars }}" as="b" hint-placeholder-count="5"><span style="width:{{ b.w }}%;background:{{ b.c }};opacity:{{ b.o }}"></span></sc-for></div><div style="display:flex;justify-content:space-between;font-size:11.5px;font-variant-numeric:tabular-nums"><sc-for list="{{ car.bars }}" as="b" hint-placeholder-count="5"><span style="display:flex;gap:5px;align-items:center"><span style="width:8px;height:8px;border-radius:2px;background:{{ b.c }};opacity:{{ b.o }}"></span>{{ b.l }} · {{ b.p }}</span></sc-for></div></div>
+</div>
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;display:flex;flex-direction:column">
+<div style="padding:10px 14px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--bd)"><span style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);display:flex;align-items:center;gap:8px;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Corte</span>14/10/2026</span><span style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);display:flex;align-items:center;gap:8px;font-size:13px"><span style="color:var(--mu)">Vendedor</span>Todos ▾</span><span style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);display:flex;align-items:center;gap:8px;font-size:13px"><span style="color:var(--mu)">Estado</span>Todos ▾</span><span style="flex:1"></span><span style="font-size:12px;color:var(--mu)">Edad contada desde el vencimiento</span></div>
+<div style="display:grid;grid-template-columns:{{ caCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 14px">Cliente</span><span style="padding:0 10px;text-align:right">Corriente</span><span style="padding:0 10px;text-align:right">1–30</span><span style="padding:0 10px;text-align:right">31–60</span><span style="padding:0 10px;text-align:right">61–90</span><span style="padding:0 10px;text-align:right">Más de 90</span><span style="padding:0 10px;text-align:right">Total</span><span style="padding:0 10px">Cupo usado</span><span style="padding:0 10px">Estado</span></div>
+<div style="flex:1;overflow:auto"><sc-for list="{{ car.rows }}" as="r" hint-placeholder-count="7"><div style="display:grid;grid-template-columns:{{ caCols }};height:44px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);cursor:pointer" style-hover="background:var(--hov)"><span style="padding:0 14px;display:flex;flex-direction:column;min-width:0;line-height:1.3"><span style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">{{ r.nit }}</span></span><sc-for list="{{ r.b }}" as="v" hint-placeholder-count="5"><span style="padding:0 10px;text-align:right;font-variant-numeric:tabular-nums;color:{{ v.fg }};font-weight:{{ v.fw }}">{{ v.v }}</span></sc-for><span style="padding:0 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600">{{ r.total }}</span><span style="padding:0 10px;display:flex;align-items:center;gap:8px"><span style="flex:1;height:6px;border-radius:3px;background:var(--sf2);overflow:hidden"><span style="display:block;height:100%;width:{{ r.pw }}%;background:{{ r.pc }};border-radius:3px"></span></span><span style="font-size:12px;font-variant-numeric:tabular-nums;width:36px;text-align:right">{{ r.pct }}</span></span><span style="padding:0 10px"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:5px;font-size:12px;font-weight:600;background:{{ r.sBg }};color:{{ r.sFg }};white-space:nowrap">{{ r.st }}</span></span></div></sc-for></div>
+<div style="display:grid;grid-template-columns:{{ caCols }};height:40px;align-items:center;font-size:13px;font-weight:700;background:var(--sf);border-top:1px solid var(--bd)"><span style="padding:0 14px">Totales · {{ car.n }} clientes</span><sc-for list="{{ car.tot }}" as="v" hint-placeholder-count="6"><span style="padding:0 10px;text-align:right;font-variant-numeric:tabular-nums">{{ v }}</span></sc-for><span></span><span></span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isImp }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;gap:4px;border-bottom:1px solid var(--bd)"><sc-for list="{{ w.impTabs }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.pick }}" style="border:0;background:transparent;padding:10px 14px;font-size:14px;font-weight:{{ t.fw }};color:{{ t.fg }};border-bottom:2px solid {{ t.bd }};cursor:pointer;margin-bottom:-1px">{{ t.name }}</button></sc-for></div>
+<sc-if value="{{ w.impTar }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mu)"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Una tarifa con uso no se modifica: se cierra su vigencia y se crea una nueva. Los documentos conservan la tarifa con la que se emitieron.</div>
+<div style="flex:1;min-height:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="display:grid;grid-template-columns:{{ txCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 14px">Código</span><span style="padding:0 8px">Nombre</span><span style="padding:0 8px">Tipo</span><span style="padding:0 8px;text-align:right">Tarifa</span><span style="padding:0 8px">Base mínima</span><span style="padding:0 8px">Cuenta</span><span style="padding:0 8px">Vigente desde</span><span style="padding:0 8px">Hasta</span><span style="padding:0 8px">Estado</span></div>
+<sc-for list="{{ taxes }}" as="t" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:{{ txCols }};height:{{ rowH }}px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);color:{{ t.fg }}" style-hover="background:var(--hov)"><span style="padding:0 14px;font:500 12px 'JetBrains Mono',monospace">{{ t.c }}</span><span style="padding:0 8px">{{ t.n }}</span><span style="padding:0 8px;color:var(--mu)">{{ t.ty }}</span><span style="padding:0 8px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600">{{ t.r }}</span><span style="padding:0 8px;color:var(--mu)">{{ t.b }}</span><span style="padding:0 8px;font:500 12px 'JetBrains Mono',monospace">{{ t.a }}</span><span style="padding:0 8px;font-variant-numeric:tabular-nums">{{ t.f }}</span><span style="padding:0 8px;font-variant-numeric:tabular-nums">{{ t.h }}</span><span style="padding:0 8px"><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:{{ t.sBg }};color:{{ t.sFg }}">{{ t.s }}</span></span></div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ w.impFe }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px;display:flex;flex-direction:column;gap:10px"><span style="font-size:12px;color:var(--mu);font-weight:500">Ambiente</span><div style="height:36px;background:var(--sf2);border-radius:9px;padding:3px;display:grid;grid-template-columns:1fr 1fr;gap:3px"><span style="border-radius:7px;display:grid;place-items:center;font-size:13px;color:var(--mu);font-weight:600">Habilitación</span><span style="border-radius:7px;display:grid;place-items:center;font-size:13px;font-weight:600;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.14)">Producción</span></div><span style="font-size:12px;color:var(--mu)">Set de pruebas aprobado el 12/02/2026</span></div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);padding:16px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:var(--mu);font-weight:500">Proveedor tecnológico</span><div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;border-radius:8px;background:var(--sf2);display:grid;place-items:center;font:600 11px 'JetBrains Mono',monospace;color:var(--mu)">PT</span><span style="font-size:15px;font-weight:600;flex:1">Conector FE</span><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--okb);color:var(--ok)">✓ Conectado</span></div><span style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">Última transmisión 14/10/2026 10:59 · 0 en cola</span></div>
+<div style="background:var(--card);border:1px solid var(--wa);border-radius:12px;box-shadow:var(--e1);padding:16px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:var(--mu);font-weight:500">Certificado de firma digital</span><div style="display:flex;align-items:center;gap:8px"><span style="width:20px;height:20px;border-radius:50%;border:2px solid var(--wa);color:var(--wa);display:grid;place-items:center;font-size:11px;font-weight:700">!</span><span style="font-size:15px;font-weight:600;color:var(--wa)">Vence en 32 días</span></div><span style="font-size:12px;color:var(--mu);line-height:1.4">Vence el 15/11/2026. Renuévalo antes para no detener la emisión.</span><button style="align-self:flex-start;height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;font-weight:600;cursor:pointer">Cargar certificado nuevo</button></div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px"><span style="font-size:15px;font-weight:600;flex:1">Resoluciones de numeración</span><button style="height:32px;padding:0 12px;border-radius:7px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:12px;font-weight:600;cursor:pointer">Sincronizar con la DIAN</button></div>
+<div style="display:grid;grid-template-columns:200px 80px 160px 220px minmax(0,1fr) 120px;height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu)"><span style="padding:0 18px">Resolución</span><span style="padding:0 8px">Prefijo</span><span style="padding:0 8px">Rango</span><span style="padding:0 8px">Vigencia</span><span style="padding:0 8px">Consumo</span><span style="padding:0 8px">Estado</span></div>
+<sc-for list="{{ resol }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:200px 80px 160px 220px minmax(0,1fr) 120px;height:44px;align-items:center;font-size:13px;border-top:1px solid var(--bd)"><span style="padding:0 18px;font:500 12px 'JetBrains Mono',monospace">{{ r.n }}</span><span style="padding:0 8px;font:600 12px 'JetBrains Mono',monospace">{{ r.p }}</span><span style="padding:0 8px;font-variant-numeric:tabular-nums">{{ r.r }}</span><span style="padding:0 8px;font-variant-numeric:tabular-nums">{{ r.v }}</span><span style="padding:0 8px;display:flex;align-items:center;gap:10px"><span style="flex:1;max-width:220px;height:6px;border-radius:3px;background:var(--sf2);overflow:hidden"><span style="display:block;height:100%;width:{{ r.w }}%;background:var(--pr)"></span></span><span style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">{{ r.u }}</span></span><span style="padding:0 8px"><span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:{{ r.sBg }};color:{{ r.sFg }}">{{ r.s }}</span></span></div></sc-for>
+</div>
+<div role="alert" style="border-radius:12px;border:1px solid var(--er);background:var(--erb);color:var(--er);padding:14px 16px;display:flex;gap:12px;font-size:13px;line-height:1.5"><span style="flex:none;width:22px;height:22px;border-radius:50%;background:var(--er);color:var(--erb);font-weight:700;display:grid;place-items:center">!</span><div style="flex:1"><div style="font-size:14px;font-weight:600">Último rechazo: nota crédito NC-1 (corregido)</div><div>La DIAN rechazó el primer envío porque faltaba el CUFE de la factura referenciada. Se completó la referencia y se aceptó a las 11:20.</div><div style="font:500 11px 'JetBrains Mono',monospace;margin-top:4px;opacity:.9">Regla de la DIAN · 10/10/2026 11:12</div></div><a href="#" style="color:var(--er);font-weight:600;white-space:nowrap">Ver eventos</a></div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isAudit }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px">
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);overflow:hidden;display:flex;flex-direction:column;min-width:0">
+<div style="padding:10px 14px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--bd)"><span style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);display:flex;align-items:center;gap:8px;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:var(--mu)">Fechas</span>01/10/2026 – 14/10/2026</span><span style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);display:flex;align-items:center;gap:8px;font-size:13px"><span style="color:var(--mu)">Usuario</span>Todos ▾</span><span style="height:32px;padding:0 10px;border-radius:7px;border:1px solid var(--bds);display:flex;align-items:center;gap:8px;font-size:13px"><span style="color:var(--mu)">Entidad</span>Todas ▾</span><span style="flex:1"></span><span style="font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px"><svg width="10" height="10" viewBox="0 0 10 10"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg>Solo lectura · no se edita ni se borra</span></div>
+<div style="display:grid;grid-template-columns:{{ auCols }};height:30px;align-items:center;background:var(--sf);font-size:12px;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bd)"><span style="padding:0 12px">Fecha y hora</span><span style="padding:0 8px">Usuario</span><span style="padding:0 8px">Acción</span><span style="padding:0 8px">Referencia</span><span style="padding:0 8px">Detalle</span><span style="padding:0 8px">IP</span></div>
+<div style="flex:1;overflow:auto"><sc-for list="{{ audit }}" as="a" hint-placeholder-count="8"><div onClick="{{ a.pick }}" style="display:grid;grid-template-columns:{{ auCols }};height:{{ rowH }}px;align-items:center;font-size:13px;border-bottom:1px solid var(--bd);cursor:pointer;background:{{ a.bg }}" style-hover="background:var(--hov)"><span style="padding:0 12px;font-variant-numeric:tabular-nums;color:var(--mu);white-space:nowrap">{{ a.t }}</span><span style="padding:0 8px;white-space:nowrap">{{ a.u }}</span><span style="padding:0 8px"><span style="font-size:12px;font-weight:600;padding:2px 7px;border-radius:4px;background:{{ a.aBg }};color:{{ a.aFg }};white-space:nowrap">{{ a.a }}</span></span><span style="padding:0 8px;font:500 12px 'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.r }}</span><span style="padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mu)">{{ a.d }}</span><span style="padding:0 8px;font:400 12px 'JetBrains Mono',monospace;color:var(--mu)">{{ a.ip }}</span></div></sc-for></div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e2);padding:18px;display:flex;flex-direction:column;gap:12px;align-self:start">
+<span style="align-self:flex-start;font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:{{ auSel.aBg }};color:{{ auSel.aFg }}">{{ auSel.a }}</span>
+<div style="font-size:16px;font-weight:600">{{ auSel.e }} · <span style="font-family:'JetBrains Mono',monospace">{{ auSel.r }}</span></div>
+<div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:12px"><span style="color:var(--mu)">Usuario</span><span>{{ auSel.u }}</span><span style="color:var(--mu)">Cuándo</span><span style="font-variant-numeric:tabular-nums">{{ auSel.t }} · hora Col.</span><span style="color:var(--mu)">IP</span><span style="font-family:'JetBrains Mono',monospace">{{ auSel.ip }}</span></div>
+<div style="border:1px solid var(--bd);border-radius:10px;overflow:hidden"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;height:28px;align-items:center;font-size:11px;font-weight:600;color:var(--mu);background:var(--sf);text-transform:uppercase;letter-spacing:.04em"><span style="padding:0 10px">Campo</span><span style="padding:0 10px">Antes</span><span style="padding:0 10px">Después</span></div><sc-for list="{{ auSel.diff }}" as="d" hint-placeholder-count="2"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;min-height:32px;align-items:center;font-size:12px;border-top:1px solid var(--bd);font-variant-numeric:tabular-nums"><span style="padding:6px 10px;color:var(--mu)">{{ d.f }}</span><span style="padding:6px 10px;text-decoration:line-through;color:var(--mu)">{{ d.b }}</span><span style="padding:6px 10px;font-weight:600">{{ d.a }}</span></div></sc-for></div>
+<span style="font-size:12px;color:var(--mu);line-height:1.4">{{ auSel.d }}</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ w.isEmpresa }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;padding:16px 28px 24px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ companies }}" as="c" hint-placeholder-count="3"><div style="background:var(--card);border:{{ c.bd }};border-radius:12px;box-shadow:{{ c.sh }};padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer" style-hover="box-shadow:var(--e2)"><span style="width:36px;height:36px;border-radius:9px;background:{{ c.tile }};color:{{ c.tileFg }};display:grid;place-items:center;font-size:13px;font-weight:700;flex:none">{{ c.ini }}</span><span style="flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3"><span style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.n }}</span><span style="font:400 11px 'JetBrains Mono',monospace;color:var(--mu)">NIT {{ c.nit }}</span><span style="font-size:12px;color:var(--mu)">{{ c.m }}</span></span></div></sc-for>
+<button style="height:40px;border-radius:10px;border:1.5px dashed var(--bds);background:transparent;color:var(--pr);font-size:13px;font-weight:600;cursor:pointer">+ Nueva empresa</button>
+<span style="font-size:12px;color:var(--mu);line-height:1.45">Cada empresa tiene su plan de cuentas, terceros, períodos y numeración. Los datos no se mezclan entre empresas.</span>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--e1);display:flex;flex-direction:column;overflow:hidden">
+<div style="flex:1;overflow:auto;padding:18px 22px;display:flex;flex-direction:column;gap:20px">
+<sc-for list="{{ params }}" as="s" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em">{{ s.t }}</span><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 18px"><sc-for list="{{ s.f }}" as="f" hint-placeholder-count="3"><label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:13px;font-weight:500">{{ f.l }}</span><span style="height:40px;border:1px solid {{ f.bd }};border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:14px;background:{{ f.bg }};color:{{ f.fg }};white-space:nowrap;overflow:hidden"><sc-if value="{{ f.lock }}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 10 10" style="flex:none"><rect x="1.5" y="4.5" width="7" height="5" rx="1" fill="currentColor"></rect><path d="M3 4.5V3a2 2 0 0 1 4 0v1.5" stroke="currentColor" fill="none" stroke-width="1.2"></path></svg></sc-if><span style="overflow:hidden;text-overflow:ellipsis;font-family:{{ f.ff }};font-variant-numeric:tabular-nums">{{ f.v }}</span></span><sc-if value="{{ f.h }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:var(--mu)">{{ f.h }}</span></sc-if></label></sc-for></div></div></sc-for>
+</div>
+<div style="padding:12px 22px;border-top:1px solid var(--bd);background:var(--sf);display:flex;align-items:center;gap:10px"><span style="flex:1;font-size:12px;color:var(--mu)">Los cambios se registran en la bitácora con valor anterior y nuevo.</span><button style="height:38px;padding:0 14px;border-radius:8px;border:0;background:transparent;color:var(--pr);font-size:13px;font-weight:500;cursor:pointer">Descartar</button><button style="height:38px;padding:0 16px;border-radius:8px;border:0;background:var(--pr);color:var(--onpr);font-size:13px;font-weight:600;cursor:pointer;box-shadow:var(--e1)">Guardar cambios</button></div>
+</div>
+</div>
+</sc-if>
+
+</main>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+
+<h3 class="dv-h">Móvil 390 · Cobro exprés (fila superior claro · inferior Slate)</h3>
+<div style="display:grid;grid-template-columns:repeat(3,max-content);gap:40px 44px;padding:12px">
+<sc-for list="{{ mob }}" as="m" hint-placeholder-count="6">
+<div class="dv-opt" id="{{ m.id }}" style="gap:16px">
+<div class="dv-olabel"><a class="dv-oid" href="#{{ m.id }}">{{ m.id }}</a>{{ m.label }}</div>
+<div style="{{ m.vars }}">
+<div style="height:47px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font-size:15px;font-weight:600;background:var(--card)"><span style="font-variant-numeric:tabular-nums">9:41</span><span style="display:flex;gap:6px;align-items:center"><span style="width:17px;height:10px;border-radius:2px;background:currentColor"></span><span style="width:25px;height:12px;border:1.5px solid currentColor;border-radius:3px;padding:1.5px;display:flex"><span style="width:72%;background:currentColor;border-radius:1px"></span></span></span></div>
+<div style="height:52px;flex:none;background:var(--card);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:4px;padding:0 8px"><button style="width:44px;height:44px;border:0;background:transparent;color:var(--pr);font-size:26px">‹</button><div style="flex:1;font-size:17px;font-weight:600">{{ m.title }}</div></div>
+
+<sc-if value="{{ m.isCli }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;overflow:auto;scrollbar-width:none"><div style="padding:14px 16px 140px;display:flex;flex-direction:column;gap:12px">
+<div style="height:44px;border:1px solid var(--bd);border-radius:10px;display:flex;align-items:center;gap:10px;padding:0 14px;font-size:15px;background:var(--card);color:var(--mu)"><span style="width:14px;height:14px;border:1.7px solid currentColor;border-radius:50%"></span>Cliente por nombre o NIT</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--e2);padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;gap:12px;align-items:center"><span style="width:44px;height:44px;border-radius:12px;background:var(--prs);color:var(--pr);display:grid;place-items:center;font-weight:700">AC</span><div style="min-width:0"><div style="font-size:16px;font-weight:600">Almacenes La Ceiba S.A.S.</div><div style="font:400 12px 'JetBrains Mono',monospace;color:var(--mu)">NIT 901.234.567-8</div></div></div>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:5px;background:{{ cob.stBg }};color:{{ cob.stFg }}">{{ cob.st }}</span><span style="font-size:12px;color:var(--mu)">Plazo 30 días · Sin mora</span></div>
+<div style="height:12px;border-radius:6px;background:var(--sf2);overflow:hidden"><span style="display:block;height:100%;width:{{ cob.pw }}%;background:var(--ne);border-radius:6px"></span></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:12px"><div><div style="color:var(--mu)">Cupo</div><div style="font-weight:600;font-variant-numeric:tabular-nums">$ 5.000.000,00</div></div><div><div style="color:var(--mu)">Saldo</div><div style="font-weight:600;font-variant-numeric:tabular-nums">{{ cob.saldo }}</div></div><div><div style="color:var(--mu)">Disponible</div><div style="font-weight:600;font-variant-numeric:tabular-nums">{{ cob.disp }}</div></div></div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:12px 14px 6px;font-size:14px;font-weight:600">Facturas pendientes</div><sc-if value="{{ cob.noPend }}" hint-placeholder-val="{{ false }}"><div style="padding:16px 14px;border-top:1px solid var(--bd);font-size:14px;color:var(--mu)">✓ Sin facturas pendientes.</div></sc-if>
+<sc-for list="{{ cob.pend }}" as="f" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--bd)"><div><div style="font:600 13px 'JetBrains Mono',monospace">{{ f.n }}</div><div style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">Vence {{ f.v }} · {{ f.dl }}</div></div><div style="text-align:right"><div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">{{ f.s }}</div><sc-if value="{{ f.paid }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:var(--ok);font-weight:600">{{ f.paid }}</div></sc-if></div></div></sc-for>
+</div>
+</div></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);border-top:1px solid var(--glassb);padding:12px 16px 32px;display:grid;grid-template-columns:1fr 1.4fr;gap:10px"><button style="height:52px;border-radius:12px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:15px;font-weight:600">Nuevo pedido</button><a href="#{{ m.abonoId }}" style="height:52px;border-radius:12px;background:var(--pr);color:var(--onpr);font-size:15px;font-weight:600;display:grid;place-items:center;text-decoration:none;box-shadow:var(--e2)">Registrar abono</a></div>
+</sc-if>
+
+<sc-if value="{{ m.isAbono }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;overflow:auto;scrollbar-width:none"><div style="padding:16px 16px 150px;display:flex;flex-direction:column;gap:14px">
+<div style="text-align:center;display:flex;flex-direction:column;gap:4px;padding:6px 0"><span style="font-size:13px;color:var(--mu)">Almacenes La Ceiba S.A.S. · saldo {{ cob.saldo0 }}</span>
+<span style="display:flex;align-items:baseline;justify-content:center;gap:6px;border-bottom:2px solid {{ cob.amtBd }};padding:4px 0 8px;margin:0 20px"><span style="font-size:24px;color:var(--mu);font-weight:600">$</span><input value="{{ abonoIn }}" onChange="{{ onAbono }}" inputmode="numeric" size="1" style="width:220px;border:0;outline:0;background:transparent;color:var(--tx);font-size:38px;font-weight:700;letter-spacing:-.02em;text-align:center;font-variant-numeric:tabular-nums"></input></span>
+<sc-if value="{{ cob.over }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;gap:8px;align-items:center;justify-content:center;font-size:12px;color:var(--er);font-weight:500;margin-top:4px"><span style="width:16px;height:16px;border-radius:50%;background:var(--er);color:var(--erb);font-size:10px;font-weight:700;display:grid;place-items:center">!</span>Supera el saldo adeudado. El máximo es {{ cob.saldo0 }}.</span></sc-if>
+</div>
+<div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px"><sc-for list="{{ cob.quick }}" as="q" hint-placeholder-count="3"><button onClick="{{ q.pick }}" style="height:36px;flex:none;padding:0 12px;border-radius:18px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums">{{ q.l }}</button></sc-for></div>
+<div style="height:48px;background:var(--sf2);border-radius:12px;padding:3px;display:grid;grid-template-columns:1fr 1fr;gap:3px"><sc-for list="{{ cobPay }}" as="p" hint-placeholder-count="2"><button onClick="{{ p.pick }}" style="border:0;border-radius:9px;background:{{ p.bg }};color:{{ p.fg }};box-shadow:{{ p.sh }};font-size:15px;font-weight:600">{{ p.name }}</button></sc-for></div>
+<sc-if value="{{ cob.tr }}" hint-placeholder-val="{{ false }}"><label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:500">Número de comprobante / referencia *</span><span style="height:48px;border:2px solid {{ cob.refBd }};border-radius:10px;display:flex;align-items:center;padding:0 12px;background:var(--card)"><input value="{{ cobRef }}" onChange="{{ onCobRef }}" placeholder="Ej. 0048213377" style="flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font:500 16px 'JetBrains Mono',monospace"></input></span><span style="font-size:12px;color:{{ cob.refFg }}">{{ cob.refHint }}</span></label></sc-if>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--e1);overflow:hidden">
+<div style="padding:12px 14px 6px;display:flex;justify-content:space-between;font-size:14px;font-weight:600">Aplicación del abono<span style="font-size:12px;font-weight:500;color:var(--mu)">Más antigua primero</span></div>
+<sc-for list="{{ cob.inv }}" as="f" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 14px;border-top:1px solid var(--bd);align-items:center"><div><div style="font:600 13px 'JetBrains Mono',monospace">{{ f.n }}</div><div style="font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums">Saldo {{ f.s0 }}</div></div><div style="text-align:right"><div style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ f.apFg }}">{{ f.ap }}</div><div style="font-size:11px;color:var(--mu);font-variant-numeric:tabular-nums">queda {{ f.s }}</div></div></div></sc-for>
+</div>
+</div></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);border-top:1px solid var(--glassb);padding:12px 16px 32px;display:flex;flex-direction:column;gap:6px"><button onClick="{{ doRecibo }}" style="height:54px;border-radius:12px;border:0;background:{{ cob.btnBg }};color:{{ cob.btnFg }};font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:var(--e2)"><span>Registrar recibo</span><span style="font-variant-numeric:tabular-nums">{{ cob.amt }}</span></button><span style="font-size:12px;color:var(--mu);text-align:center">{{ cob.btnNote }}</span></div>
+</sc-if>
+
+<sc-if value="{{ m.isRecNone }}" hint-placeholder-val="{{ false }}"><div style="flex:1;display:grid;place-items:center;padding:32px;text-align:center"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;max-width:260px"><span style="width:56px;height:56px;border-radius:50%;background:var(--sf2);color:var(--mu);display:grid;place-items:center;font:600 14px 'JetBrains Mono',monospace">RC</span><span style="font-size:18px;font-weight:600">Aún no hay recibos hoy</span><span style="font-size:14px;color:var(--mu);line-height:1.5">Registra un abono para emitir el recibo de caja de Almacenes La Ceiba.</span><a href="#{{ m.abonoId }}" style="margin-top:8px;height:48px;padding:0 20px;border-radius:12px;background:var(--pr);color:var(--onpr);font-size:15px;font-weight:600;display:grid;place-items:center;text-decoration:none">Registrar abono</a></div></div></sc-if>
+<sc-if value="{{ m.isRec }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;overflow:auto;scrollbar-width:none"><div style="padding:22px 16px 150px;display:flex;flex-direction:column;gap:14px;align-items:stretch">
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center"><span style="width:56px;height:56px;border-radius:50%;background:var(--okb);color:var(--ok);display:grid;place-items:center;font-size:26px;font-weight:700;box-shadow:0 0 0 8px var(--okb)">✓</span><span style="font-size:20px;font-weight:700;margin-top:8px">Recibo registrado</span><span style="font:600 14px 'JetBrains Mono',monospace;color:var(--mu)">{{ rec.num }} · {{ rec.t }}</span></div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--e2);overflow:hidden">
+<div style="padding:16px;display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px dashed var(--bds)"><span style="font-size:13px;color:var(--mu)">Valor recibido</span><span style="font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em">{{ rec.amt }}</span></div>
+<div style="padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:13px"><span style="color:var(--mu)">Cliente</span><span style="text-align:right">Almacenes La Ceiba S.A.S.</span><span style="color:var(--mu)">Medio</span><span style="text-align:right">{{ rec.method }}</span><span style="color:var(--mu)">Aplicado a</span><span style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px">{{ rec.apl }}</span><span style="color:var(--mu)">Nuevo saldo</span><span style="text-align:right;font-weight:600;font-variant-numeric:tabular-nums">{{ rec.saldo }}</span><span style="color:var(--mu)">Cupo disponible</span><span style="text-align:right;font-weight:600;font-variant-numeric:tabular-nums">{{ rec.disp }}</span></div>
+<div style="padding:10px 16px;background:var(--sf);display:flex;gap:8px;align-items:center;font-size:12px"><span style="font-weight:600;padding:2px 8px;border-radius:5px;background:{{ rec.stBg }};color:{{ rec.stFg }}">{{ rec.st }}</span><span style="color:var(--mu)">Contabilizado en el libro diario</span></div>
+</div>
+</div></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--glass);backdrop-filter:blur(24px) saturate(1.5);border-top:1px solid var(--glassb);padding:12px 16px 32px;display:flex;flex-direction:column;gap:8px"><button style="height:52px;border-radius:12px;border:0;background:#1F7A4D;color:#fff;font-size:16px;font-weight:600;box-shadow:var(--e2)">Enviar recibo por WhatsApp</button><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button style="height:44px;border-radius:10px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:14px;font-weight:500">PDF</button><a href="#{{ m.cliId }}" style="height:44px;border-radius:10px;border:1px solid var(--bds);background:var(--card);color:var(--tx);font-size:14px;font-weight:500;display:grid;place-items:center;text-decoration:none">Volver al cliente</a></div></div>
+</sc-if>
+
+</div>
+</div>
+</sc-for>
+</div>
+
+<p class="dv-next">Siguiente: «Cierre anual y estados financieros» · «Usuarios, roles y permisos» · «Compras y cuentas por pagar».</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;compacta&quot;,&quot;normal&quot;],&quot;default&quot;:&quot;compacta&quot;,&quot;tsType&quot;:&quot;'compacta'|'normal'&quot;,&quot;section&quot;:&quot;Tablas&quot;}}">
+const TH = {
+  light: {'--logo':'url(assets/sifca-claro-mark.png)','--logofull':'url(assets/sifca-claro-lockup.png)','--app':'#F4F6F8','--bg':'#FFFFFF','--card':'#FFFFFF','--side':'#FAFBFC','--sf':'#F4F6F8','--sf2':'#E9EDF2','--hov':'#F3F6F9','--bd':'#E1E5EA','--bds':'#7B8794','--tx':'#1B2430','--mu':'#4B5767','--pr':'#0B5CAD','--prh':'#094C8F','--onpr':'#FFFFFF','--prs':'#E8F1FB','--ok':'#17663E','--okb':'#E6F4EA','--wa':'#7A4B00','--wab':'#FFF1D6','--er':'#A8201A','--erb':'#FDECEA','--ne':'#3F4A59','--neb':'#E9EDF2','--ring':'#0B5CAD','--glass':'rgba(255,255,255,.8)','--glassb':'rgba(255,255,255,.7)','--scrim':'rgba(27,36,48,.28)','--e1':'0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06)','--e2':'0 6px 16px -4px rgba(16,24,40,.12),0 2px 4px rgba(16,24,40,.05)','--e3':'0 28px 56px -16px rgba(16,24,40,.32),0 4px 10px rgba(16,24,40,.08)'},
+  dark: {'--logo':'url(assets/sifca-oscuro-mark.png)','--logofull':'url(assets/sifca-oscuro-lockup.png)','--app':'#1E293B','--bg':'#1E293B','--card':'#273548','--side':'#1A2434','--sf':'#2D3D53','--sf2':'#36485F','--hov':'#2F405A','--bd':'#3A4C63','--bds':'#7D8EA5','--tx':'#E8EDF3','--mu':'#AEBACB','--pr':'#7DB7F2','--prh':'#A0CBF6','--onpr':'#0B1B2E','--prs':'#2A4466','--ok':'#86D9A8','--okb':'#1F4034','--wa':'#F2C879','--wab':'#463A23','--er':'#FFA197','--erb':'#4D2C30','--ne':'#CBD4DF','--neb':'#3A4A60','--ring':'#7DB7F2','--glass':'rgba(39,53,72,.82)','--glassb':'rgba(255,255,255,.08)','--scrim':'rgba(12,18,28,.5)','--e1':'0 1px 2px rgba(0,0,0,.22)','--e2':'0 8px 20px -6px rgba(0,0,0,.42)','--e3':'0 32px 64px -16px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04)'}
+};
+const fmn = c => { const neg = c < 0; c = Math.abs(Math.round(c)); return (neg ? '− ' : '') + String(Math.floor(c/100)).replace(/\B(?=(\d{3})+(?!\d))/g,'.') + ',' + String(c%100).padStart(2,'0'); };
+const fm = c => (c < 0 ? '− $ ' + fmn(-c) : '$ ' + fmn(c));
+const z = c => c ? fmn(c) : '';
+const parse = s => { s = String(s || '').replace(/[$\s]/g,''); if (!s) return 0; if (!/^[\d.,]+$/.test(s)) return NaN; const v = parseFloat(s.replace(/\./g,'').replace(',','.')); return isNaN(v) ? NaN : Math.round(v*100); };
+const ACCT = {'1':'Activo','11':'Disponible','1105':'Caja','110510':'Caja menor','1110':'Bancos','13':'Deudores','1305':'Clientes','130505':'Clientes nacionales','14':'Inventarios','1435':'Mercancías','2':'Pasivo','24':'Impuestos, gravámenes y tasas','2408':'IVA por pagar','3':'Patrimonio','31':'Capital social','3115':'Aportes sociales','4':'Ingresos','41':'Operacionales','4135':'Comercio al por mayor y al por menor','4175':'Devoluciones en ventas','6':'Costos de ventas','61':'Costo de ventas y de prestación de servicios','6135':'Costo de ventas'};
+const LEAF = new Set(['110510','1110','130505','1435','2408','3115','4135','4175','6135']);
+const NEED_T = new Set(['130505']);
+const DV = 'Droguería Vida Plena S.A.S.';
+const BASE = [
+  {n:'AJ-1',f:'01/10/2026',d:'Apertura de inventario aportado como capital',l:[['1435','',100000000,0,'Inventario inicial'],['3115','J. Murcia',0,100000000,'Aporte en especie']]},
+  {n:'FV-1',f:'05/10/2026',d:'Factura de venta a crédito con IVA',l:[['130505',DV,119000000,0],['4135',DV,0,100000000],['2408',DV,0,19000000]]},
+  {n:'FV-2',f:'05/10/2026',d:'Costo de ventas',l:[['6135','',60000000,0],['1435','',0,60000000]]},
+  {n:'NC-1',f:'10/10/2026',d:'Nota crédito por devolución parcial',l:[['4175',DV,20000000,0],['2408',DV,3800000,0],['130505',DV,0,23800000]]},
+  {n:'NC-2',f:'10/10/2026',d:'Reingreso al costo de salida',l:[['1435','',12000000,0],['6135','',0,12000000]]},
+  {n:'AJ-2',f:'12/10/2026',d:'Traslado a caja menor',l:[['110510','',5000000,0],['1110','Bancolombia S.A.',0,5000000]]},
+  {n:'AJ-3',f:'13/10/2026',d:'Reversión: traslado a caja menor',l:[['1110','Bancolombia S.A.',5000000,0],['110510','',0,5000000]]},
+  {n:'RC-1',f:'20/10/2026',d:'Recibo de caja',l:[['1110',DV,95200000,0],['130505',DV,0,95200000]]}
+];
+const dkey = f => f.split('/').reverse().join('');
+const MES = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const GROUPS = [['IN','Inicio'],['VE','Ventas'],['CA','Cartera'],['CO','Compras'],['IV','Inventario'],['CT','Contabilidad'],['IM','Impuestos'],['FE','Factura electrónica'],['TE','Terceros'],['VI','Catálogo y vitrina'],['IG','Integraciones'],['CF','Configuración']];
+const CHILD = {CT:['Comprobantes','Nuevo comprobante','Borradores','Libro diario','Libro mayor','Balance de prueba','Períodos','Cierre anual'], CA:['Cartera por edades','Recibos de caja','Cupos y bloqueos'], IM:['Tarifas y vigencias','Retenciones','Calendario tributario'], FE:['Configuración DIAN','Documentos','Eventos'], CF:['Empresa y multiempresa','Usuarios y roles','Auditoría','Preferencias']};
+const WEB = [['editor','Editor de comprobante · grilla 28 px'],['detalle','Detalle contabilizado · Reversar'],['libros','Libros oficiales · mayor y diario'],['balance','Balance de prueba'],['periodos','Períodos y cierre'],['cartera','Cartera por edades'],['impuestos','Impuestos y factura electrónica DIAN'],['audit','Auditoría · bitácora'],['empresa','Empresa y multiempresa']];
+const CLIENTS = [
+  ['Almacenes La Ceiba S.A.S.','901.234.567-8',[410000000,0,0,0,0],500000000],
+  ['Colegio Nuevo Horizonte','860.045.112-3',[238000000,0,0,0,0],250000000],
+  ['Distribuidora El Roble S.A.S.','900.876.301-5',[120000000,80000000,45000000,0,0],300000000],
+  ['Hotel Mirador del Río S.A.S.','901.112.908-1',[104000000,56000000,0,0,0],200000000],
+  ['Papelería Escolar Arcoíris','1.020.456.789',[48000000,12000000,0,0,0],100000000],
+  ['Ferretería San Mateo S.A.S.','900.334.221-9',[65000000,0,0,0,0],400000000],
+  ['Supermercado La Cosecha Ltda.','830.509.776-2',[0,32000000,0,28000000,15000000],150000000]
+];
+const CEIBA = [['FE-2291','20/10/2026','vence en 6 días',145000000],['FE-2310','30/10/2026','vence en 16 días',165000000],['FE-2334','07/11/2026','vence en 24 días',100000000]];
+const AUD = [
+  ['14/10/2026 10:58','Sistema','Emitió','Factura de venta','FV-2','Transmitida al proveedor tecnológico','—',[['Estado DIAN','Borrador','Emitida']],'n'],
+  ['14/10/2026 10:46','J. Murcia','Probó conexión','Conector','Alegra','Respuesta 200 · conexión verificada','190.24.18.7',[['Estado','Error 401','Conectado']],'n'],
+  ['14/10/2026 10:42','J. Murcia','Error de conexión','Conector','Alegra','Respuesta 401 · credenciales rechazadas','190.24.18.7',[['Estado','Conectado','Error 401']],'e'],
+  ['13/10/2026 16:20','C. Ortiz','Cambió cupo','Tercero','Almacenes La Ceiba S.A.S.','Cupo $ 4.000.000,00 → $ 5.000.000,00','181.52.9.140',[['Cupo de crédito','$ 4.000.000,00','$ 5.000.000,00'],['Umbral de alerta','80 %','80 %']],'n'],
+  ['13/10/2026 09:02','J. Murcia','Reversó','Comprobante','AJ-2','Motivo: el traslado se registró dos veces · generó AJ-3','190.24.18.7',[['Estado','Contabilizado','Reversado por AJ-3']],'n'],
+  ['05/10/2026 17:45','J. Murcia','Cerró período','Período','Sep 2026','Lista de cierre completa · 0 borradores','190.24.18.7',[['Estado','Abierto','Cerrado']],'n'],
+  ['01/10/2026 09:14','J. Murcia','Contabilizó','Comprobante','AJ-1','Σ $ 1.000.000,00 · cuadrado','190.24.18.7',[['Estado','Borrador','Contabilizado'],['Número','—','AJ-1']],'n'],
+  ['01/10/2026 08:58','L. Rincón','Inició sesión','Sesión','—','Google SSO · Chrome en Windows','181.52.9.140',[['Sesión','—','Activa']],'n']
+];
+const LINE0 = () => [{acct:'110510',terc:'',desc:'Reposición caja menor',d:'100.000,00',c:''},{acct:'1110',terc:'Bancolombia S.A.',desc:'Cheque 004512',d:'',c:'99.999,99'},{acct:'',terc:'',desc:'',d:'',c:''}];
+
+class Component extends DCLogic {
+  state = { lines:LINE0(), edDesc:'Reposición de caja menor octubre', posted:null, rev:null, motivo:'', nextAJ:4, revOpen:{'3c':true}, libTab:{'3f':'diario'}, impTab:{'3n':'fe'}, perSel:{}, closeOpen:{}, months:{1:'c',2:'c',3:'c',4:'c',5:'c',6:'c',7:'c',8:'c',9:'c',10:'a',11:'f',12:'f'}, draftOk:false, closedOct:null, reopen:'', mayor:'1435', level:4, auSel:3, abono:'1.450.000', cobMethod:'efectivo', cobRef:'', receipt:null, paidTotal:0, rcNext:2, events:[] };
+  setMap(k, id, v) { this.setState(s => ({[k]: {...s[k], [id]: v}})); }
+  setLine(i, k, v) { this.setState(s => { const lines = s.lines.slice(); lines[i] = {...lines[i], [k]: v}; return {lines}; }); }
+  log(ev) { this.setState(s => ({events:[ev, ...s.events]})); }
+  renderVals() {
+    const st = this.state, rowH = (this.props.density ?? 'compacta') === 'normal' ? 36 : 28;
+    const seg = on => ({bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--tx)' : 'var(--mu)', sh: on ? '0 1px 3px rgba(0,0,0,.14)' : 'none'});
+    const octOpen = st.months[10] === 'a';
+    const openM = octOpen ? 10 : [1,2,3,4,5,6,7,8,9,10,11,12].find(m => st.months[m] === 'a');
+    const chip = (openM ? MES[openM] : 'Nov') + ' 2026 · Abierto';
+    // editor
+    const errs = []; let sd = 0, sc = 0;
+    const lines = st.lines.map((l, i) => {
+      const d = parse(l.d), c = parse(l.c), empty = !l.acct && !l.d && !l.c && !l.desc && !l.terc;
+      let name = '', nfg = 'var(--mu)', nw = 400, bad = false;
+      if (l.acct) {
+        if (!ACCT[l.acct]) { name = '! Cuenta no existe'; nfg = 'var(--er)'; nw = 600; bad = true; errs.push({n:i+1, t:' la cuenta ' + l.acct + ' no existe en el plan de cuentas.'}); }
+        else if (!LEAF.has(l.acct)) { name = '! ' + ACCT[l.acct] + ' · no es de movimiento'; nfg = 'var(--er)'; nw = 600; bad = true; errs.push({n:i+1, t:' ' + l.acct + ' es una cuenta de nivel superior; usa una cuenta de movimiento.'}); }
+        else { name = ACCT[l.acct]; nfg = 'var(--tx)'; }
+      } else if (!empty) { bad = true; errs.push({n:i+1, t:' falta la cuenta.'}); }
+      if (isNaN(d) || isNaN(c)) { bad = true; errs.push({n:i+1, t:' valor no válido. Usa punto de miles y coma decimal.'}); }
+      else { if (d && c) { bad = true; errs.push({n:i+1, t:' tiene débito y crédito. Una línea lleva un solo lado.'}); } sd += d; sc += c; }
+      if (l.acct && NEED_T.has(l.acct) && !l.terc) { bad = true; errs.push({n:i+1, t:' la cuenta ' + l.acct + ' exige tercero.'}); }
+      return {...l, n:i+1, acctName:name, nameFg:nfg, nameW:nw, rowBg: bad ? 'var(--erb)' : 'transparent',
+        onAcct:e => this.setLine(i,'acct',e.target.value.trim()), onTerc:e => this.setLine(i,'terc',e.target.value), onDesc:e => this.setLine(i,'desc',e.target.value),
+        onD:e => this.setLine(i,'d',e.target.value), onC:e => this.setLine(i,'c',e.target.value),
+        fmtD:() => { const v = parse(l.d); if (v && !isNaN(v)) this.setLine(i,'d',fmn(v)); }, fmtC:() => { const v = parse(l.c); if (v && !isNaN(v)) this.setLine(i,'c',fmn(v)); },
+        del:() => this.setState(s => ({lines: s.lines.filter((_, j) => j !== i)}))};
+    });
+    const balanced = sd === sc && sd > 0, posted = !!st.posted;
+    const canPost = !posted && balanced && !errs.length && octOpen;
+    const ed = { lines, errs, hasErrs: !!errs.length && !posted, sd:fm(sd), sc:fm(sc), diff: fm(Math.abs(sd - sc)) + (balanced ? ' ✓' : ''), diffFg: balanced ? 'var(--ok)' : 'var(--er)', balanced, unbal: !balanced,
+      posted, editable: !posted, desc: st.edDesc, onDesc: e => this.setState({edDesc:e.target.value}),
+      num: posted ? st.posted : 'Se asigna al contabilizar', numFg: posted ? 'var(--tx)' : 'var(--mu)',
+      perClosed: !octOpen, dateBd: octOpen ? '1px solid var(--bds)' : '2px solid var(--er)', perFg: octOpen ? 'var(--ok)' : 'var(--er)',
+      perMsg: octOpen ? '● Período Oct 2026 · Abierto' : 'El período 2026-10 está cerrado. Cambia la fecha o pide que lo reabran.',
+      addLine: () => this.setState(s => ({lines:[...s.lines, {acct:'',terc:'',desc:'',d:'',c:''}]})),
+      newOne: () => this.setState({posted:null, lines:LINE0()}) };
+    const postNow = () => { if (!canPost) return; const num = 'AJ-' + st.nextAJ; this.setState(s => ({posted:num, nextAJ:s.nextAJ+1})); this.log(['14/10/2026 15:02','J. Murcia','Contabilizó','Comprobante',num,'Σ ' + fm(sd) + ' · cuadrado','190.24.18.7',[['Estado','Borrador','Contabilizado'],['Número','—',num]],'n']); };
+    // entries
+    const entries = BASE.slice();
+    if (st.posted) entries.push({n:st.posted, f:'14/10/2026', d:st.edDesc, l: st.lines.filter(l => l.acct).map(l => [l.acct, l.terc, parse(l.d), parse(l.c)])});
+    if (st.rev) entries.push({n:st.rev.num, f:'14/10/2026', d:'Reversión: apertura de inventario', l: BASE[0].l.map(([a,t,d,c]) => [a,t,c,d])});
+    entries.sort((a,b) => dkey(a.f).localeCompare(dkey(b.f)) || a.n.localeCompare(b.n));
+    const agg = {}; let totD = 0, totC = 0;
+    entries.forEach(e => e.l.forEach(([a,,d,c]) => { agg[a] = agg[a] || {d:0,c:0}; agg[a].d += d; agg[a].c += c; totD += d; totC += c; }));
+    // rev
+    const rmot = st.motivo.trim(), revOk = rmot.length >= 5 && octOpen && !st.rev;
+    const rev = { done: !!st.rev, num: st.rev ? st.rev.num : '', motivo: st.rev ? st.rev.motivo : '', motivoIn: st.motivo, count: rmot.length + ' / mín. 5', hintFg: 'var(--mu)',
+      dateBd: octOpen ? '1px solid var(--bds)' : '2px solid var(--er)', btnBg: revOk ? 'var(--pr)' : 'var(--sf2)', btnFg: revOk ? 'var(--onpr)' : 'var(--mu)', btnCur: revOk ? 'pointer' : 'not-allowed' };
+    const doRev = id => { if (!revOk) return; const num = 'AJ-' + st.nextAJ; this.setState(s => ({rev:{num, motivo:rmot}, nextAJ:s.nextAJ+1, revOpen:{}})); this.log(['14/10/2026 15:05','J. Murcia','Reversó','Comprobante','AJ-1','Motivo: ' + rmot + ' · generó ' + num,'190.24.18.7',[['Estado','Contabilizado','Reversado por ' + num]],'n']); };
+    // mayor
+    const ma = st.mayor; let run = 0, mtd = 0, mtc = 0; const mrows = [];
+    entries.forEach(e => e.l.forEach(([a,t,d,c,desc]) => { if (a !== ma) return; run += d - c; mtd += d; mtc += c; mrows.push({f:e.f, n:e.n, t:t || '—', desc: desc || e.d, d:z(d), c:z(c), s:fmn(run)}); }));
+    const debNat = /^[156]/.test(ma) || ma === '4175';
+    const mayor = { code:ma, name:ACCT[ma], nat: debNat ? 'débito' : 'crédito', rows:mrows, td:fmn(mtd), tc:fmn(mtc), ts:fmn(run),
+      kpis:[{l:'Saldo anterior',v:'$ 0,00'},{l:'Σ Débitos',v:fm(mtd)},{l:'Σ Créditos',v:fm(mtc)},{l:'Saldo final',v:fm(run)}] };
+    const diario = []; entries.forEach(e => { const ed2 = e.l.reduce((a,x) => a + x[2], 0), ec = e.l.reduce((a,x) => a + x[3], 0); diario.push({head:true, line:false, f:e.f, n:e.n, desc:e.d, d:fmn(ed2), c:fmn(ec)}); e.l.forEach(([a,t,d,c]) => diario.push({head:false, line:true, a, name:ACCT[a], t:t || '', d:z(d), c:z(c), ind: c ? '28px' : '8px'})); });
+    // balance
+    const L = st.level, bmap = {};
+    Object.keys(agg).forEach(a => { const k = a.length > L ? a.slice(0, L) : a; bmap[k] = bmap[k] || {d:0,c:0}; bmap[k].d += agg[a].d; bmap[k].c += agg[a].c; });
+    let finD = 0, finC = 0;
+    const bal = Object.keys(bmap).sort().map(k => { const v = bmap[k], net = v.d - v.c; if (net > 0) finD += net; else finC -= net;
+      return {code:k, name:ACCT[k], md:z(v.d), mc:z(v.c), fd: net > 0 ? fmn(net) : '', fc: net < 0 ? fmn(-net) : '', ind: (12 + (k.length > 2 ? (k.length >= 6 ? 0 : 0) : 0)) + 'px', fw: k.length <= 2 && L > 2 ? 600 : 400, bg:'transparent'}; });
+    // periods
+    const months = st.months;
+    // cartera
+    const B = [0,0,0,0,0]; let ctot = 0, venc = 0, nAl = 0, nBl = 0;
+    const crow = CLIENTS.map(([name,nit,b,cupo]) => { const t = b.reduce((a,x) => a+x, 0), pct = t/cupo*100, mora = b[2]+b[3]+b[4] > 0;
+      b.forEach((x,i) => B[i] += x); ctot += t; venc += t - b[0];
+      const s = mora ? ['Bloqueado por mora','var(--wab)','var(--wa)'] : pct >= 80 ? ['! En alerta','var(--wab)','var(--wa)'] : ['Al día','var(--okb)','var(--ok)'];
+      if (mora) nBl++; else if (pct >= 80) nAl++;
+      return {name, nit, b: b.map((x,i) => ({v: x ? fmn(x) : '—', fg: !x ? 'var(--mu)' : i >= 2 ? 'var(--wa)' : 'var(--tx)', fw: x && i >= 2 ? 600 : 400})), total:fmn(t), pw:Math.min(pct,100).toFixed(1), pct:Math.round(pct) + ' %', pc: mora || pct >= 80 ? 'var(--wa)' : 'var(--pr)', st:s[0], sBg:s[1], sFg:s[2]}; });
+    const car = { rows:crow, n:CLIENTS.length, tot:[...B.map(fmn), fmn(ctot)],
+      kpis:[{l:'Cartera total',v:fm(ctot),s:'7 clientes con saldo',fg:'var(--tx)'},{l:'Vencida',v:Math.round(venc/ctot*100) + ' %',s:fm(venc),fg:'var(--wa)'},{l:'Alertas y bloqueos',v:nAl + ' · ' + nBl,s:nAl + ' en alerta de cupo · ' + nBl + ' bloqueados por mora',fg:'var(--tx)'}],
+      bars: ['Corriente','1–30','31–60','61–90','+90'].map((l,i) => ({l, w:(B[i]/ctot*100).toFixed(1), p:Math.round(B[i]/ctot*100) + ' %', c: i === 0 ? 'var(--pr)' : 'var(--wa)', o: i === 0 ? 1 : [1,.55,.75,1][i-1]})) };
+    // cobro
+    const R = st.receipt, paid = st.paidTotal;
+    let pl = paid;
+    const cur = CEIBA.map(([n,v,dl,s]) => { const ap = Math.min(pl, s); pl -= ap; return {n, v, dl, s0:s, s:s - ap}; }).filter(x => x.s > 0);
+    const saldo0 = cur.reduce((a,x) => a + x.s, 0), amt = parse(st.abono) || 0, over = amt > saldo0;
+    let left = Math.min(amt, saldo0);
+    const inv = cur.map(x => { const ap = Math.min(left, x.s); left -= ap; return {n:x.n, s0:fm(x.s), s:fm(x.s - ap), ap: ap ? '− ' + fm(ap) : '$ 0,00', apFg: ap ? 'var(--ok)' : 'var(--mu)'}; });
+    const tr = st.cobMethod === 'transferencia', refOk = st.cobRef.trim().length >= 4;
+    const cobOk = amt > 0 && !over && (!tr || refOk);
+    const newSaldo = saldo0 - (over ? 0 : amt), pct0 = saldo0 / 500000000;
+    const stOf = p => p >= .8 ? ['! En alerta · ' + Math.round(p*100) + ' %','var(--wab)','var(--wa)'] : ['Al día · ' + Math.round(p*100) + ' % del cupo','var(--okb)','var(--ok)'];
+    const S0 = stOf(pct0);
+    const cob = { saldo0:fm(saldo0), saldo:fm(saldo0), disp:fm(500000000 - saldo0), pw:(pct0*100).toFixed(1), st:S0[0], stBg:S0[1], stFg:S0[2],
+      pend: cur.map(x => ({n:x.n, v:x.v, dl:x.dl, s:fm(x.s), paid: x.s < x.s0 ? 'Abono parcial · ' + R.num : ''})), hasPend: cur.length > 0, noPend: !cur.length,
+      inv, over, amt:fm(amt), amtBd: over ? 'var(--er)' : 'var(--ring)', tr, refBd: refOk ? 'var(--ring)' : st.cobRef ? 'var(--er)' : 'var(--bds)', refFg: refOk ? 'var(--ok)' : st.cobRef ? 'var(--er)' : 'var(--mu)', refHint: refOk ? '✓ Referencia válida · Bancos 1110 ·· 4821' : st.cobRef ? '! Mínimo 4 caracteres' : 'Obligatorio para conciliar el banco',
+      quick: [['Total adeudado',saldo0]].concat(cur[0] ? [[cur[0].n, cur[0].s]] : []).concat([['$ 500.000',50000000]]).map(([l,v]) => ({l: l + (l[0] === '$' ? '' : ' · ' + fm(v)), pick:() => this.setState({abono:fmn(v).replace(/,00$/,'')})})),
+      btnBg: cobOk ? 'var(--pr)' : 'var(--sf2)', btnFg: cobOk ? 'var(--onpr)' : 'var(--mu)', btnNote: cobOk ? 'Nuevo saldo ' + fm(newSaldo) + ' · cupo disponible ' + fm(500000000 - newSaldo) : over ? 'Ajusta el valor para continuar.' : saldo0 ? 'Completa los datos para continuar.' : 'El cliente no tiene saldo pendiente.' };
+    const S1 = stOf(pct0);
+    const rec = R ? { has:true, none:false, num:R.num, t:R.t, amt:fm(R.amt), method:R.method, apl:R.apl, saldo:fm(saldo0), disp:fm(500000000 - saldo0), st:S1[0], stBg:S1[1], stFg:S1[2] } : { has:false, none:true };
+    const doRecibo = () => { if (!cobOk) return; const num = 'RC-' + (st.rcNext); let l3 = amt; const apl = cur.filter(x => { const t = l3 > 0; l3 -= x.s; return t; }).map(x => x.n).join(' · ');
+      this.setState(s => ({receipt:{num, amt, apl, method: tr ? 'Transferencia · ref. ' + s.cobRef.trim() : 'Efectivo · Caja 1105', t:'14/10/2026 15:20'}, paidTotal:s.paidTotal + amt, rcNext:s.rcNext + 1, abono:'', cobRef:''}));
+      this.log(['14/10/2026 15:20','L. Rincón','Registró recibo','Recibo de caja',num,fm(amt) + ' · Almacenes La Ceiba · ' + apl,'186.30.4.12',[['Saldo del cliente',fm(saldo0),fm(saldo0 - amt)]],'n']); };
+    // audit
+    const allAud = [...st.events, ...AUD];
+    const audit = allAud.map(([t,u,a,e,r,d,ip,diff,k], i) => ({t,u,a,e,r,d,ip,diff:diff.map(([f,b,af]) => ({f,b,a:af})), aBg: k === 'e' ? 'var(--erb)' : 'var(--neb)', aFg: k === 'e' ? 'var(--er)' : 'var(--ne)', bg: i === st.auSel ? 'var(--prs)' : 'transparent', pick:() => this.setState({auSel:i})}));
+    if (audit[2] && audit[2].a === 'Error de conexión') audit[2].a = '! Error de conexión';
+    const auSel = audit[Math.min(st.auSel, audit.length - 1)];
+    // web
+    const web = [];
+    WEB.forEach(([kind,label], wi) => ['light','dark'].forEach((th, ti) => {
+      const id = '3' + String.fromCharCode(97 + wi*2 + ti);
+      const impTab = st.impTab[id] || 'tar', libTab = st.libTab[id] || 'mayor';
+      const nav = {editor:['CT','Nuevo comprobante'], detalle:['CT','Comprobantes'], libros:['CT', libTab === 'mayor' ? 'Libro mayor' : 'Libro diario'], balance:['CT','Balance de prueba'], periodos:['CT','Períodos'], cartera:['CA','Cartera por edades'], impuestos: impTab === 'tar' ? ['IM','Tarifas y vigencias'] : ['FE','Configuración DIAN'], audit:['CF','Auditoría'], empresa:['CF','Empresa y multiempresa']}[kind];
+      const w = { id, label: label + (ti ? ' · Slate' : ' · Claro'),
+        vars: {...TH[th], width:'1440px', height:'900px', position:'relative', display:'flex', flexDirection:'column', background:'var(--app)', color:'var(--tx)', fontFamily:'Inter,system-ui,sans-serif'},
+        groups: GROUPS.map(([code,name]) => { const act = code === nav[0]; return {code, name, weight: act ? 600 : 400, tileBg: act ? 'var(--pr)' : 'var(--sf2)', tileFg: act ? 'var(--onpr)' : 'var(--mu)', showChildren: act, children: act ? CHILD[code].map(c => ({name:c, badge: c === 'Borradores' && !st.draftOk ? '1' : '', bg: c === nav[1] ? 'var(--prs)' : 'transparent', fg: c === nav[1] ? 'var(--pr)' : 'var(--tx)', weight: c === nav[1] ? 600 : 400})) : []}; }),
+        isEditor: kind === 'editor', isDetalle: kind === 'detalle', isLibros: kind === 'libros', isBalance: kind === 'balance', isPeriodos: kind === 'periodos', isCartera: kind === 'cartera', isImp: kind === 'impuestos', isAudit: kind === 'audit', isEmpresa: kind === 'empresa', badges: [], actions: [] };
+      const btn = (label, on, primary, k, enabled = true, tip = '') => ({label, on, k: k || '', tip, bd: primary ? '0' : '1px solid var(--bds)', bg: primary ? (enabled ? 'var(--pr)' : 'var(--sf2)') : 'var(--card)', fg: primary ? (enabled ? 'var(--onpr)' : 'var(--mu)') : 'var(--tx)', fw: primary ? 600 : 500, cur: enabled ? 'pointer' : 'not-allowed', sh: primary && enabled ? 'var(--e2)' : 'var(--e1)'});
+      if (kind === 'editor') { w.crumb = 'Contabilidad › Comprobantes › Nuevo'; w.title = posted ? st.posted : 'Nuevo comprobante';
+        w.badges = [posted ? {t:'Contabilizado', bg:'var(--neb)', fg:'var(--ne)'} : {t:'◌ Borrador', bg:'var(--wab)', fg:'var(--wa)'}];
+        w.actions = posted ? [btn('↺ Reversar…', () => {}, false)] : [btn('Guardar borrador', () => {}, false, 'Ctrl S'), btn('Contabilizar', postNow, true, 'Ctrl ↵', canPost, canPost ? '' : !octOpen ? 'Período cerrado' : !balanced ? 'Diferencia ' + fm(Math.abs(sd - sc)) : 'Corrige los errores')]; }
+      if (kind === 'detalle') { w.crumb = 'Contabilidad › Comprobantes'; w.title = 'AJ-1';
+        w.badges = [{t:'🔒︎ Contabilizado'.replace('🔒︎ ',''), bg:'var(--neb)', fg:'var(--ne)'}].concat(st.rev ? [{t:'Reversado por', ref:st.rev.num, bg:'var(--neb)', fg:'var(--ne)'}] : []);
+        w.actions = [btn('Imprimir', () => {}, false), btn('Duplicar como borrador', () => {}, false)].concat(st.rev ? [] : [btn('↺ Reversar…', () => this.setMap('revOpen', id, true), true)]);
+        w.revOpen = !!st.revOpen[id] && !st.rev; w.closeRev = () => this.setMap('revOpen', id, false); w.doRev = () => doRev(id); }
+      if (kind === 'libros') { w.crumb = 'Contabilidad › Libros oficiales'; w.title = libTab === 'mayor' ? 'Libro mayor' : 'Libro diario'; w.isMayor = libTab === 'mayor'; w.isDiario = !w.isMayor;
+        w.libTabs = [['mayor','Mayor'],['diario','Diario']].map(([k,n]) => ({name:n, pick:() => this.setMap('libTab', id, k), ...seg(libTab === k)}));
+        w.actions = [btn('Exportar PDF', () => {}, false), btn('Exportar Excel', () => {}, false)]; }
+      if (kind === 'balance') { w.crumb = 'Contabilidad › Informes'; w.title = 'Balance de prueba'; w.badges = [{t:'✓ Cuadrado', bg:'var(--okb)', fg:'var(--ok)'}]; w.actions = [btn('Exportar', () => {}, false)]; }
+      if (kind === 'periodos') { w.crumb = 'Contabilidad › Períodos'; w.title = 'Períodos contables';
+        const sel = st.perSel[id] || 10;
+        w.months = [1,2,3,4,5,6,7,8,9,10,11,12].map(m => { const s = months[m], on = m === sel;
+          const S = s === 'c' ? ['Cerrado','var(--neb)','var(--ne)'] : s === 'a' ? ['● Abierto','var(--okb)','var(--ok)'] : ['No iniciado','transparent','var(--mu)'];
+          return {name: MES[m] + ' 2026', st:S[0], sBg:S[1], sFg:S[2], meta: s === 'c' ? (m === 10 ? 'Cerrado hoy' : 'Cerrado ' + String(5).padStart(2,'0') + '/' + String(m+1).padStart(2,'0') + '/2026') : s === 'a' ? (m === 10 && !st.draftOk ? '1 borrador pendiente' : 'Sin pendientes') : '—',
+            bd: on ? '2px solid var(--pr)' : '1px solid var(--bd)', bg: s === 'f' ? 'transparent' : 'var(--card)', sh: on ? '0 0 0 4px var(--prs)' : 'none', pick:() => this.setMap('perSel', id, m)}; });
+        const s = months[sel], blocking = sel === 10 && !st.draftOk;
+        const checks = [
+          blocking ? {t:'1 comprobante en borrador', s:'AJ · Provisión de servicios públicos · 31/10/2026. Contabilízalo o descártalo.', icon:'!', dot:'var(--er)', dotFg:'var(--erb)', fg:'var(--er)', bg:'var(--erb)', act:'Descartar borrador', on:() => { this.setState({draftOk:true}); }} : {t:'Sin borradores', s:'Todos los comprobantes del período están contabilizados.', icon:'✓', dot:'var(--ok)', dotFg:'var(--okb)', fg:'var(--tx)', bg:'transparent', act:''},
+          {t:'Balance de prueba cuadrado', s:'Σ débitos = Σ créditos · ' + fm(totD), icon:'✓', dot:'var(--ok)', dotFg:'var(--okb)', fg:'var(--tx)', bg:'transparent', act:''},
+          {t:'Documentos DIAN resueltos', s:'0 facturas en transmisión o rechazadas.', icon:'✓', dot:'var(--ok)', dotFg:'var(--okb)', fg:'var(--tx)', bg:'transparent', act:''},
+          sel === 10 ? {t:'Conciliación bancaria 1110 pendiente', s:'No bloquea el cierre, pero se recomienda conciliar antes.', icon:'!', dot:'var(--wa)', dotFg:'var(--wab)', fg:'var(--wa)', bg:'var(--wab)', act:''} : {t:'Conciliación bancaria al día', s:'Sin partidas pendientes.', icon:'✓', dot:'var(--ok)', dotFg:'var(--okb)', fg:'var(--tx)', bg:'transparent', act:''}
+        ];
+        const can = s === 'a' && !blocking;
+        w.pm = {name: MES[sel] + ' 2026', st: s === 'c' ? 'Cerrado' : s === 'a' ? '● Abierto' : 'No iniciado', sBg: s === 'c' ? 'var(--neb)' : s === 'a' ? 'var(--okb)' : 'var(--sf2)', sFg: s === 'c' ? 'var(--ne)' : s === 'a' ? 'var(--ok)' : 'var(--mu)', isOpen: s === 'a', isClosed: s === 'c', isFuture: s === 'f', checks,
+          btnBg: can ? 'var(--pr)' : 'var(--sf2)', btnFg: can ? 'var(--onpr)' : 'var(--mu)', btnCur: can ? 'pointer' : 'not-allowed', btnNote: can ? 'Todo listo para cerrar.' : '1 pendiente bloquea el cierre.', closedAt: sel === 10 ? (st.closedOct || '14/10/2026 15:10') : '05/' + String(sel+1).padStart(2,'0') + '/2026 17:45'};
+        w.askClose = () => { if (can) this.setMap('closeOpen', id, true); };
+        w.closeOpen = !!st.closeOpen[id]; w.cancelClose = () => this.setMap('closeOpen', id, false);
+        w.doClose = () => { this.setState(s2 => ({months:{...s2.months, [sel]:'c', [sel+1]: s2.months[sel+1] === 'f' ? 'a' : s2.months[sel+1]}, closeOpen:{}, closedOct:'14/10/2026 15:10'})); this.log(['14/10/2026 15:10','J. Murcia','Cerró período','Período', MES[sel] + ' 2026','Lista de cierre completa','190.24.18.7',[['Estado','Abierto','Cerrado']],'n']); };
+        w.reopen = () => { if (st.reopen.trim().length < 5) return; this.setState(s2 => ({months:{...s2.months, [sel]:'a'}, reopen:''})); this.log(['14/10/2026 15:12','J. Murcia','Reabrió período','Período', MES[sel] + ' 2026','Motivo: ' + st.reopen.trim(),'190.24.18.7',[['Estado','Cerrado','Abierto']],'n']); };
+        w.actions = [btn('Cierre anual…', () => {}, false, '', false, 'Requiere los 12 meses cerrados')]; }
+      if (kind === 'cartera') { w.crumb = 'Cartera › Informes'; w.title = 'Cartera por edades'; w.actions = [btn('Exportar', () => {}, false), btn('Registrar recibo', () => {}, true)]; }
+      if (kind === 'impuestos') { w.crumb = impTab === 'tar' ? 'Impuestos › Tarifas y vigencias' : 'Factura electrónica › Configuración'; w.title = impTab === 'tar' ? 'Impuestos' : 'Factura electrónica DIAN';
+        w.impTar = impTab === 'tar'; w.impFe = !w.impTar;
+        w.impTabs = [['tar','Tarifas y vigencias'],['fe','Factura electrónica DIAN']].map(([k,n]) => ({name:n, pick:() => this.setMap('impTab', id, k), fw: impTab === k ? 600 : 500, fg: impTab === k ? 'var(--pr)' : 'var(--mu)', bd: impTab === k ? 'var(--pr)' : 'transparent'}));
+        w.actions = w.impTar ? [btn('Nueva vigencia', () => {}, true)] : [btn('Probar emisión', () => {}, false)];
+        if (w.impFe) w.badges = [{t:'✓ Producción', bg:'var(--okb)', fg:'var(--ok)'}]; }
+      if (kind === 'audit') { w.crumb = 'Configuración › Auditoría'; w.title = 'Bitácora de auditoría'; w.actions = [btn('Exportar', () => {}, false)]; }
+      if (kind === 'empresa') { w.crumb = 'Configuración › Empresa y multiempresa'; w.title = 'Comercializadora Andina S.A.S.'; w.badges = [{t:'Empresa activa', bg:'var(--prs)', fg:'var(--pr)'}]; }
+      web.push(w);
+    }));
+    const mob = [];
+    [['light'],['dark']].forEach(([th], ti) => [['cli','Consulta de cliente y cupo','Cliente'],['abono','Registrar abono','Registrar abono'],['rec','Recibo emitido','Recibo de caja']].forEach(([k,label,title], ki) => {
+      const id = '3' + String.fromCharCode(115 + ti*3 + ki);
+      mob.push({id, label: label + (ti ? ' · Slate' : ' · Claro'), title, isCli: k === 'cli', isAbono: k === 'abono', isRec: k === 'rec' && !!st.receipt, isRecNone: k === 'rec' && !st.receipt, abonoId: '3' + String.fromCharCode(116 + ti*3), cliId: '3' + String.fromCharCode(115 + ti*3),
+        vars: {...TH[th], width:'390px', height:'844px', borderRadius:'48px', background:'var(--app)', color:'var(--tx)', boxShadow:'0 0 0 10px #1A2028,0 0 0 11px #2E3742,0 30px 60px -12px rgba(0,0,0,.35)', overflow:'hidden', display:'flex', flexDirection:'column', position:'relative', margin:'11px', fontFamily:'Inter,system-ui,sans-serif'}});
+    }));
+    return {
+      web, mob, chip, rowH, ed, rev, onMotivo: e => this.setState({motivo:e.target.value}),
+      edCols:'40px 300px 200px minmax(0,1fr) 150px 150px 80px 36px', lbCols:'100px 84px 220px minmax(0,1fr) 150px 150px 160px', djCols:'200px 90px minmax(0,1fr) 220px 150px 150px', bpCols:'110px minmax(0,1fr) repeat(6,128px)', caCols:'minmax(250px,1fr) repeat(5,96px) 120px 130px 160px', txCols:'90px minmax(0,1fr) 100px 80px 110px 80px 110px 110px 110px', auCols:'130px 100px 170px 170px minmax(0,1fr) 110px',
+      aj1: BASE[0].l.map(([a,t,d,c,desc]) => ({a, name:ACCT[a], t:t || '—', desc, d:z(d), c:z(c)})),
+      revPrev: BASE[0].l.map(([a,,d,c]) => ({a, name:ACCT[a], d:z(c), c:z(d)})),
+      trace: [{t:'Creado como borrador', s:'01/10/2026 09:10 · J. Murcia', dot:'var(--wa)'},{t:'Contabilizado', s:'01/10/2026 09:14 · J. Murcia', dot:'var(--pr)'}].concat(st.rev ? [{t:'Reversado por ' + st.rev.num, s:'14/10/2026 15:05 · J. Murcia', dot:'var(--ne)'}] : [{t:'Sin reversiones', s:'Vigente', dot:'var(--bd)'}]),
+      mayor, mayorAccts: ['1110','130505','1435','2408','4135','6135'].map(c => ({code:c, pick:() => this.setState({mayor:c}), bg: c === ma ? 'var(--pr)' : 'var(--card)', fg: c === ma ? 'var(--onpr)' : 'var(--tx)', bd: c === ma ? 'var(--pr)' : 'var(--bd)'})),
+      diario, diarioCount: entries.length + ' comprobantes', totD:fmn(totD), totC:fmn(totC), finD:fmn(finD), finC:fmn(finC),
+      bal, levels: [['Clase',1],['Grupo',2],['Cuenta',4],['Subcuenta',6]].map(([n,l]) => ({name:n, pick:() => this.setState({level:l}), ...seg(L === l)})),
+      reopenIn: st.reopen, onReopen: e => this.setState({reopen:e.target.value}), reopenFg: st.reopen.trim().length >= 5 ? 'var(--pr)' : 'var(--mu)',
+      car,
+      taxes: [['IVA19','IVA 19 %','IVA','19 %','—','2408','01/01/2017','—','Vigente'],['IVA16','IVA 16 %','IVA','16 %','—','2408','01/01/2013','31/12/2016','Histórica'],['IVA5','IVA 5 %','IVA','5 %','—','2408','01/01/2017','—','Vigente'],['EXE','Exento','IVA','0 %','—','—','01/01/2017','—','Vigente'],['EXC','Excluido','IVA','No aplica','—','—','01/01/2017','—','Vigente'],['INC8','Impuesto al consumo 8 %','INC','8 %','—','2495','01/01/2013','—','Vigente'],['RF25','Retefuente compras 2,5 %','Retención','2,5 %','27 UVT','2365','01/01/2026','—','Vigente'],['RICA','ReteICA por municipio','Retención','Por municipio','Según municipio','2368','01/01/2026','—','Vigente']].map(([c,n,ty,r,b,a,f,h,s]) => ({c,n,ty,r,b,a,f,h,s, sBg: s === 'Vigente' ? 'var(--okb)' : 'var(--neb)', sFg: s === 'Vigente' ? 'var(--ok)' : 'var(--ne)', fg: s === 'Vigente' ? 'var(--tx)' : 'var(--mu)'})),
+      resol: [['18764000001234','FV','1 – 5.000','01/03/2026 – 01/03/2028',2,5000,'Vigente'],['18764000001235','NC','1 – 1.000','01/03/2026 – 01/03/2028',2,1000,'Vigente'],['18760000009876','FE','1 – 3.000','01/02/2024 – 01/02/2026',2334,3000,'Vencida']].map(([n,p,r,v,u,t,s]) => ({n,p,r,v, w:(u/t*100).toFixed(1), u: u.toLocaleString('es-CO') + ' de ' + t.toLocaleString('es-CO'), s, sBg: s === 'Vigente' ? 'var(--okb)' : 'var(--neb)', sFg: s === 'Vigente' ? 'var(--ok)' : 'var(--ne)'})),
+      audit, auSel,
+      companies: [['CA','Comercializadora Andina S.A.S.','900.123.456-7','Activa · Oct 2026 abierto',true],['PL','Papelería Los Andes S.A.S.','901.555.210-3','Migración desde Alegra en curso',false],['DN','Distribuciones del Norte S.A.S.','900.998.441-0','Sep 2026 abierto',false]].map(([ini,n,nit,m,on]) => ({ini,n,nit,m, bd: on ? '2px solid var(--pr)' : '1px solid var(--bd)', sh: on ? '0 0 0 4px var(--prs)' : 'var(--e1)', tile: on ? 'var(--pr)' : 'var(--sf2)', tileFg: on ? 'var(--onpr)' : 'var(--mu)'})),
+      params: [
+        {t:'Datos legales', f:[['Razón social','Comercializadora Andina S.A.S.'],['NIT','900.123.456-7','','mono'],['Régimen','Responsable de IVA'],['Actividad económica (CIIU)','4690 · Comercio al por mayor no especializado'],['Dirección','Cra. 15 # 93-47, oficina 402'],['Ciudad','Bogotá D.C.']]},
+        {t:'Parámetros contables', f:[['Plan de cuentas','PUC comerciantes','Bloqueado: tiene movimientos',0,1],['Moneda funcional','COP · peso colombiano','',0,1],['Decimales','2'],['Zona horaria','America/Bogota (UTC−5)','Todas las horas se muestran en hora de Colombia'],['Inicio del año fiscal','Enero'],['Costeo por defecto para ítems nuevos','Promedio ponderado','Cada ítem queda fijo al tener movimientos']]},
+        {t:'Formato y documentos', f:[['Formato numérico','$ 1.190.000,00','Punto de miles y coma decimal (es-CO)'],['Formato de fecha','dd/mm/aaaa · 14/10/2026'],['Fechas en períodos cerrados','No permitir','Solo con reapertura y motivo'],['Centro de costo','Obligatorio en cuentas 5 y 6'],['Umbral de alerta de cupo','80 %'],['Consecutivos','Por tipo y prefijo · sin huecos']]}
+      ].map(s => ({t:s.t, f:s.f.map(([l,v,h,mono,lock]) => ({l, v, h: h || '', lock: !!lock, ff: mono === 'mono' ? "'JetBrains Mono',monospace" : 'inherit', bd: lock ? 'var(--bd)' : 'var(--bds)', bg: lock ? 'var(--sf)' : 'var(--bg)', fg: lock ? 'var(--mu)' : 'var(--tx)'}))})),
+      cob, rec, abonoIn: st.abono, onAbono: e => this.setState({abono:e.target.value}),
+      cobPay: [['efectivo','Efectivo'],['transferencia','Transferencia']].map(([k,n]) => ({name:n, pick:() => this.setState({cobMethod:k}), ...seg(st.cobMethod === k)})),
+      cobRef: st.cobRef, onCobRef: e => this.setState({cobRef:e.target.value}),
+      doRecibo
+    };
+  }
+}
+</script>
+</body>
+</html>
