@@ -1,0 +1,148 @@
+openapi: 3.1.0
+info:
+  title: SIFCA API — Plataforma (spec 016)
+  version: 0.1.0-draft
+  summary: Contexto de sesión para el back-office y filtro por número de comprobante.
+  description: |
+    **Contrato de diseño** de la spec 016. Añade un recurso de plataforma (`/me`) y un parámetro opcional,
+    retrocompatible, a la lista de comprobantes de la spec 001. La fuente de verdad en código serán los esquemas Zod
+    de `packages/contracts` (`platform/me.ts` y `accounting/journal-entry.ts`), comparados en CI contra este archivo.
+
+    - Hasta la spec 012 la autenticación es el adaptador **provisional** de desarrollo (JWT HS256 con `tid`, `sub`
+      y `perms`); la API se niega a arrancar con `NODE_ENV=production`.
+    - Errores `application/problem+json` (RFC 9457) con `code` estable, como en la spec 001.
+  license:
+    name: Propietaria
+    identifier: LicenseRef-Proprietary
+servers:
+  - url: "{baseUrl}/api/v1"
+    variables:
+      baseUrl:
+        default: http://localhost:3000
+tags:
+  - name: Platform
+    description: Sesión y contexto de trabajo.
+security:
+  - bearerAuth: []
+paths:
+  /me:
+    get:
+      tags: [Platform]
+      operationId: me_get
+      summary: Contexto de la sesión actual (usuario, empresa, permisos y fecha de trabajo)
+      description: |
+        No exige un permiso específico: basta una sesión válida. Lo usa el back-office para construir el menú, la
+        paleta y las guardas (FR-010) y para la barra superior (FR-001).
+      x-required-permission: null
+      parameters:
+        - $ref: "#/components/parameters/RequestId"
+      responses:
+        "200":
+          description: Contexto de la sesión.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SessionContext" }
+              example:
+                user: { id: 0192f0a1-7c3e-7b1a-9f00-000000000001, displayName: Juliana Murcia }
+                tenant:
+                  id: 0192f0a1-7c3e-7b1a-9f00-0000000000aa
+                  name: Comercializadora Andina S.A.S.
+                  nit: { number: "900123456", dv: "8" }
+                permissions: [accounting.entry.post, accounting.report.read]
+                workingDate: "2026-10-16"
+                authMode: dev
+        "401": { $ref: "#/components/responses/Problem" }
+        "500": { $ref: "#/components/responses/Problem" }
+  /accounting/journal-entries:
+    get:
+      tags: [Platform]
+      operationId: journalEntries_list_numberFilter
+      summary: (Extensión) filtro por número de comprobante
+      description: |
+        **Solo se documenta el parámetro nuevo**; el resto de la operación está en
+        `docs/specs/001-contabilidad-comprobantes-inmutables/contracts/accounting.v1.openapi.yaml`.
+        `number` exige `voucherType`; sin él responde `422 VALIDATION_FAILED` con `field = number`.
+      x-required-permission: accounting.report.read
+      parameters:
+        - name: voucherType
+          in: query
+          schema: { type: string, pattern: "^[A-Z]{1,5}$" }
+        - name: number
+          in: query
+          required: false
+          schema: { type: integer, minimum: 1 }
+          example: 1
+      responses:
+        "200":
+          description: Página con 0 o 1 comprobante (el par tipo-número es único por año; si hay varios años, los más recientes primero).
+        "422": { $ref: "#/components/responses/Problem" }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  parameters:
+    RequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      description: Identificador de la solicitud; si falta, lo genera el servidor y lo devuelve en los errores.
+      schema: { type: string, maxLength: 100 }
+  responses:
+    Problem:
+      description: Error (RFC 9457).
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+  schemas:
+    SessionContext:
+      type: object
+      additionalProperties: false
+      required: [user, tenant, permissions, workingDate, authMode]
+      properties:
+        user:
+          type: object
+          additionalProperties: false
+          required: [id, displayName]
+          properties:
+            id: { type: string, format: uuid }
+            displayName: { type: string, minLength: 1, maxLength: 120 }
+        tenant:
+          type: object
+          additionalProperties: false
+          required: [id, name, nit]
+          properties:
+            id: { type: string, format: uuid }
+            name: { type: string, minLength: 1, maxLength: 200 }
+            nit:
+              type: object
+              additionalProperties: false
+              required: [number, dv]
+              properties:
+                number: { type: string, pattern: "^[0-9]{5,15}$" }
+                dv: { type: string, pattern: "^[0-9]$" }
+        permissions:
+          type: array
+          items: { type: string, pattern: "^[a-z]+(\\.[a-zA-Z]+)+$" }
+          uniqueItems: true
+        workingDate: { type: string, format: date, description: Hoy en America/Bogota (R-CON-014). }
+        authMode: { type: string, enum: [dev] }
+    Problem:
+      type: object
+      required: [type, title, status, code]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        code:
+          type: string
+          description: Código estable. El cliente DEBE tolerar códigos que no conoce (research §4).
+        requestId: { type: string }
+        errors:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field: { type: string, examples: ["lines[2].accountCode"] }
+              message: { type: string }
+              rule: { type: string }
