@@ -38,6 +38,7 @@ Si un ADR, una spec o un plan contradice la constitución, **prevalece la consti
 |---|---|
 | [`00-alcance-supuestos-y-roadmap.md`](00-alcance-supuestos-y-roadmap.md) | Alcance, decisiones (Q-01, Q-02, Q-03, Q-11), fuera de alcance, supuestos, preguntas abiertas, riesgos y fases |
 | [`informe-del-proyecto.md`](informe-del-proyecto.md) | **Informe consolidado:** qué se hizo, qué se investigó (con su grado de certeza), resultados, pendientes |
+| [`roadmap-specs.md`](roadmap-specs.md) | **Hoja de ruta de desarrollo:** auditoría de los mockups, 25 specs en 7 olas con dependencias y plan de datos semilla |
 | [`constitution.md`](constitution.md) | Constitución y gates de calidad |
 | [`specs/`](specs/README.md) | 11 especificaciones con escenarios Gherkin y `traceability-matrix.md` |
 | [`01-arquitectura/`](01-arquitectura/) | Módulos y capas del backend, modelo de datos PostgreSQL, evaluación de librerías, contrato OpenAPI, integración con motores externos, ADRs |
