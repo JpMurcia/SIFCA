@@ -158,7 +158,7 @@ Estado: ✅ entregada · 🟡 spec escrita (`spec.md` + `.feature`), sin impleme
 | Sec. | Id | Ola | Nombre | Estado | Depende de | Paralelo con |
 |---:|---|:-:|---|:-:|---|---|
 | 1 | SPEC-000-fundaciones-backend | 0 | Monorepo, Clean Architecture, Prisma + Zod, RLS, `problem+json`, logs, OpenAPI | ✅ | — | — |
-| 2 | SPEC-016-fundaciones-frontend | 0 | `apps/admin` (Vite + React), tokens, cascarón, estados globales, cliente API | 🆕 | 000 | — |
+| 2 | SPEC-016-fundaciones-frontend | 0 | `apps/admin` (Vite + React), tokens, cascarón, estados globales, cliente API | 🟡 | 000 | — |
 | 3 | SPEC-012-autenticacion-y-sesiones | 1 | JWT, refresh tokens rotativos, sesiones, recuperación de contraseña | 🆕 | 000, 016 | — |
 | 4 | SPEC-017-usuarios-roles-permisos | 1 | Usuarios, roles, permisos granulares (RBAC), guards | 🆕 | 012 | — |
 | 5 | SPEC-013-configuracion-empresa | 1 | Empresa, parámetros con vigencia, numeración, años fiscales, plantillas | 🆕 | 017 | — |
@@ -253,7 +253,7 @@ escenarios al ejecutar `/speckit-specify`.
   responde `problem+json` con `code` y `requestId`; `prisma:drift` sin diferencias; el contrato publicado coincide con
   los esquemas Zod (`test:contract`).
 
-**SPEC-016-fundaciones-frontend** 🆕
+**SPEC-016-fundaciones-frontend** 🟡 ([spec](specs/016-fundaciones-frontend/spec.md))
 - **Alcance:** `apps/admin` (Vite + React + TypeScript); tokens de diseño de `1a/1b` (Claro y Slate) y densidades
   Compacta/Normal/Cómoda (`7aa–7ac`); cascarón con menú expandido 1440 y colapsado 1024 (`1c–1f`, `7ad`), barra
   superior con empresa, período y paleta `Ctrl+K`; componentes de estado global: esqueleto, vacío, banner de error con

@@ -30,7 +30,7 @@ Estado: ✅ entregada · 🟡 spec escrita, sin implementar · 🆕 por especifi
 | Sec. | Spec | Ola | Estado | Depende de |
 |---:|---|:-:|:-:|---|
 | 1 | 000 Fundaciones backend (monorepo, RLS, `problem+json`, OpenAPI) | 0 | ✅ | — |
-| 2 | 016 Fundaciones frontend (`apps/admin`, tokens, estados globales) | 0 | 🆕 | 000 |
+| 2 | [016](docs/specs/016-fundaciones-frontend/spec.md) Fundaciones frontend (`apps/admin`, tokens, estados globales) | 0 | 🟡 | 000 |
 | 3 | 012 Autenticación y sesiones | 1 | 🆕 | 000, 016 |
 | 4 | 017 Usuarios, roles y permisos | 1 | 🆕 | 012 |
 | 5 | 013 Configuración por empresa | 1 | 🆕 | 017 |

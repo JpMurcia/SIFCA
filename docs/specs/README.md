@@ -20,6 +20,7 @@ Cada **caso de uso** de SIFCA tiene su especificación en `docs/specs/NNN-nombre
 | [009](009-facturacion-electronica-pta/spec.md) | Facturación electrónica mediante PTA (puerto `EInvoiceProvider`) | R-FE | F3 |
 | [010](010-motor-impuestos-y-retenciones/spec.md) | Motor de impuestos y retenciones con vigencias | R-IMP | F3 |
 | [011](011-multitenancy-api-y-webhooks/spec.md) | Aislamiento por tenant, API Keys, idempotencia y webhooks | Constitución IV, IX | F2 |
+| [016](016-fundaciones-frontend/spec.md) | Fundaciones del back-office web: cascarón, estados globales, errores tipificados, permisos y formatos es-CO | Constitución I, IV, V, VI · ADR-0001, ADR-0009 | F2 (Ola 0) |
 
 ## Especificaciones propuestas (aún sin `spec.md`)
 
