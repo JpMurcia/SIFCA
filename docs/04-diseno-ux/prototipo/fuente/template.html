@@ -1,0 +1,364 @@
+<title>SIFCA Prototipo navegable</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Visor de prototipo: barra superior fija, índice de pantallas a la izquierda, maqueta al centro con zonas clicables.
+   Identidad tomada del sistema de diseño de SIFCA (docs/04-diseno-ux/04-sistema-de-diseno.md). */
+:root {
+  --bg: #EEF1F5;
+  --surface: #FFFFFF;
+  --surface-2: #F4F6F8;
+  --fg: #1B2430;
+  --muted: #4B5767;
+  --line: #D5DBE3;
+  --accent: #0B5CAD;
+  --accent-soft: rgba(11, 92, 173, 0.14);
+  --accent-fg: #FFFFFF;
+  --warn: #7A4B00;
+  --warn-bg: #FFF1D6;
+  --warn-line: #C98A1A;
+  --stage: #DDE2E8;
+  --shadow: 0 1px 2px rgba(27, 36, 48, 0.06), 0 8px 24px rgba(27, 36, 48, 0.10);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --side-w: 288px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161D; --surface: #18202A; --surface-2: #1E2732; --fg: #E6EBF1; --muted: #A3AEBB; --line: #2C3744;
+    --accent: #5AA2EE; --accent-soft: rgba(90, 162, 238, 0.20); --accent-fg: #0C1724;
+    --warn: #F2C46B; --warn-bg: #3A2C10; --warn-line: #C98A1A; --stage: #0C1117;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.45); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161D; --surface: #18202A; --surface-2: #1E2732; --fg: #E6EBF1; --muted: #A3AEBB; --line: #2C3744;
+  --accent: #5AA2EE; --accent-soft: rgba(90, 162, 238, 0.20); --accent-fg: #0C1724;
+  --warn: #F2C46B; --warn-bg: #3A2C10; --warn-line: #C98A1A; --stage: #0C1117;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.45); color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-ui); font-size: 14px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; min-width: 0; }
+.brand b { font-weight: 700; letter-spacing: 0.06em; font-size: 15px; }
+.brand span { color: var(--muted); font-size: 13px; white-space: nowrap; }
+.ctrl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ctrl label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+select, .search {
+  height: 34px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); padding: 0 10px; max-width: 100%;
+}
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; background: var(--surface-2); height: 32px; padding: 0 12px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn {
+  height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.on { background: var(--accent-soft); border-color: var(--accent); color: var(--fg); }
+.kbd { font-family: var(--font-mono); font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+.menu-btn { display: none; }
+
+.body { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); min-height: 0; }
+.side {
+  border-right: 1px solid var(--line); background: var(--surface); overflow-y: auto; min-height: 0;
+  padding-block: 12px 24px; padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: 12px;
+}
+.side .search { width: 100%; margin-bottom: 8px; }
+.group { margin-top: 14px; }
+.group h2 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 4px 8px; display: flex; justify-content: space-between; }
+.group h2 em { font-style: normal; font-family: var(--font-mono); font-weight: 500; }
+.item {
+  display: grid; grid-template-columns: 38px 1fr; align-items: center; gap: 6px; width: 100%;
+  border: 0; background: transparent; text-align: left; padding: 5px 8px; border-radius: 6px; cursor: pointer;
+}
+.item:hover { background: var(--surface-2); }
+.item[aria-current="page"] { background: var(--accent-soft); font-weight: 600; }
+.item code { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+.main { overflow: auto; min-height: 0; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 12px; }
+.head h1 { font-size: 20px; line-height: 1.2; margin: 0; text-wrap: balance; }
+.chip { font-family: var(--font-mono); font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+.chip.id { color: var(--fg); font-weight: 600; }
+.meta { color: var(--muted); font-size: 13px; }
+.flow {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 12px; padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+}
+.flow strong { margin-right: 6px; }
+.step { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 3px 10px; cursor: pointer; font-size: 12px; display: inline-flex; gap: 6px; align-items: center; }
+.step b { font-family: var(--font-mono); font-weight: 600; color: var(--muted); }
+.step.now { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.step.now b { color: var(--accent-fg); }
+.step.gap { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn); }
+.arrow { color: var(--muted); }
+
+.stage-wrap { background: var(--stage); border-radius: 12px; padding: 16px; display: flex; justify-content: center; }
+.stage { position: relative; width: 100%; box-shadow: var(--shadow); border-radius: 8px; overflow: hidden; background: var(--surface); line-height: 0; }
+.stage.phone { border-radius: 22px; }
+.stage img { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; }
+.hs {
+  position: absolute; border: 0; padding: 0; margin: 0; background: transparent; cursor: pointer; border-radius: 4px;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+.hs:hover, .hs:focus-visible, .zones .hs, .flash .hs { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+.hs.gap:hover, .hs.gap:focus-visible, .zones .hs.gap, .flash .hs.gap { background: rgba(201, 138, 26, 0.22); box-shadow: inset 0 0 0 2px var(--warn-line); }
+.below { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 14px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.links .lbl { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+.link { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 13px; }
+.link:hover { border-color: var(--accent); }
+.link.gap { border-color: var(--warn-line); background: var(--warn-bg); color: var(--warn); }
+.note { color: var(--muted); font-size: 12px; }
+
+dialog {
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--fg); padding: 20px 22px;
+  max-width: min(460px, calc(100vw - 32px)); box-shadow: var(--shadow);
+}
+dialog::backdrop { background: rgba(10, 15, 22, 0.45); }
+dialog h3 { margin: 0 0 4px; font-size: 17px; }
+dialog .tag { display: inline-block; font-family: var(--font-mono); font-size: 12px; color: var(--warn); background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 999px; padding: 1px 8px; margin-bottom: 10px; }
+dialog p { margin: 0 0 16px; color: var(--muted); }
+dialog .actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .body { grid-template-columns: minmax(0, 1fr); }
+  .side { display: none; border-right: 0; border-bottom: 1px solid var(--line); max-height: 60vh; }
+  .side.open { display: block; }
+  .menu-btn { display: inline-flex; }
+  .brand span { display: none; }
+  .stage-wrap { padding: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .hs { transition: none; } }
+</style>
+
+<div class="app">
+  <header class="bar">
+    <div class="brand"><b>SIFCA</b><span>Prototipo navegable · 7 tandas de maquetas</span></div>
+    <button class="btn menu-btn" id="menu-btn" aria-expanded="false" aria-controls="side">Pantallas</button>
+    <div class="ctrl">
+      <label for="flow-select">Flujo</label>
+      <select id="flow-select"><option value="">Navegación libre</option></select>
+    </div>
+    <div class="ctrl" role="group" aria-label="Tema de la maqueta">
+      <div class="seg"><button id="t-claro" aria-pressed="true">Claro</button><button id="t-slate" aria-pressed="false">Slate</button></div>
+    </div>
+    <button class="btn" id="zones-btn" aria-pressed="false" title="Mostrar zonas clicables (Z)">Zonas clicables <span class="kbd">Z</span></button>
+    <div class="ctrl">
+      <button class="btn" id="prev-btn" title="Anterior (←)" aria-label="Pantalla anterior">←</button>
+      <button class="btn" id="next-btn" title="Siguiente (→)" aria-label="Pantalla siguiente">→</button>
+    </div>
+  </header>
+  <div class="body">
+    <nav class="side" id="side" aria-label="Pantallas">
+      <input class="search" id="search" type="search" placeholder="Buscar pantalla o id (p. ej. 3a)" aria-label="Buscar pantalla">
+      <div id="groups"></div>
+    </nav>
+    <main class="main" id="main">
+      <div class="head">
+        <span class="chip id" id="h-id"></span>
+        <h1 id="h-title"></h1>
+        <span class="meta" id="h-meta"></span>
+      </div>
+      <div class="flow" id="flow" hidden></div>
+      <div class="stage-wrap"><div class="stage" id="stage"><img id="shot" alt=""></div></div>
+      <div class="below">
+        <div class="links" id="links"></div>
+        <p class="note" id="note"></p>
+      </div>
+    </main>
+  </div>
+</div>
+
+<dialog id="gap-dlg" aria-labelledby="gap-title">
+  <span class="tag" id="gap-tag"></span>
+  <h3 id="gap-title"></h3>
+  <p id="gap-text"></p>
+  <div class="actions"><button class="btn" id="gap-close">Seguir navegando</button></div>
+</dialog>
+
+<script type="application/json" id="proto-data">__DATA__</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById('proto-data').textContent);
+  const byId = {}; D.screens.forEach((s, i) => { s.index = i; byId[s.id] = s; });
+  const PLAT = { web: 'Web', movil: 'App móvil', vitrina: 'Vitrina pública', sistema: 'Sistema de diseño' };
+  const $ = (id) => document.getElementById(id);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('sifca-proto-' + k); return v === null ? d : v; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('sifca-proto-' + k, v); } catch (e) { /* sin almacenamiento */ } }
+  };
+  let theme = store.get('theme', 'claro');
+  let zones = store.get('zones', '0') === '1';
+  let flow = null;
+  let current = null;
+
+  // Índice lateral agrupado por módulo
+  const groups = []; const gmap = {};
+  D.screens.forEach((s) => { if (!gmap[s.module]) { gmap[s.module] = { name: s.module, items: [] }; groups.push(gmap[s.module]); } gmap[s.module].items.push(s); });
+  function renderIndex(filter) {
+    const q = (filter || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+    const box = $('groups'); box.textContent = '';
+    groups.forEach((g) => {
+      const items = g.items.filter((s) => !q || (s.id + ' ' + s.title + ' ' + g.name).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().includes(q));
+      if (!items.length) return;
+      const sec = document.createElement('div'); sec.className = 'group';
+      const h = document.createElement('h2'); h.innerHTML = '<span></span><em></em>';
+      h.firstChild.textContent = g.name; h.lastChild.textContent = items.length; sec.appendChild(h);
+      items.forEach((s) => {
+        const b = document.createElement('button'); b.className = 'item'; b.type = 'button'; b.dataset.id = s.id;
+        b.innerHTML = '<code></code><span></span>';
+        b.children[0].textContent = s.id; b.children[1].textContent = s.title;
+        if (current && current.id === s.id) b.setAttribute('aria-current', 'page');
+        b.addEventListener('click', () => { go(s.id); closeSide(); });
+        sec.appendChild(b);
+      });
+      box.appendChild(sec);
+    });
+  }
+
+  // Flujos guiados
+  D.flows.forEach((f) => { const o = document.createElement('option'); o.value = f.id; o.textContent = f.name; $('flow-select').appendChild(o); });
+  $('flow-select').addEventListener('change', (e) => {
+    flow = D.flows.find((f) => f.id === e.target.value) || null;
+    if (flow) { const first = flow.steps[0]; first.startsWith('gap:') ? showGap(first.slice(4)) : go(first); }
+    renderFlow();
+  });
+  function stepLabel(st) { return st.startsWith('gap:') ? D.gaps[st.slice(4)].title : byId[st].title; }
+  function renderFlow() {
+    const box = $('flow');
+    if (!flow) { box.hidden = true; return; }
+    box.hidden = false; box.textContent = '';
+    const t = document.createElement('strong'); t.textContent = flow.name; box.appendChild(t);
+    flow.steps.forEach((st, i) => {
+      if (i) { const a = document.createElement('span'); a.className = 'arrow'; a.textContent = '›'; box.appendChild(a); }
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'step';
+      const isGap = st.startsWith('gap:');
+      if (isGap) b.classList.add('gap');
+      if (current && st === current.id) b.classList.add('now');
+      b.innerHTML = '<b></b><span></span>'; b.firstChild.textContent = isGap ? st.slice(4) : st; b.lastChild.textContent = stepLabel(st);
+      b.title = isGap ? 'Pantalla faltante en las maquetas' : 'Ir a ' + st;
+      b.addEventListener('click', () => (isGap ? showGap(st.slice(4)) : go(st)));
+      box.appendChild(b);
+    });
+  }
+
+  function frameFor(s) { return theme === 'slate' && s.slate ? s.slate : s.id; }
+  function go(id, fromHash) {
+    if (id.startsWith('gap:')) { showGap(id.slice(4)); return; }
+    const s = byId[id]; if (!s) return;
+    current = s;
+    if (!fromHash && location.hash !== '#s-' + id) { history.pushState(null, '', '#s-' + id); }
+    render();
+  }
+  function render() {
+    const s = current; const fid = frameFor(s); const fr = D.frames[fid];
+    $('h-id').textContent = s.id + (fid !== s.id ? ' · ' + fid : '');
+    $('h-title').textContent = s.title;
+    $('h-meta').textContent = s.module + ' · ' + PLAT[s.platform] + ' · ' + fr.w + ' × ' + fr.h + ' px';
+    document.title = s.title + ' · SIFCA Prototipo navegable';
+    const stage = $('stage'); const img = $('shot');
+    stage.querySelectorAll('.hs').forEach((n) => n.remove());
+    const phone = fr.w <= 420;
+    stage.classList.toggle('phone', phone);
+    stage.classList.toggle('zones', zones);
+    stage.style.maxWidth = (phone ? Math.round(fr.w * 1.08) : fr.w) + 'px';
+    img.src = 'img/' + fid + '.jpg'; img.width = fr.w; img.height = fr.h;
+    img.alt = 'Maqueta ' + fid + ': ' + s.title + ' (' + fr.label + ')';
+    const seen = new Map();
+    fr.hs.forEach((h) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'hs';
+      const gap = h.to.startsWith('gap:'); if (gap) b.classList.add('gap');
+      b.style.left = (h.x / fr.w * 100) + '%'; b.style.top = (h.y / fr.h * 100) + '%';
+      b.style.width = (h.w / fr.w * 100) + '%'; b.style.height = (h.h / fr.h * 100) + '%';
+      const dest = gap ? D.gaps[h.to.slice(4)].title + ' (pantalla faltante)' : byId[h.to].title;
+      b.setAttribute('aria-label', h.label + ' → ' + dest); b.title = h.label + ' → ' + dest;
+      b.addEventListener('click', (e) => { e.stopPropagation(); go(h.to); });
+      stage.appendChild(b);
+      if (!seen.has(h.to)) seen.set(h.to, h.label);
+    });
+    // Enlaces accesibles bajo la maqueta
+    const links = $('links'); links.textContent = '';
+    const lbl = document.createElement('span'); lbl.className = 'lbl'; lbl.textContent = seen.size ? 'Desde aquí' : 'Sin enlaces en esta pantalla'; links.appendChild(lbl);
+    [...seen.keys()].forEach((to) => {
+      const gap = to.startsWith('gap:');
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'link' + (gap ? ' gap' : '');
+      b.textContent = gap ? D.gaps[to.slice(4)].title + ' · falta' : byId[to].title;
+      b.addEventListener('click', () => go(to)); links.appendChild(b);
+    });
+    $('note').textContent = (theme === 'slate' && !s.slate ? 'Esta pantalla no tiene variante Slate en las maquetas; se muestra en Claro. ' : '') +
+      'Maqueta ' + fid + ' · ' + fr.label + '. Pulsa sobre la maqueta fuera de una zona para ver dónde se puede hacer clic.';
+    $('t-slate').disabled = !s.slate;
+    document.querySelectorAll('.item').forEach((n) => { if (n.dataset.id === s.id) n.setAttribute('aria-current', 'page'); else n.removeAttribute('aria-current'); });
+    renderFlow();
+    $('main').scrollTop = 0;
+  }
+
+  function showGap(code) {
+    const g = D.gaps[code]; if (!g) return;
+    $('gap-tag').textContent = 'Brecha ' + code + ' · auditoría de maquetas';
+    $('gap-title').textContent = g.title; $('gap-text').textContent = g.text;
+    const dlg = $('gap-dlg'); if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  }
+  $('gap-close').addEventListener('click', () => { const d = $('gap-dlg'); d.close ? d.close() : d.removeAttribute('open'); });
+
+  // Pulsar fuera de una zona: destella las zonas clicables
+  $('stage').addEventListener('click', () => {
+    const st = $('stage'); st.classList.add('flash'); setTimeout(() => st.classList.remove('flash'), 650);
+  });
+
+  function setTheme(t) {
+    theme = t; store.set('theme', t);
+    $('t-claro').setAttribute('aria-pressed', String(t === 'claro')); $('t-slate').setAttribute('aria-pressed', String(t === 'slate'));
+    if (current) render();
+  }
+  $('t-claro').addEventListener('click', () => setTheme('claro'));
+  $('t-slate').addEventListener('click', () => setTheme('slate'));
+  function setZones(on) { zones = on; store.set('zones', on ? '1' : '0'); $('zones-btn').setAttribute('aria-pressed', String(on)); $('zones-btn').classList.toggle('on', on); $('stage').classList.toggle('zones', on); }
+  $('zones-btn').addEventListener('click', () => setZones(!zones));
+
+  function seq() { return flow ? flow.steps.filter((x) => !x.startsWith('gap:')) : D.screens.map((s) => s.id); }
+  function step(d) {
+    const list = seq(); let i = list.indexOf(current.id);
+    if (i < 0) i = d > 0 ? -1 : list.length;
+    const n = list[(i + d + list.length) % list.length]; go(n);
+  }
+  $('prev-btn').addEventListener('click', () => step(-1));
+  $('next-btn').addEventListener('click', () => step(1));
+  $('search').addEventListener('input', (e) => renderIndex(e.target.value));
+  function closeSide() { $('side').classList.remove('open'); $('menu-btn').setAttribute('aria-expanded', 'false'); }
+  $('menu-btn').addEventListener('click', () => { const o = $('side').classList.toggle('open'); $('menu-btn').setAttribute('aria-expanded', String(o)); });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, select, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+    if ($('gap-dlg').open) return;
+    if (e.key === 'ArrowRight') { step(1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { step(-1); e.preventDefault(); }
+    else if (e.key === 'z' || e.key === 'Z') setZones(!zones);
+    else if (e.key === 't' || e.key === 'T') setTheme(theme === 'claro' ? 'slate' : 'claro');
+  });
+
+  function fromHash() { const m = /^#s-([0-9a-z]+)$/.exec(location.hash); return m && byId[m[1]] ? m[1] : null; }
+  window.addEventListener('popstate', () => { const id = fromHash(); if (id) go(id, true); });
+  window.addEventListener('hashchange', () => { const id = fromHash(); if (id && (!current || current.id !== id)) go(id, true); });
+
+  renderIndex('');
+  setTheme(theme === 'slate' ? 'slate' : 'claro');
+  setZones(zones);
+  go(fromHash() || '4a', true);
+})();
+</script>

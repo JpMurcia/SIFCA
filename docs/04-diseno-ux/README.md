@@ -33,6 +33,8 @@
 | [`04-sistema-de-diseno.md`](04-sistema-de-diseno.md) | Principios, color (con contrastes calculados), tipografía, densidad, componentes contables, accesibilidad, formato `es-CO` |
 | [`06-integraciones-migracion-y-configuracion.md`](06-integraciones-migracion-y-configuracion.md) | **Integraciones, migración de datos (Alegra y archivos) y configuración por empresa**: principios, API de Alegra con su certeza, reglas de migración, pantallas IN.1–IN.10, catálogo de configuración, lo no configurable y el radar de decisiones |
 | [`05-referencias-y-benchmark.md`](05-referencias-y-benchmark.md) | Qué se investigó (REA, SamitSQL, Alegra), qué está verificado y qué no, y la **hoja de captura** para completar la navegación de SamitSQL |
+| [`maquetas/`](maquetas/README.md) | Las 7 tandas de maquetas de Claude Design (141 vistas), íconos y logos |
+| [`prototipo/`](prototipo/README.md) | **Prototipo navegable**: 80 pantallas enlazadas por menú y botones, flujos guiados y brechas señaladas |
 
 ## Qué es verificado y qué es propuesta (léelo antes de maquetar)
 

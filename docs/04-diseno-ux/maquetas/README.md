@@ -19,3 +19,5 @@ las 141 vistas están en [`../../roadmap-specs.md`](../../roadmap-specs.md) §1.
 **Cómo verlas:** abrir el `.html` en un navegador con Internet. `support.js` (el *runtime* de Claude Design) descarga
 React 18 desde unpkg; las fuentes salen de Google Fonts. Son **referencia de diseño**, no código de producción: la
 aplicación implementa los tokens en `packages/design-tokens` y los componentes en `apps/admin`.
+
+**Prototipo navegable:** las mismas vistas enlazadas entre sí, con flujos guiados, en [`../prototipo/`](../prototipo/README.md).
