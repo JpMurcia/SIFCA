@@ -8,9 +8,9 @@
 
 | Indicador | Valor |
 |---|---:|
-| Especificaciones | 12 |
-| Requisitos funcionales (FR) | 157 |
-| Escenarios ejecutables | 169 |
+| Especificaciones | 17 |
+| Requisitos funcionales (FR) | 235 |
+| Escenarios ejecutables | 222 |
 | Reglas definidas en el catálogo | 95 |
 | Reglas con cobertura (FR o escenario) | 85 |
 | Reglas **sin** cobertura todavía | 10 |
@@ -19,20 +19,20 @@
 
 | Regla | Título | Requisitos (spec/FR) | Escenarios |
 |---|---|---|---|
-| R-CON-001 | Todo comprobante cuadra | 001/FR-001, 002/FR-011, 005/FR-004 | 001-01, 001-02, 001-11, 005-01 |
+| R-CON-001 | Todo comprobante cuadra | 001/FR-001, 002/FR-011, 005/FR-004, 019/FR-003 | 001-01, 001-02, 001-11, 005-01, 019-01 |
 | R-CON-002 | Cada línea tiene un solo lado, positivo | 001/FR-002 | 001-03 |
-| R-CON-003 | Mínimo dos líneas y solo cuentas auxiliares activas | 001/FR-003 | 001-01, 001-04 |
+| R-CON-003 | Mínimo dos líneas y solo cuentas auxiliares activas | 001/FR-003, 018/FR-001, 018/FR-003, 018/FR-006 | 001-01, 001-04, 018-01, 018-02, 018-03, 018-04, 018-05, 018-06, 018-07, 018-08, 018-09, 018-10, 018-11 |
 | R-CON-004 | Solo en períodos abiertos | 001/FR-004, 002/FR-003, 016/FR-003 | 001-05, 001-14, 002-07, 016-02 |
-| R-CON-005 | Inmutabilidad y reversión | 001/FR-005, 004/FR-009, 016/FR-013, 016/FR-020 | 001-06, 001-07, 004-14, 016-10 |
-| R-CON-006 | Consecutivo propio por tipo de comprobante, sin saltos ni duplicados | 001/FR-006 | 001-08 |
+| R-CON-005 | Inmutabilidad y reversión | 001/FR-005, 004/FR-009, 016/FR-013, 016/FR-020 | 001-06, 001-07, 004-14, 016-10, 017-06 |
+| R-CON-006 | Consecutivo propio por tipo de comprobante, sin saltos ni duplicados | 001/FR-006, 013/FR-008, 013/FR-009 | 001-08, 013-06, 013-07, 013-08 |
 | R-CON-007 | Trazabilidad al documento fuente | 001/FR-007, 002/FR-001, 002/FR-011, 005/FR-004 | 002-01 |
-| R-CON-008 | Tercero y dimensión obligatorios según la cuenta | 001/FR-008, 010/FR-011 | 001-09, 010-14 |
-| R-CON-009 | Aritmética decimal y redondeo | 001/FR-009, 002/FR-004, 010/FR-003, 016/FR-015 | 001-10, 016-11 |
-| R-CON-010 | Libros oficiales | 001/FR-010, 016/FR-020 | 001-16 |
-| R-CON-011 | Cierre mensual | 001/FR-011, 007/FR-006, 016/FR-003 | 001-12, 007-08, 016-01 |
-| R-CON-012 | Cierre anual | 001/FR-012 | 001-15 |
-| R-CON-013 | Naturaleza de las cuentas | 001/FR-010 | 001-11 |
-| R-CON-014 | Fecha, hora y zona | 001/FR-013, 016/FR-016, 016/FR-024 | 001-13 |
+| R-CON-008 | Tercero y dimensión obligatorios según la cuenta | 001/FR-008, 010/FR-011, 018/FR-007, 018/FR-008 | 001-09, 010-14, 018-09 |
+| R-CON-009 | Aritmética decimal y redondeo | 001/FR-009, 002/FR-004, 010/FR-003, 013/FR-003, 016/FR-015, 019/FR-006 | 001-10, 016-11 |
+| R-CON-010 | Libros oficiales | 001/FR-010, 016/FR-020, 018/FR-014, 019/FR-001, 019/FR-009, 019/FR-010, 019/FR-011, 019/FR-012 | 001-16, 019-01, 019-02, 019-03, 019-04, 019-05, 019-06, 019-07, 019-08, 019-09 |
+| R-CON-011 | Cierre mensual | 001/FR-011, 007/FR-006, 016/FR-003, 019/FR-014 | 001-12, 007-08, 016-01, 019-09 |
+| R-CON-012 | Cierre anual | 001/FR-012, 018/FR-009, 018/FR-012, 019/FR-002, 019/FR-005 | 001-15, 018-06, 018-07, 019-03, 019-04 |
+| R-CON-013 | Naturaleza de las cuentas | 001/FR-010, 018/FR-002, 018/FR-004, 018/FR-005, 018/FR-011, 019/FR-001, 019/FR-004, 019/FR-007, 019/FR-008 | 001-11, 018-01, 018-02, 018-03, 018-04, 018-05, 018-06, 018-07, 018-08, 018-09, 018-10, 018-11, 019-01, 019-02, 019-03, 019-04, 019-05, 019-06, 019-07, 019-08, 019-09 |
+| R-CON-014 | Fecha, hora y zona | 001/FR-013, 013/FR-004, 016/FR-016, 016/FR-024 | 001-13, 013-03 |
 | R-IMP-001 | Tarifas de IVA | 004/FR-006, 010/FR-001 | 004-13, 010-02 |
 | R-IMP-002 | Base gravable | 010/FR-002 | — |
 | R-IMP-003 | IVA por línea y redondeo | 002/FR-004, 010/FR-003 | 002-01, 010-01 |
@@ -54,7 +54,7 @@
 | R-FE-009 | Un documento aceptado no se modifica | 004/FR-009, 009/FR-007 | 004-14, 009-07 |
 | R-FE-010 | Notas crédito y débito | 004/FR-008, 004/FR-011 | 004-06, 004-12 |
 | R-FE-011 | Contingencia | 009/FR-009 | 009-06 |
-| R-FE-012 | Identificación del adquirente | 002/FR-009, 009/FR-008 | 002-09, 009-11, 009-12 |
+| R-FE-012 | Identificación del adquirente | 002/FR-009, 009/FR-008, 013/FR-001, 013/FR-002 | 002-09, 009-11, 009-12, 013-01, 013-02 |
 | R-FE-013 | Conservación | 009/FR-010 | 009-01, 009-15 |
 | R-FE-014 | Documento soporte | 005/FR-006 | 005-13 |
 | R-INV-001 | Métodos de costeo permitidos y selección por ítem | 006/FR-001, 006/FR-002 | 006-01, 006-02 |
@@ -120,20 +120,25 @@
 | [009-facturacion-electronica-pta](009-facturacion-electronica-pta/spec.md) | Facturación electrónica mediante Proveedor Tecnológico Autorizado | 13 | 15 | 12 |
 | [010-motor-impuestos-y-retenciones](010-motor-impuestos-y-retenciones/spec.md) | Motor de impuestos y retenciones con vigencias | 12 | 14 | 12 |
 | [011-multitenancy-api-y-webhooks](011-multitenancy-api-y-webhooks/spec.md) | Aislamiento por tenant, API Keys, idempotencia y webhooks | 11 | 15 | 0 |
+| [012-autenticacion-y-sesiones](012-autenticacion-y-sesiones/spec.md) | Autenticación y sesiones | 18 | 12 | 0 |
+| [013-configuracion-empresa](013-configuracion-empresa/spec.md) | Configuración por empresa | 14 | 10 | 4 |
 | [016-fundaciones-frontend](016-fundaciones-frontend/spec.md) | Fundaciones del back-office web (cascarón, estados globales y cliente de contratos) | 24 | 12 | 6 |
+| [017-usuarios-roles-permisos](017-usuarios-roles-permisos/spec.md) | Usuarios, roles y permisos | 16 | 11 | 1 |
+| [018-plan-de-cuentas-puc](018-plan-de-cuentas-puc/spec.md) | Plan de cuentas (PUC) gestionable | 16 | 11 | 5 |
+| [019-estados-financieros-niif](019-estados-financieros-niif/spec.md) | Estados financieros NIIF para Pymes | 14 | 9 | 6 |
 
 ## 3. Principios de la constitución → escenarios
 
 | Principio | Escenarios |
 |---|---|
-| P-I | 001-01, 001-02, 001-03, 001-04, 001-05, 001-06, 001-07, 001-08, 001-09, 001-10, 001-11, 001-12, 001-13, 001-14, 001-15, 001-16, 003-17, 004-01, 004-02, 004-03, 004-04, 004-05, 004-06, 004-07, 004-08, 004-09, 004-10, 004-11, 004-12, 004-13, 004-14, 004-15, 006-01, 006-02, 006-03, 006-04, 006-05, 006-06, 006-07, 006-08, 006-09, 006-10, 006-11, 006-12, 006-13, 006-14, 006-15, 006-16, 016-10 |
+| P-I | 001-01, 001-02, 001-03, 001-04, 001-05, 001-06, 001-07, 001-08, 001-09, 001-10, 001-11, 001-12, 001-13, 001-14, 001-15, 001-16, 003-17, 004-01, 004-02, 004-03, 004-04, 004-05, 004-06, 004-07, 004-08, 004-09, 004-10, 004-11, 004-12, 004-13, 004-14, 004-15, 006-01, 006-02, 006-03, 006-04, 006-05, 006-06, 006-07, 006-08, 006-09, 006-10, 006-11, 006-12, 006-13, 006-14, 006-15, 006-16, 012-04, 012-09, 013-02, 013-05, 016-10, 017-03, 017-09, 018-03, 018-04, 018-05, 018-07 |
 | P-II | 007-01, 007-02, 007-03, 007-04, 007-05, 007-06, 007-07, 007-08, 007-09, 007-10, 008-01, 008-02, 008-03, 008-04, 008-05, 008-06, 008-07, 008-08, 008-09, 008-10, 008-11, 008-12, 008-13 |
-| P-III | 002-01, 002-02, 002-03, 002-04, 002-05, 002-06, 002-07, 002-08, 002-09, 002-10, 002-11, 002-12, 002-13, 003-01, 003-02, 003-03, 003-04, 003-05, 003-06, 003-07, 003-08, 003-09, 003-10, 003-11, 003-12, 003-13, 003-14, 003-15, 003-16, 003-17, 004-01, 004-02, 004-03, 004-04, 004-05, 004-06, 004-07, 004-08, 004-09, 004-10, 004-11, 004-12, 004-13, 004-14, 004-15, 005-01, 005-02, 005-03, 005-04, 005-05, 005-06, 005-07, 005-08, 005-09, 005-10, 005-11, 005-12, 005-13, 009-13, 009-14, 011-08, 016-08 |
-| P-IV | 011-01, 011-02, 011-03, 011-04, 011-05, 011-06, 011-07, 011-08, 011-09, 011-10, 011-11, 011-12, 011-13, 011-14, 011-15, 016-07 |
+| P-III | 002-01, 002-02, 002-03, 002-04, 002-05, 002-06, 002-07, 002-08, 002-09, 002-10, 002-11, 002-12, 002-13, 003-01, 003-02, 003-03, 003-04, 003-05, 003-06, 003-07, 003-08, 003-09, 003-10, 003-11, 003-12, 003-13, 003-14, 003-15, 003-16, 003-17, 004-01, 004-02, 004-03, 004-04, 004-05, 004-06, 004-07, 004-08, 004-09, 004-10, 004-11, 004-12, 004-13, 004-14, 004-15, 005-01, 005-02, 005-03, 005-04, 005-05, 005-06, 005-07, 005-08, 005-09, 005-10, 005-11, 005-12, 005-13, 009-13, 009-14, 011-08, 013-07, 016-08 |
+| P-IV | 011-01, 011-02, 011-03, 011-04, 011-05, 011-06, 011-07, 011-08, 011-09, 011-10, 011-11, 011-12, 011-13, 011-14, 011-15, 012-01, 012-02, 012-03, 012-04, 012-05, 012-06, 012-07, 012-08, 012-09, 012-10, 012-11, 012-12, 013-01, 013-02, 013-03, 013-04, 013-05, 013-06, 013-07, 013-08, 013-09, 013-10, 016-07, 017-01, 017-02, 017-03, 017-04, 017-05, 017-06, 017-07, 017-08, 017-09, 017-10, 017-11, 018-11, 019-09 |
 | P-V | 002-12, 009-08, 011-12, 011-13, 016-04, 016-05, 016-06 |
 | P-VI | 001-01, 001-02, 001-03, 001-04, 001-05, 001-06, 001-07, 001-08, 001-09, 001-10, 001-11, 001-12, 001-13, 001-14, 001-15, 001-16, 006-01, 006-02, 006-03, 006-04, 006-05, 006-06, 006-07, 006-08, 006-09, 006-10, 006-11, 006-12, 006-13, 006-14, 006-15, 006-16, 011-15, 016-11 |
 | P-VII | 010-01, 010-02, 010-03, 010-04, 010-05, 010-06, 010-07, 010-08, 010-09, 010-10, 010-11, 010-12, 010-13, 010-14 |
-| P-VIII | — |
+| P-VIII | 017-07 |
 | P-IX | 009-01, 009-02, 009-03, 009-04, 009-05, 009-06, 009-07, 009-08, 009-09, 009-10, 009-11, 009-12, 009-13, 009-14, 009-15, 011-05, 011-06, 011-07, 011-09, 011-10, 011-11, 011-13, 011-14 |
 
 ## 4. Reglas sin cobertura (pendientes de especificar)

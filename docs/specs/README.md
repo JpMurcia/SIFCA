@@ -20,14 +20,17 @@ Cada **caso de uso** de SIFCA tiene su especificación en `docs/specs/NNN-nombre
 | [009](009-facturacion-electronica-pta/spec.md) | Facturación electrónica mediante PTA (puerto `EInvoiceProvider`) | R-FE | F3 |
 | [010](010-motor-impuestos-y-retenciones/spec.md) | Motor de impuestos y retenciones con vigencias | R-IMP | F3 |
 | [011](011-multitenancy-api-y-webhooks/spec.md) | Aislamiento por tenant, API Keys, idempotencia y webhooks | Constitución IV, IX | F2 |
+| [012](012-autenticacion-y-sesiones/spec.md) | Autenticación y sesiones: credenciales rotativas, sesiones por dispositivo, recuperación, bloqueo, elegir empresa | Constitución I, IV, V, IX · ADR-0002 | F2 (Ola 1) |
+| [013](013-configuracion-empresa/spec.md) | Configuración por empresa: datos fiscales, parámetros con vigencia, numeración sin huecos, plantillas PDF | R-CON-006, R-FE-012 · ADR-0005 | F2 (Ola 1) |
 | [016](016-fundaciones-frontend/spec.md) | Fundaciones del back-office web: cascarón, estados globales, errores tipificados, permisos y formatos es-CO | Constitución I, IV, V, VI · ADR-0001, ADR-0009 | F2 (Ola 0) |
+| [017](017-usuarios-roles-permisos/spec.md) | Usuarios, roles y permisos granulares, solicitud de permiso, segundo factor, bitácora | Constitución I, IV · ADR-0002 | F2 (Ola 1) |
+| [018](018-plan-de-cuentas-puc/spec.md) | Plan de cuentas gestionable, PUC base, centros de costo, conceptos → cuentas y clasificación | R-CON-003, 008, 012, 013 | F2 (Ola 2) |
+| [019](019-estados-financieros-niif/spec.md) | Estados financieros NIIF para Pymes: situación financiera y resultados comparativos | R-CON-010…013 | F2 (Ola 2) |
 
 ## Especificaciones propuestas (aún sin `spec.md`)
 
 | # | Caso de uso | Fase | Detalle |
 |---|---|---|---|
-| 012 | Identidad, roles y permisos (IAM) | F2 | Pendiente: ver «Dependencias y pendientes» abajo |
-| 013 | Configuración por empresa (parámetros con vigencia y bitácora, cuentas por defecto, numeración, plantillas, alertas) | F2–F8 | [`04-diseno-ux/06-…`](../04-diseno-ux/06-integraciones-migracion-y-configuracion.md) §5–6 |
 | 014 | Conectores e integración (Alegra de solo lectura, archivos CSV/XLSX, referencias externas, cola de trabajos) | F8 | `06-…` §2–4 y §7 |
 | 015 | Migración de datos (saldos iniciales, cartera abierta, existencias, histórico opcional, conciliación, deshacer por reversión) | F8 | `06-…` §3.3 y §4; reglas MG-01…MG-09 por validar con el contador |
 

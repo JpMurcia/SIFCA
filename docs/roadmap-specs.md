@@ -159,12 +159,12 @@ Estado: ✅ entregada · 🟡 spec escrita (`spec.md` + `.feature`), sin impleme
 |---:|---|:-:|---|:-:|---|---|
 | 1 | SPEC-000-fundaciones-backend | 0 | Monorepo, Clean Architecture, Prisma + Zod, RLS, `problem+json`, logs, OpenAPI | ✅ | — | — |
 | 2 | SPEC-016-fundaciones-frontend | 0 | `apps/admin` (Vite + React), tokens, cascarón, estados globales, cliente API | 🟡 | 000 | — |
-| 3 | SPEC-012-autenticacion-y-sesiones | 1 | JWT, refresh tokens rotativos, sesiones, recuperación de contraseña | 🆕 | 000, 016 | — |
-| 4 | SPEC-017-usuarios-roles-permisos | 1 | Usuarios, roles, permisos granulares (RBAC), guards | 🆕 | 012 | — |
-| 5 | SPEC-013-configuracion-empresa | 1 | Empresa, parámetros con vigencia, numeración, años fiscales, plantillas | 🆕 | 017 | — |
+| 3 | SPEC-012-autenticacion-y-sesiones | 1 | JWT, refresh tokens rotativos, sesiones, recuperación de contraseña | 🟡 | 000, 016 | — |
+| 4 | SPEC-017-usuarios-roles-permisos | 1 | Usuarios, roles, permisos granulares (RBAC), guards | 🟡 | 012 | — |
+| 5 | SPEC-013-configuracion-empresa | 1 | Empresa, parámetros con vigencia, numeración, años fiscales, plantillas | 🟡 | 017 | — |
 | 6 | SPEC-001-contabilidad-comprobantes-inmutables | 2 | Motor de partida doble inmutable, diario, mayor, balance, períodos, cierre anual | ✅ (93/94) | 000 | — |
-| 7 | SPEC-018-plan-de-cuentas-puc | 2 | PUC jerárquico gestionable, conceptos contables, PUC base | 🆕 | 001, 013 | 020, 021 |
-| 8 | SPEC-019-estados-financieros-niif | 2 | Estado de situación financiera y de resultados (NIIF Pymes) | 🆕 | 018 | 020, 021 |
+| 7 | SPEC-018-plan-de-cuentas-puc | 2 | PUC jerárquico gestionable, conceptos contables, PUC base | 🟡 | 001, 013 | 020, 021 |
+| 8 | SPEC-019-estados-financieros-niif | 2 | Estado de situación financiera y de resultados (NIIF Pymes) | 🟡 | 018 | 020, 021 |
 | 9 | SPEC-020-terceros | 3 | Clientes y proveedores: NIT con DV, responsabilidades, cupo y plazo | 🆕 | 013 | 018, 019, 021 |
 | 10 | SPEC-021-items-y-bodegas | 3 | Ítems, categorías, unidades, bodegas por tipo | 🆕 | 013 | 018, 019, 020 |
 | 11 | SPEC-006-inventario-kardex-costeo | 3 | Kardex multibodega, PEPS y promedio ponderado, política de despacho | 🟡 | 018, 021 | — |
@@ -272,7 +272,7 @@ escenarios al ejecutar `/speckit-specify`.
 
 #### Ola 1 — Seguridad y configuración
 
-**SPEC-012-autenticacion-y-sesiones** 🆕
+**SPEC-012-autenticacion-y-sesiones** 🟡 ([spec](specs/012-autenticacion-y-sesiones/spec.md))
 - **Alcance:** inicio de sesión con correo y contraseña (hash argon2id); *access token* JWT corto (15 min) y *refresh
   token* opaco rotativo con detección de reutilización; sesiones por dispositivo con revocación; cierre por
   inactividad (30 min, `5q`); bloqueo progresivo por intentos fallidos; recuperación de contraseña por enlace de un
@@ -286,7 +286,7 @@ escenarios al ejecutar `/speckit-specify`.
   (se conserva la prueba).
 - **Dependencias:** 000, 016.
 
-**SPEC-017-usuarios-roles-permisos** 🆕
+**SPEC-017-usuarios-roles-permisos** 🟡 ([spec](specs/017-usuarios-roles-permisos/spec.md))
 - **Alcance:** usuarios por empresa (invitar, desactivar), roles con matriz de permisos granulares
   (`modulo.recurso.accion`, p. ej. `accounting.period.reopen`), roles base (Administrador, Contador, Auxiliar
   contable, Vendedor/POS, Cartera, Bodega, Solo lectura), *guard* NestJS declarativo por endpoint, endpoint
@@ -300,11 +300,10 @@ escenarios al ejecutar `/speckit-specify`.
   los escenarios de la spec 001 siguen en verde usando tokens reales.
 - **Dependencias:** 012.
 
-**SPEC-013-configuracion-empresa** 🆕
+**SPEC-013-configuracion-empresa** 🟡 ([spec](specs/013-configuracion-empresa/spec.md))
 - **Alcance:** datos de la empresa (NIT con DV, régimen, responsabilidades, logo); parámetros tipados **con vigencia,
   motivo e historial** (`5o/5p`): días de bloqueo por mora, % de alerta de cupo, umbrales ABC, política de redondeo;
-  numeración de documentos por tipo y prefijo (consecutivos sin huecos, R-CON-006); años fiscales; cuentas por
-  defecto por concepto (`REVENUE`, `VAT_OUTPUT`…) que usarán las plantillas de contabilización; plantillas PDF
+  numeración de documentos por tipo y prefijo (consecutivos sin huecos, R-CON-006); años fiscales (los de la spec 001); plantillas PDF
   (`7w/7x`).
 - **Fuera:** rangos de numeración DIAN (009), tarifas de impuestos (010).
 - **Pantallas:** `3q/3r`, `5o/5p`, `7w/7x`.
@@ -328,7 +327,7 @@ escenarios al ejecutar `/speckit-specify`.
   (lo están) y `node scripts/check-rules-verified.mjs docs/specs/001-contabilidad-comprobantes-inmutables` en verde
   (falla hasta la validación).
 
-**SPEC-018-plan-de-cuentas-puc** 🆕
+**SPEC-018-plan-de-cuentas-puc** 🟡 ([spec](specs/018-plan-de-cuentas-puc/spec.md))
 - **Alcance:** gestión del plan por empresa (hoy solo lectura): crear auxiliares, desactivar, marcar «exige tercero»,
   «exige centro de costo», clasificación corriente/no corriente y partida de estado financiero; niveles protegidos
   (clase, grupo, cuenta de 4 dígitos); cuentas con movimiento no cambian código ni naturaleza (R-CON-013); mapeo
@@ -341,7 +340,7 @@ escenarios al ejecutar `/speckit-specify`.
   conceptos mapeados.
 - **Dependencias:** 001, 013.
 
-**SPEC-019-estados-financieros-niif** 🆕
+**SPEC-019-estados-financieros-niif** 🟡 ([spec](specs/019-estados-financieros-niif/spec.md))
 - **Alcance:** estado de situación financiera (corriente/no corriente) y estado de resultados (ingresos −
   devoluciones − costo de ventas − gastos) bajo NIIF para Pymes, comparativos entre dos fechas o períodos, a partir
   del balance de prueba; exportación a PDF y XLSX; huella reproducible del informe (R-CON-010).

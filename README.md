@@ -31,12 +31,12 @@ Estado: ✅ entregada · 🟡 spec escrita, sin implementar · 🆕 por especifi
 |---:|---|:-:|:-:|---|
 | 1 | 000 Fundaciones backend (monorepo, RLS, `problem+json`, OpenAPI) | 0 | ✅ | — |
 | 2 | [016](docs/specs/016-fundaciones-frontend/spec.md) Fundaciones frontend (`apps/admin`, tokens, estados globales) | 0 | 🟡 | 000 |
-| 3 | 012 Autenticación y sesiones | 1 | 🆕 | 000, 016 |
-| 4 | 017 Usuarios, roles y permisos | 1 | 🆕 | 012 |
-| 5 | 013 Configuración por empresa | 1 | 🆕 | 017 |
+| 3 | [012](docs/specs/012-autenticacion-y-sesiones/spec.md) Autenticación y sesiones | 1 | 🟡 | 000, 016 |
+| 4 | [017](docs/specs/017-usuarios-roles-permisos/spec.md) Usuarios, roles y permisos | 1 | 🟡 | 012 |
+| 5 | [013](docs/specs/013-configuracion-empresa/spec.md) Configuración por empresa | 1 | 🟡 | 017 |
 | 6 | [001](docs/specs/001-contabilidad-comprobantes-inmutables/spec.md) Motor contable inmutable, períodos y libros | 2 | ✅ 93/94 | 000 |
-| 7 | 018 Plan de cuentas (PUC) | 2 | 🆕 | 001, 013 |
-| 8 | 019 Estados financieros NIIF Pymes | 2 | 🆕 | 018 |
+| 7 | [018](docs/specs/018-plan-de-cuentas-puc/spec.md) Plan de cuentas (PUC) | 2 | 🟡 | 001, 013 |
+| 8 | [019](docs/specs/019-estados-financieros-niif/spec.md) Estados financieros NIIF Pymes | 2 | 🟡 | 018 |
 | 9 | 020 Terceros | 3 | 🆕 | 013 |
 | 10 | 021 Ítems y bodegas | 3 | 🆕 | 013 |
 | 11 | [006](docs/specs/006-inventario-kardex-costeo/spec.md) Kardex y costeo | 3 | 🟡 | 018, 021 |
